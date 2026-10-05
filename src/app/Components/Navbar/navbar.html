@@ -1,0 +1,19 @@
+<nav class="navbar-pokemon">
+    <div class="navbar-content">
+
+        <a class="navbar-logo" routerLink="/">
+            <span class="logo-pokeball"></span>
+            <span>Pokédex</span>
+        </a>
+
+        <div class="navbar-links">
+            @for (item of itens; track item.titulo) {
+            <a class="navbar-link" [routerLink]="item.link" routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: item.link === '/' }">
+                {{ item.titulo }}
+            </a>
+            }
+        </div>
+
+    </div>
+</nav>

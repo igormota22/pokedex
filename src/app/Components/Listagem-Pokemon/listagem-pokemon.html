@@ -1,0 +1,49 @@
+<section class="pokemon-list">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+            @for (pokemon of pokemon(); track pokemon.id) {
+
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+
+                <article class="pokemon-card">
+
+                    <div class="pokemon-image">
+                        <img [src]="pokemon.sprite" [alt]="pokemon.name">
+                    </div>
+
+                    <div class="pokemon-info">
+
+                        <span class="pokemon-number">
+                            #{{ pokemon.id.toString().padStart(3, '0') }}
+                        </span>
+
+                        <h2 class="pokemon-name">
+                            {{ paraTitleCase(pokemon.name) }}
+                        </h2>
+
+                        <div class="pokemon-types">
+
+                            @for (tipo of pokemon.types; track tipo) {
+                            <span class="pokemon-type" [class]="'pokemon-type ' + tipo">
+                                {{ paraTitleCase(tipo) }}
+                            </span>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+            }
+
+        </div>
+
+    </div>
+
+</section>

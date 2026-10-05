@@ -1,1 +1,750 @@
-/* You can add global styles to this file, and also import other style files */
+ @use 'bootstrap';
+ @use 'bootstrap-icons';
+
+ /* ============================================================
+   ============================================================
+   CONFIGURAÇÕES GERAIS
+   ============================================================
+   ============================================================ */
+
+ html,
+ body {
+     margin: 0;
+     padding: 0;
+ }
+
+
+ /* ============================================================
+   ============================================================
+   NAVBAR
+   ============================================================
+   ============================================================ */
+
+ /* =========================
+   CONTAINER PRINCIPAL
+========================= */
+
+ .navbar-pokemon {
+     position: fixed;
+
+     top: 0;
+     left: 0;
+
+     width: 100%;
+
+     z-index: 1000;
+
+     background: #087fc1;
+
+     border-bottom: 4px solid #183b68;
+
+     box-shadow:
+         0 4px 0 rgba(0, 0, 0, 0.2);
+ }
+
+
+ /* =========================
+   CONTEÚDO DA NAVBAR
+========================= */
+
+ .navbar-content {
+     max-width: 1200px;
+
+     margin: 0 auto;
+
+     min-height: 72px;
+
+     padding: 0 24px;
+
+     display: flex;
+
+     align-items: center;
+
+     justify-content: space-between;
+
+     gap: 40px;
+ }
+
+
+ /* =========================
+   LOGO
+========================= */
+
+ .navbar-logo {
+     display: flex;
+
+     align-items: center;
+
+     gap: 12px;
+
+     color: #fff;
+
+     text-decoration: none;
+
+     font-size: 24px;
+
+     font-weight: 900;
+
+     letter-spacing: 1px;
+
+     text-shadow:
+         2px 2px 0 #183b68,
+         -1px -1px 0 #183b68;
+ }
+
+
+ /* =========================
+   POKÉBALL DA LOGO
+========================= */
+
+ .logo-pokeball {
+     position: relative;
+
+     width: 30px;
+     height: 30px;
+
+     border-radius: 50%;
+
+     background:
+         linear-gradient(to bottom,
+             #e53935 0%,
+             #e53935 45%,
+             #202020 45%,
+             #202020 55%,
+             #f5f5f5 55%,
+             #f5f5f5 100%);
+
+     border: 3px solid #183b68;
+
+     box-shadow:
+         2px 2px 0 rgba(0, 0, 0, 0.25);
+ }
+
+
+ /* =========================
+   CENTRO DA POKÉBALL
+========================= */
+
+ .logo-pokeball::after {
+     content: '';
+
+     position: absolute;
+
+     width: 9px;
+     height: 9px;
+
+     top: 50%;
+     left: 50%;
+
+     transform: translate(-50%, -50%);
+
+     background: #fff;
+
+     border: 2px solid #202020;
+
+     border-radius: 50%;
+ }
+
+
+ /* =========================
+   LINKS
+========================= */
+
+ .navbar-links {
+     display: flex;
+
+     align-items: center;
+
+     gap: 8px;
+ }
+
+
+ .navbar-link {
+     position: relative;
+
+     padding: 10px 18px;
+
+     color: #fff;
+
+     text-decoration: none;
+
+     font-size: 16px;
+
+     font-weight: 700;
+
+     border: 2px solid transparent;
+
+     transition:
+         background-color 0.15s ease,
+         border-color 0.15s ease,
+         transform 0.15s ease;
+ }
+
+
+ /* =========================
+   CURSOR DO MENU
+   Inspirado nos menus
+   dos jogos Pokémon
+========================= */
+
+ .navbar-link::before {
+     content: '▶';
+
+     position: absolute;
+
+     left: 5px;
+
+     opacity: 0;
+
+     font-size: 11px;
+
+     transition:
+         opacity 0.15s ease;
+ }
+
+
+ /* =========================
+   LINK ATIVO / HOVER
+========================= */
+
+ .navbar-link:hover,
+ .navbar-link.active {
+     background: #f5f5f5;
+
+     color: #183b68;
+
+     border-color: #183b68;
+
+     box-shadow:
+         3px 3px 0 #183b68;
+ }
+
+
+ .navbar-link:hover::before,
+ .navbar-link.active::before {
+     opacity: 1;
+ }
+
+
+ /* =========================
+   RESPONSIVIDADE DA NAVBAR
+========================= */
+
+ @media (max-width: 700px) {
+
+     .navbar-content {
+         flex-direction: column;
+
+         padding: 16px;
+
+         gap: 15px;
+     }
+
+
+     .navbar-links {
+         width: 100%;
+
+         justify-content: center;
+
+         flex-wrap: wrap;
+     }
+
+
+     .navbar-link {
+         padding: 8px 12px;
+     }
+ }
+
+
+ /* ============================================================
+   ============================================================
+   LISTAGEM DE POKÉMON
+   ============================================================
+   ============================================================ */
+
+ /* =========================
+   ÁREA PRINCIPAL
+========================= */
+
+ .pokemon-list {
+     min-height: 100vh;
+
+     /*
+       A navbar possui aproximadamente 72px
+       de altura e está com position: fixed.
+
+       Por isso adicionamos espaço no topo,
+       evitando que o primeiro conteúdo fique
+       escondido atrás da navbar.
+    */
+
+     padding: 117px 0 60px;
+
+
+     /*
+       Fundo verde inspirado
+       nos jogos Pokémon.
+    */
+
+     background:
+         radial-gradient(circle at 20% 20%,
+             rgba(255, 255, 255, 0.35) 0 2px,
+             transparent 3px),
+         #78c850;
+
+     background-size: 32px 32px;
+ }
+
+
+ /* ============================================================
+   CARD DO POKÉMON
+   ============================================================ */
+
+ /* =========================
+   CARD PRINCIPAL
+========================= */
+
+ .pokemon-card {
+     position: relative;
+
+     height: 100%;
+
+     overflow: hidden;
+
+     background: #ffffff;
+
+     border: 3px solid #263b59;
+
+     border-radius: 14px;
+
+     box-shadow:
+         5px 5px 0 #263b59;
+
+     cursor: pointer;
+
+     transition:
+         transform 0.18s ease,
+         box-shadow 0.18s ease;
+ }
+
+
+ /* =========================
+   EFEITO AO PASSAR O MOUSE
+========================= */
+
+ .pokemon-card:hover {
+     transform: translateY(-8px);
+
+     box-shadow:
+         8px 12px 0 #263b59;
+ }
+
+
+ /* ============================================================
+   IMAGEM / SPRITE
+   ============================================================ */
+
+ /* =========================
+   ÁREA DA IMAGEM
+========================= */
+
+ .pokemon-image {
+     position: relative;
+
+     display: flex;
+
+     align-items: center;
+
+     justify-content: center;
+
+     min-height: 200px;
+
+     background: #e9f6ff;
+
+     border-bottom: 3px solid #263b59;
+
+     overflow: hidden;
+ }
+
+
+ /* =========================
+   CÍRCULO DECORATIVO
+========================= */
+
+ .pokemon-image::before {
+     content: '';
+
+     position: absolute;
+
+     width: 180px;
+     height: 180px;
+
+     border-radius: 50%;
+
+     background: #c9eafa;
+
+     opacity: 0.7;
+ }
+
+
+ /* =========================
+   SPRITE DO POKÉMON
+========================= */
+
+ .pokemon-image img {
+     position: relative;
+
+     z-index: 1;
+
+     width: 170px;
+     height: 170px;
+
+     object-fit: contain;
+
+     /*
+       Mantém a aparência pixelada
+       característica dos sprites antigos.
+    */
+
+     image-rendering: pixelated;
+
+     transition:
+         transform 0.2s ease;
+ }
+
+
+ /* =========================
+   ZOOM DO SPRITE
+========================= */
+
+ .pokemon-card:hover .pokemon-image img {
+     transform: scale(1.08);
+ }
+
+
+ /* ============================================================
+   INFORMAÇÕES DO POKÉMON
+   ============================================================ */
+
+ /* =========================
+   CONTAINER DAS INFORMAÇÕES
+========================= */
+
+ .pokemon-info {
+     position: relative;
+
+     padding: 18px 20px 20px;
+
+     background: #ffffff;
+ }
+
+
+ /* =========================
+   FAIXA AZUL DECORATIVA
+========================= */
+
+ .pokemon-info::before {
+     content: '';
+
+     position: absolute;
+
+     top: 0;
+     left: 20px;
+
+     width: 45px;
+     height: 4px;
+
+     background: #087fc1;
+
+     border-radius:
+         0 0 4px 4px;
+ }
+
+
+ /* ============================================================
+   NÚMERO DO POKÉMON
+   ============================================================ */
+
+ .pokemon-number {
+     display: block;
+
+     margin-bottom: 2px;
+
+     color: #7b8794;
+
+     font-size: 13px;
+
+     font-weight: 800;
+
+     letter-spacing: 1px;
+ }
+
+
+ /* ============================================================
+   NOME DO POKÉMON
+   ============================================================ */
+
+ .pokemon-name {
+     margin: 0 0 15px;
+
+     color: #263b59;
+
+     font-size: 23px;
+
+     font-weight: 900;
+
+     letter-spacing: 0.3px;
+ }
+
+
+ /* ============================================================
+   TIPOS DO POKÉMON
+   ============================================================ */
+
+ /* =========================
+   CONTAINER DOS TIPOS
+========================= */
+
+ .pokemon-types {
+     display: flex;
+
+     flex-wrap: wrap;
+
+     gap: 7px;
+ }
+
+
+ /* =========================
+   BADGE DO TIPO
+========================= */
+
+ .pokemon-type {
+     display: inline-flex;
+
+     align-items: center;
+
+     justify-content: center;
+
+     min-width: 68px;
+
+     padding: 5px 11px;
+
+     color: #ffffff;
+
+     border: 2px solid rgba(0, 0, 0, 0.18);
+
+     border-radius: 5px;
+
+     font-size: 12px;
+
+     font-weight: 800;
+
+     text-transform: uppercase;
+
+     letter-spacing: 0.4px;
+
+     box-shadow:
+         2px 2px 0 rgba(0, 0, 0, 0.18);
+ }
+
+
+ /* ============================================================
+   CORES DOS TIPOS
+   ============================================================ */
+
+ /* =========================
+   NORMAL
+========================= */
+
+ .pokemon-type.normal {
+     background: #a8a878;
+ }
+
+
+ /* =========================
+   FIRE
+========================= */
+
+ .pokemon-type.fire {
+     background: #f08030;
+ }
+
+
+ /* =========================
+   WATER
+========================= */
+
+ .pokemon-type.water {
+     background: #6890f0;
+ }
+
+
+ /* =========================
+   ELECTRIC
+========================= */
+
+ .pokemon-type.electric {
+     background: #f8d030;
+
+     color: #3d3200;
+ }
+
+
+ /* =========================
+   GRASS
+========================= */
+
+ .pokemon-type.grass {
+     background: #78c850;
+ }
+
+
+ /* =========================
+   ICE
+========================= */
+
+ .pokemon-type.ice {
+     background: #98d8d8;
+
+     color: #164646;
+ }
+
+
+ /* =========================
+   FIGHTING
+========================= */
+
+ .pokemon-type.fighting {
+     background: #c03028;
+ }
+
+
+ /* =========================
+   POISON
+========================= */
+
+ .pokemon-type.poison {
+     background: #a040a0;
+ }
+
+
+ /* =========================
+   GROUND
+========================= */
+
+ .pokemon-type.ground {
+     background: #e0c068;
+
+     color: #4a3b12;
+ }
+
+
+ /* =========================
+   FLYING
+========================= */
+
+ .pokemon-type.flying {
+     background: #a890f0;
+ }
+
+
+ /* =========================
+   PSYCHIC
+========================= */
+
+ .pokemon-type.psychic {
+     background: #f85888;
+ }
+
+
+ /* =========================
+   BUG
+========================= */
+
+ .pokemon-type.bug {
+     background: #a8b820;
+ }
+
+
+ /* =========================
+   ROCK
+========================= */
+
+ .pokemon-type.rock {
+     background: #b8a038;
+ }
+
+
+ /* =========================
+   GHOST
+========================= */
+
+ .pokemon-type.ghost {
+     background: #705898;
+ }
+
+
+ /* =========================
+   DRAGON
+========================= */
+
+ .pokemon-type.dragon {
+     background: #7038f8;
+ }
+
+
+ /* =========================
+   DARK
+========================= */
+
+ .pokemon-type.dark {
+     background: #705848;
+ }
+
+
+ /* =========================
+   STEEL
+========================= */
+
+ .pokemon-type.steel {
+     background: #b8b8d0;
+
+     color: #30303b;
+ }
+
+
+ /* =========================
+   FAIRY
+========================= */
+
+ .pokemon-type.fairy {
+     background: #ee99ac;
+ }
+
+
+ /* ============================================================
+   RESPONSIVIDADE DA LISTAGEM
+   ============================================================ */
+
+ @media (max-width: 576px) {
+
+     .pokemon-list {
+         /*
+           Mantém o espaço necessário para
+           a navbar fixa no mobile.
+        */
+
+         padding: 117px 15px 45px;
+     }
+
+
+     .pokemon-image {
+         min-height: 180px;
+     }
+
+
+     .pokemon-image img {
+         width: 150px;
+         height: 150px;
+     }
+ }
