@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 interface ItemNavbar {
@@ -13,6 +13,8 @@ interface ItemNavbar {
     templateUrl: './navbar.html',
 })
 export class NavbarComponent {
+
+    protected readonly menuAberto = signal(false);
 
     itens: ItemNavbar[] = [
         {
@@ -58,4 +60,14 @@ export class NavbarComponent {
             link: '/pokedex/paldea'
         }
     ];
+
+    protected alternarMenu(): void {
+        this.menuAberto.update(
+            (aberto) => !aberto
+        );
+    }
+
+    protected fecharMenu(): void {
+        this.menuAberto.set(false);
+    }
 }
