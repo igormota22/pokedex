@@ -1,7 +1,7 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap } from 'rxjs';
+import { Component, inject, signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { combineLatest, map, switchMap } from 'rxjs';
 import { PokemonService } from '../../../Services/pokemon.service';
 
 export interface Pokemon {
@@ -22,18 +22,58 @@ export class ListagemPokemon {
 
     private readonly pokemonService = inject(PokemonService);
 
-    protected readonly pokemon = toSignal(
+    private readonly offset = signal(0);
+
+    //=========================================
+    //EXPOE A REGIAO PARA O COMPONENTE HTML
+    //=========================================
+    protected readonly regiao = toSignal(
         this.route.paramMap.pipe(
-            switchMap((params) => {
+            map((params) => params.get('regiao'))
+        ),
+        {
+            initialValue: null
+        }
+    );
+
+    protected readonly pokemon = toSignal(
+        combineLatest([
+            this.route.paramMap,
+            toObservable(this.offset)
+        ]).pipe(
+            switchMap(([params, offset]) => {
+
+                //============================================================
+                //PARAMETRO QUE DEFINE SE HAVERA ALGUM FILTRO NA LISTAGEM
+                //==============================================================
                 const regiao = params.get('regiao');
 
-                return this.pokemonService.obterPokemons(regiao ?? undefined);
+                return this.pokemonService.obterPokemons(
+                    regiao ?? undefined,
+                    offset
+                );
             })
         ),
         {
             initialValue: [],
         }
     );
+
+    protected proximaPagina(): void {
+        this.offset.update(
+            (valor) => valor + 32
+        );
+
+        window.scrollTo(0, 0);
+    }
+
+    protected paginaAnterior(): void {
+        this.offset.update(
+            (valor) => valor - 32
+        );
+
+        window.scrollTo(0, 0);
+    }
 
     protected paraTitleCase(texto: string): string {
         return texto

@@ -32,7 +32,7 @@ interface PokemonRespostaHttp {
 }
 
 
-interface Regiao {
+export interface Regiao {
     nome: string,
     inicio: number,
     quantidade: number
@@ -95,11 +95,14 @@ export class PokemonService {
 
     private readonly http = inject(HttpClient);
 
-    obterPokemons(nome?: string) {
+    obterPokemons(nome?: string, offset = 0) {
 
-        let url = 'https://pokeapi.co/api/v2/pokemon?limit=1000';
+        let url: string;
 
-        if (nome) {
+        if (!nome) {
+            url =
+                `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=32`;
+        } else {
 
             const regiao = regioes.find(
                 (regiao) =>
@@ -114,16 +117,9 @@ export class PokemonService {
                 `https://pokeapi.co/api/v2/pokemon?offset=${regiao.inicio - 1}&limit=${regiao.quantidade}`;
         }
 
-        console.log('REGIÃO RECEBIDA:', nome);
-        console.log('URL:', url);
-
         return this.http.get<ObjetoRespostaHttp>(url).pipe(
 
             switchMap((resposta) => {
-
-                console.log(resposta.results.length);
-                console.log(resposta.results[0]);
-                console.log(resposta.results[resposta.results.length - 1]);
 
                 const requisicoes = resposta.results.map(
                     (pokemon) =>
