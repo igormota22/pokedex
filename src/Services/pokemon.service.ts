@@ -38,7 +38,7 @@ interface TipoRespostaHttp {
 }
 
 
-export interface Regiao {
+interface Regiao {
     nome: string,
     inicio: number,
     quantidade: number
@@ -100,38 +100,45 @@ const regioes: Regiao[] = [
 export class PokemonService {
 
     private readonly http = inject(HttpClient);
-    obterPokemons(nome?: string, offset = 0, tipo?: string) {
 
-        if (!nome && tipo) {
+    obterPokemons(nome?: string, offset = 0, tipos?: string[]) {
 
-            return this.http
-                .get<TipoRespostaHttp>(
+        if (!nome && tipos && tipos.length > 0) {
+
+            const requisicoes = tipos.map(tipo => {
+                return this.http.get<TipoRespostaHttp>(
                     `https://pokeapi.co/api/v2/type/${tipo}`
-                )
-                .pipe(
-                    switchMap((resposta) => {
-
-                        const requisicoes = resposta.pokemon.map(
-                            (item) =>
-                                this.http.get<PokemonRespostaHttp>(
-                                    item.pokemon.url
-                                )
-                        );
-
-                        return forkJoin(requisicoes);
-                    }),
-
-                    map((detalhes) =>
-                        detalhes.map((detalhe): Pokemon => ({
-                            id: detalhe.id,
-                            name: detalhe.name,
-                            types: detalhe.types.map(
-                                (item) => item.type.name
-                            ),
-                            sprite: detalhe.sprites.front_default,
-                        }))
-                    )
                 );
+            });
+
+            return forkJoin(requisicoes).pipe(
+                switchMap((respostas) => {
+
+                    const pokemons = respostas.flatMap(
+                        resposta => resposta.pokemon
+                    );
+
+                    const requisicoesDetalhes = pokemons.map(
+                        (item) =>
+                            this.http.get<PokemonRespostaHttp>(
+                                item.pokemon.url
+                            )
+                    );
+
+                    return forkJoin(requisicoesDetalhes);
+                }),
+
+                map((detalhes) =>
+                    detalhes.map((detalhe): Pokemon => ({
+                        id: detalhe.id,
+                        name: detalhe.name,
+                        types: detalhe.types.map(
+                            (item) => item.type.name
+                        ),
+                        sprite: detalhe.sprites.front_default,
+                    }))
+                )
+            );
         }
 
         let url: string;

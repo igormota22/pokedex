@@ -17,10 +17,6 @@ body {
    NAVBAR
    ============================================================ */
 
-/* =========================
-   CONTAINER
-   ========================= */
-
 .navbar-pokemon {
     position: fixed;
 
@@ -112,10 +108,6 @@ body {
 }
 
 
-/* =========================
-   CENTRO DA POKÉBALL
-   ========================= */
-
 .logo-pokeball::after {
     content: '';
 
@@ -148,6 +140,15 @@ body {
 }
 
 
+.navbar-links-desktop {
+    display: flex;
+}
+
+
+/* ============================================================
+   BOTÕES / LINKS DA NAVBAR
+   ============================================================ */
+
 .navbar-link {
     position: relative;
 
@@ -155,18 +156,182 @@ body {
 
     color: #ffffff;
 
+    font-family: inherit;
     font-size: 16px;
     font-weight: 700;
 
     text-decoration: none;
 
+    background: transparent;
+
     border: 2px solid transparent;
+
+    cursor: pointer;
 
     transition:
         background-color 0.15s ease,
         border-color 0.15s ease,
         transform 0.15s ease;
 }
+
+
+/* ============================================================
+   CONTAINER DOS DROPDOWNS
+   ============================================================ */
+
+.navbar-dropdown-container {
+    position: relative;
+}
+
+
+/* ============================================================
+   SETA DOS DROPDOWNS
+   ============================================================ */
+
+.dropdown-arrow {
+    display: inline-block;
+
+    margin-left: 5px;
+
+    font-size: 9px;
+
+    transition:
+        transform 0.15s ease;
+}
+
+
+.dropdown-arrow.aberto {
+    transform: rotate(180deg);
+}
+
+
+/* ============================================================
+   HOVER / ATIVO
+   ============================================================ */
+
+.navbar-link:hover,
+.navbar-link.active {
+    background: #f5f5f5;
+
+    color: #183b68;
+
+    border-color: #183b68;
+
+    box-shadow:
+        3px 3px 0 #183b68;
+}
+
+
+.navbar-link:hover {
+    transform: translateY(-1px);
+}
+
+
+/* ============================================================
+   CURSOR DO MENU
+   ============================================================ */
+
+.navbar-link::before {
+    content: '▶';
+
+    position: absolute;
+
+    left: 5px;
+
+    opacity: 0;
+
+    font-size: 11px;
+
+    transition:
+        opacity 0.15s ease;
+}
+
+
+.navbar-link:hover::before,
+.navbar-link.active::before {
+    opacity: 1;
+}
+
+
+/* ============================================================
+   DROPDOWN DE REGIÕES
+   ============================================================ */
+
+.regioes-panel {
+    position: absolute;
+
+    top: calc(100% + 8px);
+    left: 0;
+
+    width: 360px;
+
+    padding: 12px;
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 8px;
+
+    background: #f5f5f5;
+
+    border: 3px solid #183b68;
+    border-radius: 8px;
+
+    box-shadow:
+        5px 5px 0 #183b68;
+
+    z-index: 1100;
+}
+
+
+/* =========================
+   LINKS DAS REGIÕES
+   ========================= */
+
+.regiao-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 38px;
+
+    padding: 7px 8px;
+
+    background: #ffffff;
+
+    border: 2px solid transparent;
+    border-radius: 5px;
+
+    color: #183b68;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.regiao-link:hover,
+.regiao-link.active {
+    background: #087fc1;
+
+    color: #ffffff;
+
+    border-color: #183b68;
+
+    box-shadow:
+        2px 2px 0 #183b68;
+
+    transform: translateY(-1px);
+}
+
 
 /* ============================================================
    FILTRO DE TIPOS
@@ -184,9 +349,9 @@ body {
 .tipos-panel {
     position: absolute;
 
-    top: 100%;
+    top: calc(100% + 8px);
 
-    right: 24px;
+    right: 0;
 
     width: 440px;
 
@@ -224,10 +389,11 @@ body {
     font-size: 14px;
 }
 
+
 .tipos-panel-header span {
     font-size: 11px;
 
-    color: #687789;
+    color: #183b68;
 
     text-transform: uppercase;
 }
@@ -283,10 +449,6 @@ body {
 }
 
 
-/* =========================
-   ESCONDE CHECKBOX
-   ========================= */
-
 .tipo-filtro input {
     position: absolute;
 
@@ -295,10 +457,6 @@ body {
     pointer-events: none;
 }
 
-
-/* =========================
-   HOVER
-   ========================= */
 
 .tipo-filtro:hover {
     filter: brightness(1.08);
@@ -310,10 +468,6 @@ body {
 }
 
 
-/* =========================
-   SELECIONADO
-   ========================= */
-
 .tipo-filtro.selecionado {
     border-color: #183b68;
 
@@ -323,8 +477,6 @@ body {
     transform: translateY(-2px);
 }
 
-
-/* Indicador de seleção */
 
 .tipo-filtro.selecionado::after {
     content: '✓';
@@ -341,7 +493,7 @@ body {
     align-items: center;
     justify-content: center;
 
-    background: #f5f5f5;
+    background: #87eaf7;
 
     color: #183b68;
 
@@ -352,9 +504,10 @@ body {
     font-weight: 900;
 }
 
+
 /* ============================================================
-    CORES DOS FILTROS DE TIPOS
-    ============================================================ */
+   CORES DOS FILTROS DE TIPOS
+   ============================================================ */
 
 .tipo-filtro.normal {
     background: #a8a878;
@@ -433,49 +586,6 @@ body {
 }
 
 
-/* =========================
-   CURSOR DO MENU
-   ========================= */
-
-.navbar-link::before {
-    content: '▶';
-
-    position: absolute;
-
-    left: 5px;
-
-    opacity: 0;
-
-    font-size: 11px;
-
-    transition:
-        opacity 0.15s ease;
-}
-
-
-/* =========================
-   LINK ATIVO / HOVER
-   ========================= */
-
-.navbar-link:hover,
-.navbar-link.active {
-    background: #f5f5f5;
-
-    color: #183b68;
-
-    border-color: #183b68;
-
-    box-shadow:
-        3px 3px 0 #183b68;
-}
-
-
-.navbar-link:hover::before,
-.navbar-link.active::before {
-    opacity: 1;
-}
-
-
 /* ============================================================
    BOTÃO DO MENU MOBILE
    ============================================================ */
@@ -500,10 +610,6 @@ body {
 }
 
 
-/* =========================
-   LINHAS DO BOTÃO
-   ========================= */
-
 .navbar-menu-button span {
     display: block;
 
@@ -519,81 +625,49 @@ body {
 
 
 /* ============================================================
-   DROPDOWN MOBILE
+   MENU MOBILE
    ============================================================ */
 
-.navbar-dropdown {
+.navbar-dropdown-mobile {
+    display: none;
+}
+
+
+/* ============================================================
+   BOTÕES DO MENU MOBILE
+   ============================================================ */
+
+.mobile-menu-button {
     width: 100%;
 
-    padding: 15px;
-
-    background: #087fc1;
-
-    border-top: 2px solid rgba(24, 59, 104, 0.35);
-
-    box-shadow:
-        0 5px 0 rgba(0, 0, 0, 0.2);
-}
-
-
-/* =========================
-   GRID DO DROPDOWN
-   ========================= */
-
-.navbar-dropdown-grid {
-    display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 8px;
-
-    max-width: 700px;
-
-    margin: 0 auto;
-}
-
-
-/* =========================
-   LINKS DO DROPDOWN
-   ========================= */
-
-.navbar-dropdown-link {
     display: flex;
     align-items: center;
-
-    gap: 10px;
-
-    width: 100%;
+    justify-content: space-between;
 
     padding: 12px 15px;
 
+    margin-bottom: 8px;
+
+    background: #087fc1;
+
     color: #ffffff;
-
-    font-size: 15px;
-    font-weight: 700;
-
-    text-decoration: none;
 
     border: 2px solid transparent;
 
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
     transition:
         background-color 0.15s ease,
-        color 0.15s ease;
+        color 0.15s ease,
+        border-color 0.15s ease;
 }
 
 
-.navbar-dropdown-link span {
-    font-size: 10px;
-
-    opacity: 0;
-
-    transition:
-        opacity 0.15s ease;
-}
-
-
-.navbar-dropdown-link:hover,
-.navbar-dropdown-link.active {
+.mobile-menu-button:hover {
     background: #f5f5f5;
 
     color: #183b68;
@@ -605,9 +679,33 @@ body {
 }
 
 
-.navbar-dropdown-link:hover span,
-.navbar-dropdown-link.active span {
-    opacity: 1;
+/* ============================================================
+   REGIÕES NO MOBILE
+   ============================================================ */
+
+.regioes-panel-mobile {
+    position: static;
+
+    width: auto;
+
+    margin-bottom: 10px;
+
+    box-shadow: none;
+}
+
+
+/* ============================================================
+   TIPOS NO MOBILE
+   ============================================================ */
+
+.tipos-panel-mobile {
+    position: static;
+
+    width: auto;
+
+    margin-bottom: 5px;
+
+    box-shadow: none;
 }
 
 
@@ -629,10 +727,6 @@ body {
     background-size: 32px 32px;
 }
 
-
-/* =========================
-   ESPAÇO LATERAL DOS CARDS
-   ========================= */
 
 .pokemon-list>.container {
     padding-left: 90px;
@@ -696,10 +790,6 @@ body {
 }
 
 
-/* =========================
-   CÍRCULO DECORATIVO
-   ========================= */
-
 .pokemon-image::before {
     content: '';
 
@@ -715,10 +805,6 @@ body {
     opacity: 0.7;
 }
 
-
-/* =========================
-   SPRITE
-   ========================= */
 
 .pokemon-image img {
     position: relative;
@@ -755,10 +841,6 @@ body {
 }
 
 
-/* =========================
-   FAIXA DECORATIVA
-   ========================= */
-
 .pokemon-info::before {
     content: '';
 
@@ -777,10 +859,6 @@ body {
 }
 
 
-/* =========================
-   NÚMERO
-   ========================= */
-
 .pokemon-number {
     display: block;
 
@@ -795,10 +873,6 @@ body {
 }
 
 
-/* =========================
-   NOME
-   ========================= */
-
 .pokemon-name {
     margin: 0 0 15px;
 
@@ -812,7 +886,7 @@ body {
 
 
 /* ============================================================
-   TIPOS
+   TIPOS DOS CARDS
    ============================================================ */
 
 .pokemon-types {
@@ -955,10 +1029,6 @@ body {
 }
 
 
-/* ============================================================
-   BOTÕES DE PAGINAÇÃO
-   ============================================================ */
-
 .botao-anterior,
 .botao-proximo {
     pointer-events: auto;
@@ -990,19 +1060,11 @@ body {
 }
 
 
-/* =========================
-   HOVER
-   ========================= */
-
 .botao-anterior:hover,
 .botao-proximo:hover {
     background: #096fa8;
 }
 
-
-/* =========================
-   CLIQUE
-   ========================= */
 
 .botao-anterior:active,
 .botao-proximo:active {
@@ -1017,11 +1079,6 @@ body {
    RESPONSIVIDADE
    ============================================================ */
 
-
-/* ============================================================
-   TABLET
-   ============================================================ */
-
 @media (max-width: 991px) {
 
     .navbar-content {
@@ -1030,24 +1087,16 @@ body {
         gap: 20px;
     }
 
-
-    .navbar-links {
-        gap: 4px;
-    }
-
-
     .navbar-link {
         padding: 9px 12px;
 
         font-size: 14px;
     }
 
-
     .pokemon-list>.container {
         padding-left: 70px;
         padding-right: 70px;
     }
-
 
     .botao-anterior,
     .botao-proximo {
@@ -1057,7 +1106,6 @@ body {
 
         font-size: 0.75rem;
     }
-
 
     .pokemon-pagination {
         padding: 0 12px;
@@ -1071,10 +1119,6 @@ body {
 
 @media (max-width: 767px) {
 
-    /* =========================
-       NAVBAR
-       ========================= */
-
     .navbar-content {
         min-height: 64px;
 
@@ -1083,17 +1127,14 @@ body {
         gap: 10px;
     }
 
-
     .navbar-logo {
         font-size: 20px;
     }
-
 
     .logo-pokeball {
         width: 26px;
         height: 26px;
     }
-
 
     /* Esconde menu desktop */
 
@@ -1101,64 +1142,60 @@ body {
         display: none;
     }
 
-
-    /* Mostra botão mobile */
+    /* Mostra hambúrguer */
 
     .navbar-menu-button {
         display: block;
     }
 
+    /* Mostra menu mobile */
 
-    /* =========================
-       DROPDOWN
-       ========================= */
-
-    .navbar-dropdown {
+    .navbar-dropdown-mobile {
         display: block;
+
+        padding: 12px 15px 15px;
+
+        background: #087fc1;
+
+        border-top: 2px solid rgba(24, 59, 104, 0.35);
+
+        box-shadow:
+            0 5px 0 rgba(0, 0, 0, 0.2);
     }
 
+    /* Painéis */
 
-    .navbar-dropdown-grid {
+    .regioes-panel-mobile,
+    .tipos-panel-mobile {
+        width: 100%;
+    }
+
+    .regioes-panel-mobile {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Tipos */
+
+    .tipos-panel-mobile {
+        padding: 12px;
+    }
+
+    .tipos-grid {
         grid-template-columns: repeat(3, 1fr);
-
-        gap: 8px;
     }
 
-
-    .navbar-dropdown-link {
-        padding: 12px 10px;
-
-        justify-content: center;
-
-        font-size: 14px;
-
-        text-align: center;
-    }
-
-
-    .navbar-dropdown-link span {
-        display: none;
-    }
-
-
-    /* =========================
-       LISTAGEM
-       ========================= */
+    /* Listagem */
 
     .pokemon-list {
         padding: 100px 15px 110px;
     }
-
 
     .pokemon-list>.container {
         padding-left: 0;
         padding-right: 0;
     }
 
-
-    /* =========================
-       PAGINAÇÃO
-       ========================= */
+    /* Paginação */
 
     .pokemon-pagination {
         position: fixed;
@@ -1175,7 +1212,6 @@ body {
 
         gap: 15px;
     }
-
 
     .botao-anterior,
     .botao-proximo {
@@ -1198,21 +1234,15 @@ body {
 
 @media (max-width: 480px) {
 
-    /* =========================
-       NAVBAR
-       ========================= */
-
     .navbar-content {
         min-height: 60px;
     }
-
 
     .navbar-logo {
         gap: 8px;
 
         font-size: 18px;
     }
-
 
     .logo-pokeball {
         width: 24px;
@@ -1221,7 +1251,6 @@ body {
         border-width: 2px;
     }
 
-
     .navbar-menu-button {
         width: 38px;
         height: 38px;
@@ -1229,36 +1258,49 @@ body {
         padding: 7px;
     }
 
-
-    /* =========================
-       DROPDOWN
-       ========================= */
-
-    .navbar-dropdown {
-        padding: 12px 10px;
+    .navbar-dropdown-mobile {
+        padding: 10px;
     }
 
+    .mobile-menu-button {
+        padding: 10px 12px;
 
-    .navbar-dropdown-grid {
+        font-size: 14px;
+    }
+
+    .regioes-panel-mobile {
+        grid-template-columns: repeat(2, 1fr);
+
+        padding: 10px;
+
         gap: 6px;
     }
 
+    .regiao-link {
+        min-height: 34px;
 
-    .navbar-dropdown-link {
-        padding: 10px 5px;
-
-        font-size: 12px;
+        font-size: 11px;
     }
 
+    .tipos-panel-mobile {
+        padding: 10px;
+    }
 
-    /* =========================
-       LISTAGEM
-       ========================= */
+    .tipos-grid {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 6px;
+    }
+
+    .tipo-filtro {
+        min-height: 34px;
+
+        font-size: 10px;
+    }
 
     .pokemon-list {
         padding-top: 96px;
     }
-
 
     .pokemon-card {
         border-width: 2px;
@@ -1267,27 +1309,22 @@ body {
             4px 4px 0 #263b59;
     }
 
-
     .pokemon-image {
         min-height: 180px;
     }
-
 
     .pokemon-image img {
         width: 150px;
         height: 150px;
     }
 
-
     .pokemon-info {
         padding: 15px 16px 17px;
     }
 
-
     .pokemon-name {
         font-size: 20px;
     }
-
 
     .pokemon-type {
         min-width: 60px;
@@ -1297,11 +1334,6 @@ body {
         font-size: 11px;
     }
 
-
-    /* =========================
-       PAGINAÇÃO
-       ========================= */
-
     .pokemon-pagination {
         bottom: 15px;
 
@@ -1309,7 +1341,6 @@ body {
 
         gap: 10px;
     }
-
 
     .botao-anterior,
     .botao-proximo {

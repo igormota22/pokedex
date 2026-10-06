@@ -62,20 +62,18 @@ export class ListagemPokemon {
             toObservable(this.offset),
             toObservable(this.pokemonTipoService.tiposSelecionados)
         ]).pipe(
-            switchMap(([params, offset]) => {
+            switchMap(([params, offset, tipos]) => {
 
                 //============================================================
-                //PARAMETRO QUE DEFINE SE HAVERA ALGUM FILTRO NA LISTAGEM
+                //PARAMETRO QUE DEFINE SE HAVERA ALGUM FILTRO NA LISTAGEM DE REGIÃO
                 //==============================================================
                 const regiao = params.get('regiao');
-
-                const tipos = this.pokemonTipoService.tiposSelecionados();
 
 
                 return this.pokemonService.obterPokemons(
                     regiao ?? undefined,
                     offset,
-                    tipos[0]
+                    tipos
                 );
             })
         ),

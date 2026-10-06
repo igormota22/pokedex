@@ -2,6 +2,8 @@
 
     <div class="navbar-content">
 
+        <!-- LOGO -->
+
         <a class="navbar-logo" routerLink="/" (click)="fecharMenu()">
 
             <span class="logo-pokeball"></span>
@@ -17,70 +19,102 @@
 
         <div class="navbar-links navbar-links-desktop">
 
-            @for (item of itens; track item.titulo) {
+            <!-- DROPDOWN REGIÕES -->
 
-            <a class="navbar-link" [routerLink]="item.link" routerLinkActive="active" [routerLinkActiveOptions]="{
-                    exact: item.link === '/pokedex'
-                }">
+            <div class="navbar-dropdown-container">
 
-                {{ item.titulo }}
+                <button type="button" class="navbar-link dropdown-button" (click)="alternarRegioesMenu()">
 
-            </a>
+                    Regiões
 
-            }
-
-            <!-- BOTÃO TIPOS -->
-
-            <button type="button" class="navbar-link tipos-button" (click)="alternarTipos()">
-
-                <span>⚙</span>
-
-                Tipos
-
-            </button>
-
-
-            <!-- PAINEL DE TIPOS -->
-
-            @if (tiposAberto()) {
-
-            <div class="tipos-panel">
-
-                <div class="tipos-panel-header">
-
-                    <strong>Filtrar por tipo</strong>
-
-                    <span>
-                        {{ pokemonTipoService.tiposSelecionados().length }}
-                        selecionados
+                    <span class="dropdown-arrow" [class.aberto]="regioesAberto()">
+                        ▼
                     </span>
 
-                </div>
+                </button>
 
 
-                <div class="tipos-grid">
+                @if (regioesAberto()) {
 
-                    @for (tipo of tipos; track tipo) {
+                <div class="regioes-panel">
 
-                    <label class="tipo-filtro"
-                        [class.selecionado]="pokemonTipoService.tiposSelecionados().includes(tipo)" [class]="tipo">
+                    @for (item of itens; track item.titulo) {
 
-                        <input type="checkbox" [checked]="pokemonTipoService.tiposSelecionados().includes(tipo)"
-                            (change)="alternarTipo(tipo)">
+                    <a class="regiao-link" [routerLink]="item.link" routerLinkActive="active" [routerLinkActiveOptions]="{
+                            exact: item.link === '/pokedex'
+                        }" (click)="fecharRegioesMenu()">
 
-                        <span class="tipo-filtro-nome">
-                            {{ tipo }}
-                        </span>
+                        {{ item.titulo }}
 
-                    </label>
+                    </a>
 
                     }
 
                 </div>
 
+                }
+
             </div>
 
-            }
+
+            <!-- BOTÃO TIPOS -->
+
+            <div class="navbar-dropdown-container">
+
+                <button type="button" class="navbar-link dropdown-button" (click)="alternarTiposMenu()">
+
+                    Tipos
+
+                    <span class="dropdown-arrow" [class.aberto]="tiposAberto()">
+                        ▼
+                    </span>
+
+                </button>
+
+
+                <!-- PAINEL DE TIPOS -->
+
+                @if (tiposAberto()) {
+
+                <div class="tipos-panel">
+
+                    <div class="tipos-panel-header">
+
+                        <strong>Filtrar por tipo</strong>
+
+                        <span>
+                            {{ pokemonTipoService.tiposSelecionados().length }}
+                            selecionados
+                        </span>
+
+                    </div>
+
+
+                    <div class="tipos-grid">
+
+                        @for (tipo of tipos; track tipo) {
+
+                        <label class="tipo-filtro"
+                            [class.selecionado]="pokemonTipoService.tiposSelecionados().includes(tipo)" [class]="tipo">
+
+                            <input type="checkbox" [checked]="pokemonTipoService.tiposSelecionados().includes(tipo)"
+                                (change)="alternarTipo(tipo)">
+
+                            <span class="tipo-filtro-nome">
+                                {{ tipo }}
+                            </span>
+
+                        </label>
+
+                        }
+
+                    </div>
+
+                </div>
+
+                }
+
+            </div>
 
         </div>
 
@@ -102,23 +136,38 @@
 
 
     <!-- ==============================================
-         DROPDOWN MOBILE
+         MENU MOBILE
          ============================================== -->
 
     @if (menuAberto()) {
 
-    <div class="navbar-dropdown">
+    <div class="navbar-dropdown navbar-dropdown-mobile">
 
-        <div class="navbar-dropdown-grid">
+
+        <!-- ==========================================
+             REGIÕES MOBILE
+             ========================================== -->
+
+        <button type="button" class="mobile-menu-button" (click)="alternarRegioesMenu()">
+
+            <span>Regiões</span>
+
+            <span class="dropdown-arrow" [class.aberto]="regioesAberto()">
+                ▼
+            </span>
+
+        </button>
+
+
+        @if (regioesAberto()) {
+
+        <div class="regioes-panel regioes-panel-mobile">
 
             @for (item of itens; track item.titulo) {
 
-            <a class="navbar-dropdown-link" [routerLink]="item.link" routerLinkActive="active"
-                [routerLinkActiveOptions]="{
+            <a class="regiao-link" [routerLink]="item.link" routerLinkActive="active" [routerLinkActiveOptions]="{
                     exact: item.link === '/pokedex'
                 }" (click)="fecharMenu()">
-
-                <span>▶</span>
 
                 {{ item.titulo }}
 
@@ -126,21 +175,25 @@
 
             }
 
-
-            <!-- BOTÃO TIPOS -->
-
-            <button type="button" class="navbar-dropdown-link" (click)="alternarTipos()">
-
-                <span>▶</span>
-
-                Tipos
-
-            </button>
-
         </div>
 
+        }
 
-        <!-- PAINEL DE TIPOS MOBILE -->
+
+        <!-- ==========================================
+             TIPOS MOBILE
+             ========================================== -->
+
+        <button type="button" class="mobile-menu-button" (click)="alternarTiposMenu()">
+
+            <span>Tipos</span>
+
+            <span class="dropdown-arrow" [class.aberto]="tiposAberto()">
+                ▼
+            </span>
+
+        </button>
+
 
         @if (tiposAberto()) {
 

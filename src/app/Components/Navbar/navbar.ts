@@ -23,6 +23,8 @@ export class NavbarComponent {
 
     protected readonly tiposAberto = signal(false);
 
+    protected readonly regioesAberto = signal(false);
+
 
     // ==========================================
     // ITENS DA NAVBAR
@@ -118,7 +120,7 @@ export class NavbarComponent {
     // MENU DE TIPOS
     // ==========================================
 
-    protected alternarTipos(): void {
+    protected alternarTiposMenu(): void {
         this.tiposAberto.update(
             (aberto) => !aberto
         );
@@ -140,6 +142,18 @@ export class NavbarComponent {
 
         });
 
+    }
+
+    //=========================================
+    // MENU REGIOES
+    //========================================
+
+    protected alternarRegioesMenu(): void {
+        this.regioesAberto.update((aberto) => !aberto);
+    }
+
+    protected fecharRegioesMenu(): void {
+        this.regioesAberto.set(false);
     }
 
 }
