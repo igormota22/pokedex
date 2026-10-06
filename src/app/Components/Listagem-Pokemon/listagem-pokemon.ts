@@ -1,8 +1,9 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest, map, switchMap } from 'rxjs';
 import { PokemonService } from '../../../Services/pokemon.service';
+import { PokemonTipoService } from '../../../Services/pokemonTipo.service';
 
 export interface Pokemon {
     id: number;
@@ -24,6 +25,25 @@ export class ListagemPokemon {
 
     private readonly offset = signal(0);
 
+    private readonly pokemonTipoService = inject(PokemonTipoService);
+
+    protected readonly pokemonsFiltrados = computed(() => {
+
+        const tipos = this.pokemonTipoService.tiposSelecionados();
+
+        if (tipos.length === 0) {
+            return this.pokemon();
+        }
+
+        if (!this.regiao()) {
+            return this.pokemon();
+        }
+
+        return this.pokemon().filter((pokemon) =>
+            tipos.some((tipo) => pokemon.types.includes(tipo))
+        );
+    });
+
     //=========================================
     //EXPOE A REGIAO PARA O COMPONENTE HTML
     //=========================================
@@ -39,7 +59,8 @@ export class ListagemPokemon {
     protected readonly pokemon = toSignal(
         combineLatest([
             this.route.paramMap,
-            toObservable(this.offset)
+            toObservable(this.offset),
+            toObservable(this.pokemonTipoService.tiposSelecionados)
         ]).pipe(
             switchMap(([params, offset]) => {
 
@@ -48,9 +69,13 @@ export class ListagemPokemon {
                 //==============================================================
                 const regiao = params.get('regiao');
 
+                const tipos = this.pokemonTipoService.tiposSelecionados();
+
+
                 return this.pokemonService.obterPokemons(
                     regiao ?? undefined,
-                    offset
+                    offset,
+                    tipos[0]
                 );
             })
         ),

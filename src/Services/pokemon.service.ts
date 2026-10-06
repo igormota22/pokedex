@@ -31,6 +31,12 @@ interface PokemonRespostaHttp {
     };
 }
 
+interface TipoRespostaHttp {
+    pokemon: {
+        pokemon: ResultadoObjetoHttp;
+    }[];
+}
+
 
 export interface Regiao {
     nome: string,
@@ -94,14 +100,47 @@ const regioes: Regiao[] = [
 export class PokemonService {
 
     private readonly http = inject(HttpClient);
+    obterPokemons(nome?: string, offset = 0, tipo?: string) {
 
-    obterPokemons(nome?: string, offset = 0) {
+        if (!nome && tipo) {
+
+            return this.http
+                .get<TipoRespostaHttp>(
+                    `https://pokeapi.co/api/v2/type/${tipo}`
+                )
+                .pipe(
+                    switchMap((resposta) => {
+
+                        const requisicoes = resposta.pokemon.map(
+                            (item) =>
+                                this.http.get<PokemonRespostaHttp>(
+                                    item.pokemon.url
+                                )
+                        );
+
+                        return forkJoin(requisicoes);
+                    }),
+
+                    map((detalhes) =>
+                        detalhes.map((detalhe): Pokemon => ({
+                            id: detalhe.id,
+                            name: detalhe.name,
+                            types: detalhe.types.map(
+                                (item) => item.type.name
+                            ),
+                            sprite: detalhe.sprites.front_default,
+                        }))
+                    )
+                );
+        }
 
         let url: string;
 
         if (!nome) {
+
             url =
                 `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=32`;
+
         } else {
 
             const regiao = regioes.find(

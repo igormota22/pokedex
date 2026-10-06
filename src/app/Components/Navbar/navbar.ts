@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { PokemonTipoService } from '../../../Services/pokemonTipo.service';
 
 interface ItemNavbar {
     titulo: string;
@@ -14,14 +15,24 @@ interface ItemNavbar {
 })
 export class NavbarComponent {
 
+    // ==========================================
+    // ESTADO DO MENU MOBILE
+    // ==========================================
+
     protected readonly menuAberto = signal(false);
+
+    protected readonly tiposAberto = signal(false);
+
+
+    // ==========================================
+    // ITENS DA NAVBAR
+    // ==========================================
 
     itens: ItemNavbar[] = [
         {
             titulo: 'Todos',
             link: '/pokedex'
         },
-
         {
             titulo: 'Kanto',
             link: '/pokedex/kanto'
@@ -35,7 +46,6 @@ export class NavbarComponent {
             link: '/pokedex/hoenn'
         },
         {
-
             titulo: 'Sinnoh',
             link: '/pokedex/sinnoh'
         },
@@ -61,6 +71,38 @@ export class NavbarComponent {
         }
     ];
 
+
+    // ==========================================
+    // TIPOS DE POKÉMON
+    // ==========================================
+
+    tipos: string[] = [
+        'normal',
+        'fire',
+        'water',
+        'electric',
+        'grass',
+        'ice',
+        'fighting',
+        'poison',
+        'ground',
+        'flying',
+        'psychic',
+        'bug',
+        'rock',
+        'ghost',
+        'dragon',
+        'dark',
+        'steel',
+        'fairy'
+    ];
+
+    private readonly pokemonTipoService = inject(PokemonTipoService);
+
+    // ==========================================
+    // MENU MOBILE
+    // ==========================================
+
     protected alternarMenu(): void {
         this.menuAberto.update(
             (aberto) => !aberto
@@ -70,4 +112,34 @@ export class NavbarComponent {
     protected fecharMenu(): void {
         this.menuAberto.set(false);
     }
+
+
+    // ==========================================
+    // MENU DE TIPOS
+    // ==========================================
+
+    protected alternarTipos(): void {
+        this.tiposAberto.update(
+            (aberto) => !aberto
+        );
+    }
+
+    protected alternarTipo(tipo: string): void {
+
+        this.pokemonTipoService.tiposSelecionados.update((tipos) => {
+
+            if (tipos.includes(tipo)) {
+
+                return tipos.filter((item) => item !== tipo);
+
+            } else {
+
+                return [...tipos, tipo];
+
+            }
+
+        });
+
+    }
+
 }

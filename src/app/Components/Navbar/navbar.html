@@ -3,9 +3,11 @@
     <div class="navbar-content">
 
         <a class="navbar-logo" routerLink="/" (click)="fecharMenu()">
+
             <span class="logo-pokeball"></span>
 
             <span>Pokédex</span>
+
         </a>
 
 
@@ -18,10 +20,65 @@
             @for (item of itens; track item.titulo) {
 
             <a class="navbar-link" [routerLink]="item.link" routerLinkActive="active" [routerLinkActiveOptions]="{
-                        exact: item.link === '/pokedex'
-                    }">
+                    exact: item.link === '/pokedex'
+                }">
+
                 {{ item.titulo }}
+
             </a>
+
+            }
+
+            <!-- BOTÃO TIPOS -->
+
+            <button type="button" class="navbar-link tipos-button" (click)="alternarTipos()">
+
+                <span>⚙</span>
+
+                Tipos
+
+            </button>
+
+
+            <!-- PAINEL DE TIPOS -->
+
+            @if (tiposAberto()) {
+
+            <div class="tipos-panel">
+
+                <div class="tipos-panel-header">
+
+                    <strong>Filtrar por tipo</strong>
+
+                    <span>
+                        {{ pokemonTipoService.tiposSelecionados().length }}
+                        selecionados
+                    </span>
+
+                </div>
+
+
+                <div class="tipos-grid">
+
+                    @for (tipo of tipos; track tipo) {
+
+                    <label class="tipo-filtro"
+                        [class.selecionado]="pokemonTipoService.tiposSelecionados().includes(tipo)" [class]="tipo">
+
+                        <input type="checkbox" [checked]="pokemonTipoService.tiposSelecionados().includes(tipo)"
+                            (change)="alternarTipo(tipo)">
+
+                        <span class="tipo-filtro-nome">
+                            {{ tipo }}
+                        </span>
+
+                    </label>
+
+                    }
+
+                </div>
+
+            </div>
 
             }
 
@@ -34,9 +91,11 @@
 
         <button type="button" class="navbar-menu-button" (click)="alternarMenu()" [attr.aria-expanded]="menuAberto()"
             aria-label="Abrir menu">
+
             <span></span>
             <span></span>
             <span></span>
+
         </button>
 
     </div>
@@ -56,17 +115,75 @@
 
             <a class="navbar-dropdown-link" [routerLink]="item.link" routerLinkActive="active"
                 [routerLinkActiveOptions]="{
-                        exact: item.link === '/pokedex'
-                    }" (click)="fecharMenu()">
+                    exact: item.link === '/pokedex'
+                }" (click)="fecharMenu()">
+
                 <span>▶</span>
 
                 {{ item.titulo }}
+
             </a>
 
             }
 
+
+            <!-- BOTÃO TIPOS -->
+
+            <button type="button" class="navbar-dropdown-link" (click)="alternarTipos()">
+
+                <span>▶</span>
+
+                Tipos
+
+            </button>
+
         </div>
+
+
+        <!-- PAINEL DE TIPOS MOBILE -->
+
+        @if (tiposAberto()) {
+
+        <div class="tipos-panel tipos-panel-mobile">
+
+            <div class="tipos-panel-header">
+
+                <strong>Filtrar por tipo</strong>
+
+                <span>
+                    {{ pokemonTipoService.tiposSelecionados().length }}
+                    selecionados
+                </span>
+
+            </div>
+
+
+            <div class="tipos-grid">
+
+                @for (tipo of tipos; track tipo) {
+
+                <label class="tipo-filtro" [class.selecionado]="pokemonTipoService.tiposSelecionados().includes(tipo)"
+                    [class]="tipo">
+
+                    <input type="checkbox" [checked]="pokemonTipoService.tiposSelecionados().includes(tipo)"
+                        (change)="alternarTipo(tipo)">
+
+                    <span class="tipo-filtro-nome">
+                        {{ tipo }}
+                    </span>
+
+                </label>
+
+                }
+
+            </div>
+
+        </div>
+
+        }
 
     </div>
 
     }
+
+</nav>

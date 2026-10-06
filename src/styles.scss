@@ -168,6 +168,270 @@ body {
         transform 0.15s ease;
 }
 
+/* ============================================================
+   FILTRO DE TIPOS
+   ============================================================ */
+
+.tipos-button {
+    cursor: pointer;
+}
+
+
+/* =========================
+   PAINEL
+   ========================= */
+
+.tipos-panel {
+    position: absolute;
+
+    top: 100%;
+
+    right: 24px;
+
+    width: 440px;
+
+    padding: 16px;
+
+    background: #f5f5f5;
+
+    border: 3px solid #183b68;
+    border-radius: 8px;
+
+    box-shadow:
+        5px 5px 0 #183b68;
+
+    z-index: 1100;
+}
+
+
+/* =========================
+   CABEÇALHO
+   ========================= */
+
+.tipos-panel-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+
+    border-bottom: 2px solid #183b68;
+
+    color: #183b68;
+
+    font-size: 14px;
+}
+
+.tipos-panel-header span {
+    font-size: 11px;
+
+    color: #687789;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================
+   GRID
+   ========================= */
+
+.tipos-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 8px;
+}
+
+
+/* =========================
+   ITEM
+   ========================= */
+
+.tipo-filtro {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 36px;
+
+    padding: 5px 8px;
+
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    color: #ffffff;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    box-shadow:
+        2px 2px 0 rgba(0, 0, 0, 0.18);
+
+    transition:
+        transform 0.12s ease,
+        filter 0.12s ease,
+        box-shadow 0.12s ease;
+}
+
+
+/* =========================
+   ESCONDE CHECKBOX
+   ========================= */
+
+.tipo-filtro input {
+    position: absolute;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+
+/* =========================
+   HOVER
+   ========================= */
+
+.tipo-filtro:hover {
+    filter: brightness(1.08);
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        3px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+
+/* =========================
+   SELECIONADO
+   ========================= */
+
+.tipo-filtro.selecionado {
+    border-color: #183b68;
+
+    box-shadow:
+        3px 3px 0 #183b68;
+
+    transform: translateY(-2px);
+}
+
+
+/* Indicador de seleção */
+
+.tipo-filtro.selecionado::after {
+    content: '✓';
+
+    position: absolute;
+
+    top: -8px;
+    right: -8px;
+
+    width: 20px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f5f5f5;
+
+    color: #183b68;
+
+    border: 2px solid #183b68;
+    border-radius: 50%;
+
+    font-size: 12px;
+    font-weight: 900;
+}
+
+/* ============================================================
+    CORES DOS FILTROS DE TIPOS
+    ============================================================ */
+
+.tipo-filtro.normal {
+    background: #a8a878;
+}
+
+.tipo-filtro.fire {
+    background: #f08030;
+}
+
+.tipo-filtro.water {
+    background: #6890f0;
+}
+
+.tipo-filtro.electric {
+    background: #f8d030;
+    color: #3d3200;
+}
+
+.tipo-filtro.grass {
+    background: #78c850;
+}
+
+.tipo-filtro.ice {
+    background: #98d8d8;
+    color: #164646;
+}
+
+.tipo-filtro.fighting {
+    background: #c03028;
+}
+
+.tipo-filtro.poison {
+    background: #a040a0;
+}
+
+.tipo-filtro.ground {
+    background: #e0c068;
+    color: #4a3b12;
+}
+
+.tipo-filtro.flying {
+    background: #a890f0;
+}
+
+.tipo-filtro.psychic {
+    background: #f85888;
+}
+
+.tipo-filtro.bug {
+    background: #a8b820;
+}
+
+.tipo-filtro.rock {
+    background: #b8a038;
+}
+
+.tipo-filtro.ghost {
+    background: #705898;
+}
+
+.tipo-filtro.dragon {
+    background: #7038f8;
+}
+
+.tipo-filtro.dark {
+    background: #705848;
+}
+
+.tipo-filtro.steel {
+    background: #b8b8d0;
+    color: #30303b;
+}
+
+.tipo-filtro.fairy {
+    background: #ee99ac;
+}
+
 
 /* =========================
    CURSOR DO MENU
