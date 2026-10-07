@@ -14,6 +14,9 @@ interface ItemNavbar {
     templateUrl: './navbar.html',
 })
 export class NavbarComponent {
+    selecionarRegiao() {
+        throw new Error('Method not implemented.');
+    }
 
     // ==========================================
     // ESTADO DO MENU MOBILE
@@ -24,6 +27,8 @@ export class NavbarComponent {
     protected readonly tiposAberto = signal(false);
 
     protected readonly regioesAberto = signal(false);
+
+    protected readonly formasRegionaisAberto = signal(false);
 
 
     // ==========================================
@@ -99,6 +104,13 @@ export class NavbarComponent {
         'fairy'
     ];
 
+    formasRegionais: string[] = [
+        'Alola',
+        'Galar',
+        'Hisui',
+        'Paldea'
+    ];
+
     private readonly pokemonTipoService = inject(PokemonTipoService);
 
     // ==========================================
@@ -158,5 +170,18 @@ export class NavbarComponent {
 
         window.scroll(0, 0);
     }
+
+    //=========================================
+    //MENU FORMAS REGIONAIS
+    //=========================================
+
+    protected alternarFormasRegionaisMenu(): void {
+        this.formasRegionaisAberto.update((aberto) => !aberto);
+    }
+
+    protected fecharFormasRegionaisMenu(): void {
+        this.formasRegionaisAberto.set(false);
+    }
+
 
 }

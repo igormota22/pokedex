@@ -41,6 +41,7 @@ interface TipoPokemonRespostaHttp {
     };
 }
 
+
 interface PokemonRespostaHttp {
     readonly id: number;
     readonly name: string;
@@ -58,6 +59,7 @@ interface PokemonRespostaHttp {
     readonly abilities: HabilidadePokemonRespostaHttp[];
 
     readonly cries: SomPokemonRespostaHttp;
+
 }
 
 interface TipoRespostaHttp {
@@ -121,6 +123,7 @@ const regioes: Regiao[] = [
     }
 ];
 
+
 @Injectable({
     providedIn: 'root',
 })
@@ -129,55 +132,69 @@ const regioes: Regiao[] = [
 export class PokemonService {
 
     private readonly http = inject(HttpClient);
+    obterPokemons(
+        nome?: string,
+        offset = 0,
+        tipos?: string[],
+        formaRegional?: string
+    ) {
 
-    obterPokemons(nome?: string, offset = 0, tipos?: string[]) {
+        let url: string;
 
-        if (!nome && tipos && tipos.length > 0) {
+        // FORMA REGIONAL
+        if (formaRegional) {
 
-            const requisicoes = tipos.map(tipo => {
-                return this.http.get<TipoRespostaHttp>(
-                    `https://pokeapi.co/api/v2/type/${tipo}`
-                );
-            });
+            url = 'https://pokeapi.co/api/v2/pokemon?limit=100000';
 
-            return forkJoin(requisicoes).pipe(
-                switchMap((respostas) => {
+            return this.http.get<ObjetoRespostaHttp>(url).pipe(
 
-                    const pokemons = respostas.flatMap(
-                        resposta => resposta.pokemon
-                    );
+                map((resposta) =>
+                    resposta.results.filter((pokemon) =>
+                        pokemon.name.endsWith(
+                            `-${formaRegional.toLowerCase()}`
+                        )
+                    )
+                ),
 
-                    const requisicoesDetalhes = pokemons.map(
-                        (item) =>
+                switchMap((pokemons) => {
+
+                    const requisicoes = pokemons.map(
+                        (pokemon) =>
                             this.http.get<PokemonRespostaHttp>(
-                                item.pokemon.url
+                                pokemon.url
                             )
                     );
 
-                    return forkJoin(requisicoesDetalhes);
+                    return forkJoin(requisicoes);
                 }),
 
-                map((detalhes) =>
-                    detalhes.map((detalhe): Pokemon => ({
+                map((detalhes) => {
+
+                    let pokemons = detalhes;
+
+                    if (tipos && tipos.length > 0) {
+                        pokemons = pokemons.filter((pokemon) =>
+                            pokemon.types.some((item) =>
+                                tipos.includes(item.type.name)
+                            )
+                        );
+                    }
+
+                    return pokemons.map((detalhe): Pokemon => ({
                         id: detalhe.id,
                         name: detalhe.name,
                         types: detalhe.types.map(
                             (item) => item.type.name
                         ),
                         sprite: detalhe.sprites.front_default,
-                    }))
-                )
+                    }));
+                })
             );
         }
 
-        let url: string;
 
-        if (!nome) {
-
-            url =
-                `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=32`;
-
-        } else {
+        // REGIÃO
+        if (nome) {
 
             const regiao = regioes.find(
                 (regiao) =>
@@ -190,7 +207,14 @@ export class PokemonService {
 
             url =
                 `https://pokeapi.co/api/v2/pokemon?offset=${regiao.inicio - 1}&limit=${regiao.quantidade}`;
+
+        } else {
+
+            // LISTAGEM NORMAL
+            url =
+                `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=32`;
         }
+
 
         return this.http.get<ObjetoRespostaHttp>(url).pipe(
 
@@ -198,22 +222,35 @@ export class PokemonService {
 
                 const requisicoes = resposta.results.map(
                     (pokemon) =>
-                        this.http.get<PokemonRespostaHttp>(pokemon.url)
+                        this.http.get<PokemonRespostaHttp>(
+                            pokemon.url
+                        )
                 );
 
                 return forkJoin(requisicoes);
             }),
 
-            map((detalhes) =>
-                detalhes.map((detalhe): Pokemon => ({
+            map((detalhes) => {
+
+                let pokemons = detalhes;
+
+                if (tipos && tipos.length > 0) {
+                    pokemons = pokemons.filter((pokemon) =>
+                        pokemon.types.some((item) =>
+                            tipos.includes(item.type.name)
+                        )
+                    );
+                }
+
+                return pokemons.map((detalhe): Pokemon => ({
                     id: detalhe.id,
                     name: detalhe.name,
                     types: detalhe.types.map(
                         (item) => item.type.name
                     ),
                     sprite: detalhe.sprites.front_default,
-                }))
-            )
+                }));
+            })
         );
     }
 

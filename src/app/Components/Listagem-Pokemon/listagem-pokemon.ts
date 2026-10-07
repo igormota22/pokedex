@@ -56,6 +56,12 @@ export class ListagemPokemon {
         }
     );
 
+    protected readonly formaRegional = toSignal(
+        this.route.paramMap.pipe(
+            map((params) => params.get('formaRegional'))
+        )
+    )
+
     protected readonly pokemon = toSignal(
         combineLatest([
             this.route.paramMap,
@@ -63,23 +69,18 @@ export class ListagemPokemon {
             toObservable(this.pokemonTipoService.tiposSelecionados)
         ]).pipe(
             switchMap(([params, offset, tipos]) => {
-
-                //============================================================
-                //PARAMETRO QUE DEFINE SE HAVERA ALGUM FILTRO NA LISTAGEM DE REGIÃO
-                //==============================================================
                 const regiao = params.get('regiao');
-
+                const formaRegional = params.get('formaRegional');
 
                 return this.pokemonService.obterPokemons(
                     regiao ?? undefined,
                     offset,
-                    tipos
+                    tipos,
+                    formaRegional ?? undefined
                 );
             })
         ),
-        {
-            initialValue: [],
-        }
+        { initialValue: [] }
     );
 
     protected proximaPagina(): void {

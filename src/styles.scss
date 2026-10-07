@@ -284,6 +284,60 @@ body {
     z-index: 1100;
 }
 
+/* ============================================================
+   FORMAS REGIONAIS
+   ============================================================ */
+
+.formas-regionais-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+
+    min-width: 230px;
+    padding: 12px;
+
+    background: #ffffff;
+    border: 3px solid #183b68;
+    border-radius: 10px;
+    box-shadow: 4px 4px 0 #183b68;
+
+    z-index: 1000;
+}
+
+.forma-regional-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 14px;
+
+    color: #183b68;
+    background: #f5f5f5;
+
+    border: 2px solid #183b68;
+    border-radius: 6px;
+
+    font-weight: 700;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+}
+
+.forma-regional-link:hover {
+    color: #ffffff;
+    background: #087fc1;
+    transform: translateY(-2px);
+}
+
 
 /* =========================
    LINKS DAS REGIÕES
