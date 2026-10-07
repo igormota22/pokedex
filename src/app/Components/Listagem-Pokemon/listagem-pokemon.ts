@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest, map, switchMap } from 'rxjs';
@@ -14,7 +14,7 @@ export interface Pokemon {
 
 @Component({
     selector: 'app-listagem-pokemon',
-    imports: [],
+    imports: [RouterLink],
     templateUrl: './listagem-pokemon.html',
 })
 export class ListagemPokemon {

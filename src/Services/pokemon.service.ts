@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin, map, switchMap } from 'rxjs';
 import { Pokemon } from '../app/Components/Listagem-Pokemon/listagem-pokemon';
+import { DadosPokemon, DadosPokemonResponse } from '../app/Components/Dados-Pokemon/dados-pokemon';
 
 
 interface ResultadoObjetoHttp {
@@ -16,6 +17,24 @@ interface ObjetoRespostaHttp {
     results: ResultadoObjetoHttp[];
 }
 
+export interface SomPokemonRespostaHttp {
+    readonly latest: string | null;
+    readonly legacy: string | null;
+}
+
+export interface HabilidadePokemonRespostaHttp {
+    readonly ability: {
+        readonly name: string;
+    };
+}
+
+export interface EstatisticaPokemonRespostaHttp {
+    readonly base_stat: number;
+    readonly stat: {
+        readonly name: string;
+    };
+}
+
 interface TipoPokemonRespostaHttp {
     type: {
         name: string;
@@ -23,12 +42,22 @@ interface TipoPokemonRespostaHttp {
 }
 
 interface PokemonRespostaHttp {
-    id: number;
-    name: string;
-    types: TipoPokemonRespostaHttp[];
-    sprites: {
-        front_default: string | null;
+    readonly id: number;
+    readonly name: string;
+
+    readonly types: TipoPokemonRespostaHttp[];
+
+    readonly sprites: {
+        readonly front_default: string | null;
     };
+
+    readonly stats: EstatisticaPokemonRespostaHttp[];
+
+    readonly weight: number;
+
+    readonly abilities: HabilidadePokemonRespostaHttp[];
+
+    readonly cries: SomPokemonRespostaHttp;
 }
 
 interface TipoRespostaHttp {
@@ -185,6 +214,34 @@ export class PokemonService {
                     sprite: detalhe.sprites.front_default,
                 }))
             )
+        );
+    }
+
+    obterDadosPokemons(nome?: string) {
+
+        const url = `https://pokeapi.co/api/v2/pokemon/${nome}`;
+
+        return this.http.get<PokemonRespostaHttp>(url).pipe(
+
+            map((detalhe): DadosPokemonResponse => ({
+                id: detalhe.id,
+                name: detalhe.name,
+                types: detalhe.types.map(item => item.type.name),
+                sprite: detalhe.sprites.front_default,
+
+                stats: detalhe.stats.map(stat => ({
+                    nome: stat.stat.name,
+                    valor: stat.base_stat
+                })),
+
+                peso: detalhe.weight,
+
+                habilidades: detalhe.abilities.map(
+                    habilidade => habilidade.ability.name
+                ),
+
+                audio: detalhe.cries.latest ?? ''
+            }))
         );
     }
 }

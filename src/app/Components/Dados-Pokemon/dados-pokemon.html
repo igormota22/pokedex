@@ -1,0 +1,149 @@
+@if (pokemon(); as dados) {
+
+<section class="pokemon-detalhes">
+
+    <div class="pokemon-detalhes-container">
+
+        <!-- CABEÇALHO -->
+        <div class="pokemon-detalhes-header">
+
+            <span class="pokemon-detalhes-numero">
+                #{{ dados.id.toString().padStart(3, '0') }}
+            </span>
+
+            <h1 class="pokemon-detalhes-nome">
+                {{ dados.name }}
+            </h1>
+
+        </div>
+
+
+        <!-- INFORMAÇÕES PRINCIPAIS -->
+        <div class="pokemon-detalhes-principal">
+
+            <!-- IMAGEM -->
+            <div class="pokemon-detalhes-imagem">
+
+                <div class="pokemon-sprite-container">
+                    <img [src]="dados.sprite" [alt]="dados.name">
+                </div>
+
+            </div>
+
+
+            <!-- INFORMAÇÕES -->
+            <div class="pokemon-detalhes-info">
+
+                <div class="pokemon-detalhes-secao">
+
+                    <h2>Tipo</h2>
+
+                    <div class="pokemon-tipos">
+
+                        @for (tipo of dados.types; track tipo) {
+
+                        <span class="pokemon-tipo" [class]="'pokemon-tipo ' + tipo">
+                            {{ tipo }}
+                        </span>
+
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="pokemon-detalhes-secao">
+
+                    <h2>Peso</h2>
+
+                    <p>
+                        {{ dados.peso / 10 }} kg
+                    </p>
+
+                </div>
+
+
+                <div class="pokemon-detalhes-secao">
+
+                    <h2>Habilidades</h2>
+
+                    <div class="pokemon-habilidades">
+
+                        @for (
+                        habilidade of dados.habilidades;
+                        track habilidade
+                        ) {
+
+                        <span>
+                            {{ habilidade }}
+                        </span>
+
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="pokemon-detalhes-secao">
+
+                    <h2>Som</h2>
+
+                    @if (dados.audio) {
+
+                    <audio [src]="dados.audio" controls></audio>
+
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATUS -->
+        <div class="pokemon-status">
+
+            <h2>Status</h2>
+
+            <div class="pokemon-status-lista">
+
+                @for (stat of dados.stats; track stat.nome) {
+
+                <div class="pokemon-status-item">
+
+                    <div class="pokemon-status-label">
+
+                        <span>
+                            {{ stat.nome }}
+                        </span>
+
+                        <strong>
+                            {{ stat.valor }}
+                        </strong>
+
+                    </div>
+
+                    <div class="pokemon-status-barra">
+
+                        <div class="pokemon-status-progresso" [style.width.%]="
+                                (stat.valor / 255) * 100
+                            "></div>
+
+                    </div>
+
+                </div>
+
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+}

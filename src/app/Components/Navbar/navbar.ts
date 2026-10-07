@@ -150,10 +150,13 @@ export class NavbarComponent {
 
     protected alternarRegioesMenu(): void {
         this.regioesAberto.update((aberto) => !aberto);
+
     }
 
     protected fecharRegioesMenu(): void {
         this.regioesAberto.set(false);
+
+        window.scroll(0, 0);
     }
 
 }
