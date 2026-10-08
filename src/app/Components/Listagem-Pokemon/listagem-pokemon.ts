@@ -2,7 +2,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest, map, switchMap } from 'rxjs';
-import { PokemonService } from '../../../Services/pokemon.service';
+import { FormaPokemon, PokemonService } from '../../../Services/pokemon.service';
 import { PokemonTipoService } from '../../../Services/pokemonTipo.service';
 
 export interface Pokemon {
@@ -10,6 +10,12 @@ export interface Pokemon {
     name: string;
     types: string[];
     sprite: string | null;
+    formas: FormaPokemon[];
+}
+
+interface DadosFormaSelecionada {
+    sprite: string | null;
+    tipos: string[];
 }
 
 @Component({
@@ -23,9 +29,13 @@ export class ListagemPokemon {
 
     private readonly pokemonService = inject(PokemonService);
 
+    private readonly pokemonTipoService = inject(PokemonTipoService);
+
     private readonly offset = signal(0);
 
-    private readonly pokemonTipoService = inject(PokemonTipoService);
+    private readonly formasSelecionadas = signal<Record<number, number>>({});
+
+    private readonly dadosFormaSelecionada = signal<Record<string, DadosFormaSelecionada>>({});
 
     protected readonly pokemonsFiltrados = computed(() => {
 
@@ -113,5 +123,40 @@ export class ListagemPokemon {
             .replace(/\b\w/g, (l) => l.toUpperCase());
     }
 
+    protected alterarFormaPokemon(
+        pokemon: Pokemon,
+        direcao: number
+    ): void {
 
+        const indiceAtual =
+            this.formasSelecionadas()[pokemon.id] ?? 0;
+
+        const novoIndice = indiceAtual + direcao;
+
+        const forma =
+            pokemon.formas[novoIndice];
+
+        if (!forma) {
+            return;
+        }
+
+        this.formasSelecionadas.update((formas) => ({
+            ...formas,
+            [pokemon.id]: novoIndice
+        }));
+
+        this.pokemonService
+            .obterDadosPokemons(forma.nome)
+            .subscribe((dados) => {
+
+                this.dadosFormaSelecionada.update((formas) => ({
+                    ...formas,
+                    [forma.nome]: {
+                        sprite: dados.sprite,
+                        tipos: dados.types
+                    }
+                }));
+
+            });
+    }
 }

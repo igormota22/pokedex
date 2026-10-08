@@ -41,12 +41,27 @@ interface TipoPokemonRespostaHttp {
     };
 }
 
+interface PokemonSpeciesRespostaHttp {
+    readonly varieties: {
+        readonly is_default: boolean;
+        readonly pokemon: {
+            readonly name: string;
+            readonly url: string;
+        };
+    }[];
+}
+
 
 interface PokemonRespostaHttp {
     readonly id: number;
     readonly name: string;
 
     readonly types: TipoPokemonRespostaHttp[];
+
+    readonly species: {
+        readonly name: string;
+        readonly url: string;
+    };
 
     readonly sprites: {
         readonly front_default: string | null;
@@ -68,6 +83,10 @@ interface Regiao {
     nome: string,
     inicio: number,
     quantidade: number
+}
+
+export interface FormaPokemon {
+    nome: string;
 }
 
 const regioes: Regiao[] = [
@@ -119,6 +138,7 @@ const regioes: Regiao[] = [
 ];
 
 
+
 @Injectable({
     providedIn: 'root',
 })
@@ -158,6 +178,17 @@ export class PokemonService {
                         (pokemon) =>
                             this.http.get<PokemonRespostaHttp>(
                                 pokemon.url
+                            ).pipe(
+                                switchMap((detalhe) =>
+                                    this.http.get<PokemonSpeciesRespostaHttp>(
+                                        detalhe.species.url
+                                    ).pipe(
+                                        map((species) => ({
+                                            detalhe,
+                                            species
+                                        }))
+                                    )
+                                )
                             )
                     );
 
@@ -170,19 +201,37 @@ export class PokemonService {
 
                     if (tipos && tipos.length > 0) {
                         pokemons = pokemons.filter((pokemon) =>
-                            pokemon.types.some((item) =>
+                            pokemon.detalhe.types.some((item) =>
                                 tipos.includes(item.type.name)
                             )
                         );
                     }
 
-                    return pokemons.map((detalhe): Pokemon => ({
-                        id: detalhe.id,
-                        name: detalhe.name,
-                        types: detalhe.types.map(
+                    return pokemons.map((pokemon): Pokemon => ({
+                        id: pokemon.detalhe.id,
+                        name: pokemon.detalhe.name,
+                        types: pokemon.detalhe.types.map(
                             (item) => item.type.name
                         ),
-                        sprite: detalhe.sprites.front_default,
+                        sprite: pokemon.detalhe.sprites.front_default,
+
+                        formas: pokemon.species.varieties
+                            .filter((variedade) => {
+                                const nome =
+                                    variedade.pokemon.name;
+
+                                return (
+                                    !nome.includes('-alola') &&
+                                    !nome.includes('-galar') &&
+                                    !nome.includes('-hisui') &&
+                                    !nome.includes('-paldea') &&
+                                    !nome.includes('-mega') &&
+                                    !nome.endsWith('-gmax')
+                                );
+                            })
+                            .map((variedade) => ({
+                                nome: variedade.pokemon.name
+                            }))
                     }));
                 })
             );
@@ -214,6 +263,17 @@ export class PokemonService {
                         (pokemon) =>
                             this.http.get<PokemonRespostaHttp>(
                                 pokemon.url
+                            ).pipe(
+                                switchMap((detalhe) =>
+                                    this.http.get<PokemonSpeciesRespostaHttp>(
+                                        detalhe.species.url
+                                    ).pipe(
+                                        map((species) => ({
+                                            detalhe,
+                                            species
+                                        }))
+                                    )
+                                )
                             )
                     );
 
@@ -226,19 +286,37 @@ export class PokemonService {
 
                     if (tipos && tipos.length > 0) {
                         pokemons = pokemons.filter((pokemon) =>
-                            pokemon.types.some((item) =>
+                            pokemon.detalhe.types.some((item) =>
                                 tipos.includes(item.type.name)
                             )
                         );
                     }
 
-                    return pokemons.map((detalhe): Pokemon => ({
-                        id: detalhe.id,
-                        name: detalhe.name,
-                        types: detalhe.types.map(
+                    return pokemons.map((pokemon): Pokemon => ({
+                        id: pokemon.detalhe.id,
+                        name: pokemon.detalhe.name,
+                        types: pokemon.detalhe.types.map(
                             (item) => item.type.name
                         ),
-                        sprite: detalhe.sprites.front_default,
+                        sprite: pokemon.detalhe.sprites.front_default,
+
+                        formas: pokemon.species.varieties
+                            .filter((variedade) => {
+                                const nome =
+                                    variedade.pokemon.name;
+
+                                return (
+                                    !nome.includes('-alola') &&
+                                    !nome.includes('-galar') &&
+                                    !nome.includes('-hisui') &&
+                                    !nome.includes('-paldea') &&
+                                    !nome.includes('-mega') &&
+                                    !nome.endsWith('-gmax')
+                                );
+                            })
+                            .map((variedade) => ({
+                                nome: variedade.pokemon.name
+                            }))
                     }));
                 })
             );
@@ -279,6 +357,17 @@ export class PokemonService {
                     (pokemon) =>
                         this.http.get<PokemonRespostaHttp>(
                             pokemon.url
+                        ).pipe(
+                            switchMap((detalhe) =>
+                                this.http.get<PokemonSpeciesRespostaHttp>(
+                                    detalhe.species.url
+                                ).pipe(
+                                    map((species) => ({
+                                        detalhe,
+                                        species
+                                    }))
+                                )
+                            )
                         )
                 );
 
@@ -290,8 +379,9 @@ export class PokemonService {
                 let pokemons = detalhes;
 
                 if (tipos && tipos.length > 0) {
+
                     pokemons = pokemons.filter((pokemon) =>
-                        pokemon.types.some((item) =>
+                        pokemon.detalhe.types.some((item) =>
                             tipos.includes(item.type.name)
                         )
                     );
@@ -305,29 +395,77 @@ export class PokemonService {
                     }
                 }
 
-                return pokemons.map((detalhe): Pokemon => ({
-                    id: detalhe.id,
-                    name: detalhe.name,
-                    types: detalhe.types.map(
+                return pokemons.map((pokemon): Pokemon => ({
+                    id: pokemon.detalhe.id,
+                    name: pokemon.detalhe.name,
+                    types: pokemon.detalhe.types.map(
                         (item) => item.type.name
                     ),
-                    sprite: detalhe.sprites.front_default,
+                    sprite: pokemon.detalhe.sprites.front_default,
+
+                    formas: pokemon.species.varieties
+                        .filter((variedade) => {
+                            const nome =
+                                variedade.pokemon.name;
+
+                            return (
+                                !nome.includes('-alola') &&
+                                !nome.includes('-galar') &&
+                                !nome.includes('-hisui') &&
+                                !nome.includes('-paldea') &&
+                                !nome.includes('-mega') &&
+                                !nome.endsWith('-gmax')
+                            );
+                        })
+                        .map((variedade) => ({
+                            nome: variedade.pokemon.name
+                        }))
                 }));
             })
         );
     }
-
     obterDadosPokemons(nome?: string) {
 
         const url = `https://pokeapi.co/api/v2/pokemon/${nome}`;
 
         return this.http.get<PokemonRespostaHttp>(url).pipe(
 
-            map((detalhe): DadosPokemonResponse => ({
+            switchMap((detalhe) =>
+                this.http.get<PokemonSpeciesRespostaHttp>(
+                    detalhe.species.url
+                ).pipe(
+                    map((species) => ({
+                        detalhe,
+                        species
+                    }))
+                )
+            ),
+
+            map(({ detalhe, species }): DadosPokemonResponse => ({
                 id: detalhe.id,
                 name: detalhe.name,
-                types: detalhe.types.map(item => item.type.name),
+                types: detalhe.types.map(
+                    item => item.type.name
+                ),
                 sprite: detalhe.sprites.front_default,
+
+                formas: species.varieties
+                    .filter((variedade) => {
+                        const nome =
+                            variedade.pokemon.name;
+
+                        return (
+                            !nome.includes('-alola') &&
+                            !nome.includes('-galar') &&
+                            !nome.includes('-hisui') &&
+                            !nome.includes('-paldea') &&
+                            !nome.includes('-mega') &&
+                            !nome.endsWith('-gmax')
+                        );
+                    })
+                    .map((variedade) => ({
+                        nome: variedade.pokemon.name
+                    })),
 
                 stats: detalhe.stats.map(stat => ({
                     nome: stat.stat.name,

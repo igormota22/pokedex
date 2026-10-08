@@ -6,12 +6,33 @@
 
             @for (pokemon of pokemonsFiltrados(); track pokemon.id) {
 
+            @let indiceForma = formasSelecionadas()[pokemon.id] ?? 0;
+            @let forma = pokemon.formas[indiceForma];
+            @let dadosForma = dadosFormaSelecionada()[forma?.nome ?? ''];
+
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
 
-                <a class="pokemon-card" [routerLink]="['/pokedex/pokemon', pokemon.name]">
+                <a class="pokemon-card" [routerLink]="[
+                        '/pokedex/pokemon',
+                        forma?.nome ?? pokemon.name
+                    ]">
+
+                    @if (pokemon.formas.length > 1 && !formaRegional() && !formaAlternativa()) {
+
+                    <button type="button" class="forma-anterior" (click)="
+                            $event.preventDefault();
+                            $event.stopPropagation();
+                            alterarFormaPokemon(pokemon, -1)
+                        ">
+                        ←
+                    </button>
+
+                    }
 
                     <div class="pokemon-image">
-                        <img [src]="pokemon.sprite" [alt]="pokemon.name">
+
+                        <img [src]="dadosForma?.sprite ?? pokemon.sprite" [alt]="forma?.nome ?? pokemon.name">
+
                     </div>
 
                     <div class="pokemon-info">
@@ -21,12 +42,19 @@
                         </span>
 
                         <h2 class="pokemon-name">
-                            {{ paraTitleCase(pokemon.name) }}
+                            {{
+                            paraTitleCase(
+                            forma?.nome ?? pokemon.name
+                            )
+                            }}
                         </h2>
 
                         <div class="pokemon-types">
 
-                            @for (tipo of pokemon.types; track tipo) {
+                            @for (
+                            tipo of dadosForma?.tipos ?? pokemon.types;
+                            track tipo
+                            ) {
 
                             <span class="pokemon-type" [class]="'pokemon-type ' + tipo">
                                 {{ paraTitleCase(tipo) }}
@@ -37,6 +65,18 @@
                         </div>
 
                     </div>
+
+                    @if (pokemon.formas.length > 1 && !formaRegional() && !formaAlternativa()) {
+
+                    <button type="button" class="forma-proxima" (click)="
+                            $event.preventDefault();
+                            $event.stopPropagation();
+                            alterarFormaPokemon(pokemon, 1)
+                        ">
+                        →
+                    </button>
+
+                    }
 
                 </a>
 
@@ -49,6 +89,7 @@
     </div>
 
     @if (!regiao() && !formaRegional() && !formaAlternativa()) {
+
     <div class="pokemon-pagination">
 
         <button type="button" class="botao-anterior" (click)="paginaAnterior()">
@@ -60,5 +101,7 @@
         </button>
 
     </div>
+
     }
+
 </section>

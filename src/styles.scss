@@ -19,12 +19,10 @@ body {
 
 .navbar-pokemon {
     position: fixed;
-
     top: 0;
     left: 0;
 
     width: 100%;
-
     z-index: 1000;
 
     background: #087fc1;
@@ -35,14 +33,8 @@ body {
         0 4px 0 rgba(0, 0, 0, 0.2);
 }
 
-
-/* =========================
-   CONTEÚDO
-   ========================= */
-
 .navbar-content {
     max-width: 1200px;
-
     min-height: 72px;
 
     margin: 0 auto;
@@ -56,9 +48,9 @@ body {
 }
 
 
-/* =========================
+/* ============================================================
    LOGO
-   ========================= */
+   ============================================================ */
 
 .navbar-logo {
     display: flex;
@@ -79,11 +71,6 @@ body {
         2px 2px 0 #183b68,
         -1px -1px 0 #183b68;
 }
-
-
-/* =========================
-   POKÉBALL
-   ========================= */
 
 .logo-pokeball {
     position: relative;
@@ -106,7 +93,6 @@ body {
     box-shadow:
         2px 2px 0 rgba(0, 0, 0, 0.25);
 }
-
 
 .logo-pokeball::after {
     content: '';
@@ -139,20 +125,27 @@ body {
     gap: 8px;
 }
 
-
 .navbar-links-desktop {
     display: flex;
 }
 
+.navbar-dropdown-container {
+    position: relative;
+}
+
 
 /* ============================================================
-   BOTÕES / LINKS DA NAVBAR
+   LINKS / BOTÕES DA NAVBAR
    ============================================================ */
 
 .navbar-link {
     position: relative;
 
     padding: 10px 18px;
+
+    background: transparent;
+
+    border: 2px solid transparent;
 
     color: #ffffff;
 
@@ -162,10 +155,6 @@ body {
 
     text-decoration: none;
 
-    background: transparent;
-
-    border: 2px solid transparent;
-
     cursor: pointer;
 
     transition:
@@ -174,13 +163,40 @@ body {
         transform 0.15s ease;
 }
 
+.navbar-link:hover,
+.navbar-link.active {
+    background: #f5f5f5;
 
-/* ============================================================
-   CONTAINER DOS DROPDOWNS
-   ============================================================ */
+    color: #183b68;
 
-.navbar-dropdown-container {
-    position: relative;
+    border-color: #183b68;
+
+    box-shadow:
+        3px 3px 0 #183b68;
+}
+
+.navbar-link:hover {
+    transform: translateY(-1px);
+}
+
+.navbar-link::before {
+    content: '▶';
+
+    position: absolute;
+
+    left: 5px;
+
+    opacity: 0;
+
+    font-size: 11px;
+
+    transition:
+        opacity 0.15s ease;
+}
+
+.navbar-link:hover::before,
+.navbar-link.active::before {
+    opacity: 1;
 }
 
 
@@ -199,57 +215,8 @@ body {
         transform 0.15s ease;
 }
 
-
 .dropdown-arrow.aberto {
     transform: rotate(180deg);
-}
-
-
-/* ============================================================
-   HOVER / ATIVO
-   ============================================================ */
-
-.navbar-link:hover,
-.navbar-link.active {
-    background: #f5f5f5;
-
-    color: #183b68;
-
-    border-color: #183b68;
-
-    box-shadow:
-        3px 3px 0 #183b68;
-}
-
-
-.navbar-link:hover {
-    transform: translateY(-1px);
-}
-
-
-/* ============================================================
-   CURSOR DO MENU
-   ============================================================ */
-
-.navbar-link::before {
-    content: '▶';
-
-    position: absolute;
-
-    left: 5px;
-
-    opacity: 0;
-
-    font-size: 11px;
-
-    transition:
-        opacity 0.15s ease;
-}
-
-
-.navbar-link:hover::before,
-.navbar-link.active::before {
-    opacity: 1;
 }
 
 
@@ -261,14 +228,13 @@ body {
     position: absolute;
 
     top: calc(100% + 8px);
-    right: 0%;
+    right: 0;
 
     width: 360px;
 
     padding: 12px;
 
     display: grid;
-
     grid-template-columns: repeat(3, 1fr);
 
     gap: 8px;
@@ -283,65 +249,6 @@ body {
 
     z-index: 1100;
 }
-
-/* ============================================================
-   FORMAS REGIONAIS
-   ============================================================ */
-
-.formas-regionais-panel {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-
-    min-width: 230px;
-    padding: 12px;
-
-    background: #ffffff;
-    border: 3px solid #183b68;
-    border-radius: 10px;
-    box-shadow: 4px 4px 0 #183b68;
-
-    z-index: 1000;
-}
-
-.forma-regional-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 10px 14px;
-
-    color: #183b68;
-    background: #f5f5f5;
-
-    border: 2px solid #183b68;
-    border-radius: 6px;
-
-    font-weight: 700;
-    text-decoration: none;
-
-    cursor: pointer;
-
-    transition:
-        background 0.15s ease,
-        color 0.15s ease,
-        transform 0.15s ease;
-}
-
-.forma-regional-link:hover {
-    color: #ffffff;
-    background: #087fc1;
-    transform: translateY(-2px);
-}
-
-
-/* =========================
-   LINKS DAS REGIÕES
-   ========================= */
 
 .regiao-link {
     display: flex;
@@ -371,7 +278,6 @@ body {
         transform 0.15s ease;
 }
 
-
 .regiao-link:hover,
 .regiao-link.active {
     background: #087fc1;
@@ -388,6 +294,71 @@ body {
 
 
 /* ============================================================
+   FORMAS REGIONAIS
+   ============================================================ */
+
+.formas-regionais-panel {
+    position: absolute;
+
+    top: calc(100% + 8px);
+    left: 0;
+
+    min-width: 230px;
+
+    padding: 12px;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 8px;
+
+    background: #ffffff;
+
+    border: 3px solid #183b68;
+    border-radius: 10px;
+
+    box-shadow:
+        4px 4px 0 #183b68;
+
+    z-index: 1000;
+}
+
+.forma-regional-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 14px;
+
+    background: #f5f5f5;
+
+    border: 2px solid #183b68;
+    border-radius: 6px;
+
+    color: #183b68;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+}
+
+.forma-regional-link:hover {
+    background: #087fc1;
+
+    color: #ffffff;
+
+    transform: translateY(-2px);
+}
+
+
+/* ============================================================
    FILTRO DE TIPOS
    ============================================================ */
 
@@ -395,16 +366,10 @@ body {
     cursor: pointer;
 }
 
-
-/* =========================
-   PAINEL
-   ========================= */
-
 .tipos-panel {
     position: absolute;
 
     top: calc(100% + 8px);
-
     right: 0;
 
     width: 440px;
@@ -422,14 +387,8 @@ body {
     z-index: 1100;
 }
 
-
-/* =========================
-   CABEÇALHO
-   ========================= */
-
 .tipos-panel-header {
     display: flex;
-
     align-items: center;
     justify-content: space-between;
 
@@ -443,32 +402,20 @@ body {
     font-size: 14px;
 }
 
-
 .tipos-panel-header span {
-    font-size: 11px;
-
     color: #183b68;
+
+    font-size: 11px;
 
     text-transform: uppercase;
 }
 
-
-/* =========================
-   GRID
-   ========================= */
-
 .tipos-grid {
     display: grid;
-
     grid-template-columns: repeat(3, 1fr);
 
     gap: 8px;
 }
-
-
-/* =========================
-   ITEM
-   ========================= */
 
 .tipo-filtro {
     position: relative;
@@ -484,8 +431,6 @@ body {
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 5px;
 
-    cursor: pointer;
-
     color: #ffffff;
 
     font-size: 11px;
@@ -496,12 +441,13 @@ body {
     box-shadow:
         2px 2px 0 rgba(0, 0, 0, 0.18);
 
+    cursor: pointer;
+
     transition:
         transform 0.12s ease,
         filter 0.12s ease,
         box-shadow 0.12s ease;
 }
-
 
 .tipo-filtro input {
     position: absolute;
@@ -510,7 +456,6 @@ body {
 
     pointer-events: none;
 }
-
 
 .tipo-filtro:hover {
     filter: brightness(1.08);
@@ -521,7 +466,6 @@ body {
         3px 4px 0 rgba(0, 0, 0, 0.25);
 }
 
-
 .tipo-filtro.selecionado {
     border-color: #183b68;
 
@@ -530,7 +474,6 @@ body {
 
     transform: translateY(-2px);
 }
-
 
 .tipo-filtro.selecionado::after {
     content: '✓';
@@ -549,10 +492,10 @@ body {
 
     background: #87eaf7;
 
-    color: #183b68;
-
     border: 2px solid #183b68;
     border-radius: 50%;
+
+    color: #183b68;
 
     font-size: 12px;
     font-weight: 900;
@@ -560,88 +503,128 @@ body {
 
 
 /* ============================================================
-   CORES DOS FILTROS DE TIPOS
+   CORES DOS TIPOS
    ============================================================ */
 
-.tipo-filtro.normal {
+.tipo-filtro.normal,
+.pokemon-type.normal,
+.pokemon-tipo.normal {
     background: #a8a878;
 }
 
-.tipo-filtro.fire {
+.tipo-filtro.fire,
+.pokemon-type.fire,
+.pokemon-tipo.fire {
     background: #f08030;
 }
 
-.tipo-filtro.water {
+.tipo-filtro.water,
+.pokemon-type.water,
+.pokemon-tipo.water {
     background: #6890f0;
 }
 
-.tipo-filtro.electric {
+.tipo-filtro.electric,
+.pokemon-type.electric,
+.pokemon-tipo.electric {
     background: #f8d030;
+
     color: #3d3200;
 }
 
-.tipo-filtro.grass {
+.tipo-filtro.grass,
+.pokemon-type.grass,
+.pokemon-tipo.grass {
     background: #78c850;
 }
 
-.tipo-filtro.ice {
+.tipo-filtro.ice,
+.pokemon-type.ice,
+.pokemon-tipo.ice {
     background: #98d8d8;
+
     color: #164646;
 }
 
-.tipo-filtro.fighting {
+.tipo-filtro.fighting,
+.pokemon-type.fighting,
+.pokemon-tipo.fighting {
     background: #c03028;
 }
 
-.tipo-filtro.poison {
+.tipo-filtro.poison,
+.pokemon-type.poison,
+.pokemon-tipo.poison {
     background: #a040a0;
 }
 
-.tipo-filtro.ground {
+.tipo-filtro.ground,
+.pokemon-type.ground,
+.pokemon-tipo.ground {
     background: #e0c068;
+
     color: #4a3b12;
 }
 
-.tipo-filtro.flying {
+.tipo-filtro.flying,
+.pokemon-type.flying,
+.pokemon-tipo.flying {
     background: #a890f0;
 }
 
-.tipo-filtro.psychic {
+.tipo-filtro.psychic,
+.pokemon-type.psychic,
+.pokemon-tipo.psychic {
     background: #f85888;
 }
 
-.tipo-filtro.bug {
+.tipo-filtro.bug,
+.pokemon-type.bug,
+.pokemon-tipo.bug {
     background: #a8b820;
 }
 
-.tipo-filtro.rock {
+.tipo-filtro.rock,
+.pokemon-type.rock,
+.pokemon-tipo.rock {
     background: #b8a038;
 }
 
-.tipo-filtro.ghost {
+.tipo-filtro.ghost,
+.pokemon-type.ghost,
+.pokemon-tipo.ghost {
     background: #705898;
 }
 
-.tipo-filtro.dragon {
+.tipo-filtro.dragon,
+.pokemon-type.dragon,
+.pokemon-tipo.dragon {
     background: #7038f8;
 }
 
-.tipo-filtro.dark {
+.tipo-filtro.dark,
+.pokemon-type.dark,
+.pokemon-tipo.dark {
     background: #705848;
 }
 
-.tipo-filtro.steel {
+.tipo-filtro.steel,
+.pokemon-type.steel,
+.pokemon-tipo.steel {
     background: #b8b8d0;
+
     color: #30303b;
 }
 
-.tipo-filtro.fairy {
+.tipo-filtro.fairy,
+.pokemon-type.fairy,
+.pokemon-tipo.fairy {
     background: #ee99ac;
 }
 
 
 /* ============================================================
-   BOTÃO DO MENU MOBILE
+   MENU MOBILE
    ============================================================ */
 
 .navbar-menu-button {
@@ -663,7 +646,6 @@ body {
     cursor: pointer;
 }
 
-
 .navbar-menu-button span {
     display: block;
 
@@ -677,19 +659,9 @@ body {
     border-radius: 2px;
 }
 
-
-/* ============================================================
-   MENU MOBILE
-   ============================================================ */
-
 .navbar-dropdown-mobile {
     display: none;
 }
-
-
-/* ============================================================
-   BOTÕES DO MENU MOBILE
-   ============================================================ */
 
 .mobile-menu-button {
     width: 100%;
@@ -699,14 +671,13 @@ body {
     justify-content: space-between;
 
     padding: 12px 15px;
-
     margin-bottom: 8px;
 
     background: #087fc1;
 
-    color: #ffffff;
-
     border: 2px solid transparent;
+
+    color: #ffffff;
 
     font-family: inherit;
     font-size: 15px;
@@ -720,7 +691,6 @@ body {
         border-color 0.15s ease;
 }
 
-
 .mobile-menu-button:hover {
     background: #f5f5f5;
 
@@ -732,32 +702,13 @@ body {
         3px 3px 0 #183b68;
 }
 
-
-/* ============================================================
-   REGIÕES NO MOBILE
-   ============================================================ */
-
-.regioes-panel-mobile {
-    position: static;
-
-    width: auto;
-
-    margin-bottom: 10px;
-
-    box-shadow: none;
-}
-
-
-/* ============================================================
-   TIPOS NO MOBILE
-   ============================================================ */
-
+.regioes-panel-mobile,
 .tipos-panel-mobile {
     position: static;
 
     width: auto;
 
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 
     box-shadow: none;
 }
@@ -780,7 +731,6 @@ body {
 
     background-size: 32px 32px;
 }
-
 
 .pokemon-list>.container {
     padding-left: 90px;
@@ -807,6 +757,7 @@ body {
     border-radius: 14px;
 
     color: inherit;
+
     text-decoration: none;
 
     box-shadow:
@@ -819,15 +770,91 @@ body {
         box-shadow 0.18s ease;
 }
 
-
 .pokemon-card:hover {
     color: inherit;
+
     text-decoration: none;
 
     transform: translateY(-8px);
 
     box-shadow:
         8px 12px 0 #263b59;
+}
+
+
+/* ============================================================
+   SETAS DAS FORMAS
+   ============================================================ */
+
+.forma-anterior,
+.forma-proxima {
+    position: absolute;
+
+    top: 50%;
+
+    z-index: 5;
+
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    background: #f5f5f5;
+
+    border: 3px solid #263b59;
+    border-radius: 50%;
+
+    color: #263b59;
+
+    font-size: 18px;
+    font-weight: 900;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transform: translateY(-50%);
+
+    box-shadow:
+        2px 2px 0 #263b59;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.forma-anterior {
+    left: 9px;
+}
+
+.forma-proxima {
+    right: 9px;
+}
+
+.forma-anterior:hover,
+.forma-proxima:hover {
+    background: #087fc1;
+
+    color: #ffffff;
+
+    transform: translateY(-50%) scale(1.08);
+
+    box-shadow:
+        3px 3px 0 #183b68;
+}
+
+.forma-anterior:active,
+.forma-proxima:active {
+    transform: translateY(-50%) scale(0.94);
+
+    box-shadow:
+        1px 1px 0 #183b68;
 }
 
 
@@ -851,7 +878,6 @@ body {
     border-bottom: 3px solid #263b59;
 }
 
-
 .pokemon-image::before {
     content: '';
 
@@ -866,7 +892,6 @@ body {
 
     opacity: 0.7;
 }
-
 
 .pokemon-image img {
     position: relative;
@@ -883,7 +908,6 @@ body {
     transition:
         transform 0.2s ease;
 }
-
 
 .pokemon-card:hover .pokemon-image img {
     transform: scale(1.08);
@@ -902,7 +926,6 @@ body {
     background: #ffffff;
 }
 
-
 .pokemon-info::before {
     content: '';
 
@@ -920,7 +943,6 @@ body {
         0 0 4px 4px;
 }
 
-
 .pokemon-number {
     display: block;
 
@@ -933,7 +955,6 @@ body {
 
     letter-spacing: 1px;
 }
-
 
 .pokemon-name {
     margin: 0 0 15px;
@@ -958,7 +979,6 @@ body {
     gap: 7px;
 }
 
-
 .pokemon-type {
     min-width: 68px;
 
@@ -968,10 +988,10 @@ body {
     align-items: center;
     justify-content: center;
 
-    color: #ffffff;
-
     border: 2px solid rgba(0, 0, 0, 0.18);
     border-radius: 5px;
+
+    color: #ffffff;
 
     font-size: 12px;
     font-weight: 800;
@@ -982,87 +1002,6 @@ body {
 
     box-shadow:
         2px 2px 0 rgba(0, 0, 0, 0.18);
-}
-
-
-/* ============================================================
-   CORES DOS TIPOS
-   ============================================================ */
-
-.pokemon-type.normal {
-    background: #a8a878;
-}
-
-.pokemon-type.fire {
-    background: #f08030;
-}
-
-.pokemon-type.water {
-    background: #6890f0;
-}
-
-.pokemon-type.electric {
-    background: #f8d030;
-    color: #3d3200;
-}
-
-.pokemon-type.grass {
-    background: #78c850;
-}
-
-.pokemon-type.ice {
-    background: #98d8d8;
-    color: #164646;
-}
-
-.pokemon-type.fighting {
-    background: #c03028;
-}
-
-.pokemon-type.poison {
-    background: #a040a0;
-}
-
-.pokemon-type.ground {
-    background: #e0c068;
-    color: #4a3b12;
-}
-
-.pokemon-type.flying {
-    background: #a890f0;
-}
-
-.pokemon-type.psychic {
-    background: #f85888;
-}
-
-.pokemon-type.bug {
-    background: #a8b820;
-}
-
-.pokemon-type.rock {
-    background: #b8a038;
-}
-
-.pokemon-type.ghost {
-    background: #705898;
-}
-
-.pokemon-type.dragon {
-    background: #7038f8;
-}
-
-.pokemon-type.dark {
-    background: #705848;
-}
-
-.pokemon-type.steel {
-    background: #b8b8d0;
-    color: #30303b;
-}
-
-.pokemon-type.fairy {
-    background: #ee99ac;
 }
 
 
@@ -1090,20 +1029,20 @@ body {
     pointer-events: none;
 }
 
-
 .botao-anterior,
 .botao-proximo {
-    pointer-events: auto;
-
     width: 105px;
 
     padding: 12px 10px;
 
+    pointer-events: auto;
+
     background: #087fc1;
-    color: #ffffff;
 
     border: 3px solid #183b68;
     border-radius: 10px;
+
+    color: #ffffff;
 
     font-size: 0.85rem;
     font-weight: 700;
@@ -1121,12 +1060,10 @@ body {
         box-shadow 0.1s ease;
 }
 
-
 .botao-anterior:hover,
 .botao-proximo:hover {
     background: #096fa8;
 }
-
 
 .botao-anterior:active,
 .botao-proximo:active {
@@ -1134,6 +1071,426 @@ body {
 
     box-shadow:
         0 1px 0 #183b68;
+}
+
+
+/* ============================================================
+   TELA DE DADOS DO POKÉMON
+   ============================================================ */
+
+.pokemon-detalhes {
+    min-height: 100vh;
+
+    padding: 115px 25px 55px;
+
+    background:
+        radial-gradient(circle at 20% 20%,
+            rgba(255, 255, 255, 0.35) 0 2px,
+            transparent 3px),
+        #78c850;
+
+    background-size: 32px 32px;
+}
+
+.pokemon-detalhes-container {
+    max-width: 1050px;
+
+    margin: 0 auto;
+
+    overflow: hidden;
+
+    background: #f5f5f5;
+
+    border: 4px solid #183b68;
+    border-radius: 10px;
+
+    box-shadow:
+        7px 7px 0 #183b68;
+}
+
+
+/* ============================================================
+   CABEÇALHO DOS DETALHES
+   ============================================================ */
+
+.pokemon-detalhes-header {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 17px 25px;
+
+    background: #087fc1;
+
+    border-bottom: 4px solid #183b68;
+
+    color: #ffffff;
+}
+
+.pokemon-detalhes-header::before,
+.pokemon-detalhes-header::after {
+    content: '';
+
+    position: absolute;
+
+    left: 10px;
+
+    width: 9px;
+    height: 9px;
+
+    background: #f5f5f5;
+
+    border: 2px solid #183b68;
+    border-radius: 50%;
+}
+
+.pokemon-detalhes-header::before {
+    top: 8px;
+}
+
+.pokemon-detalhes-header::after {
+    bottom: 8px;
+}
+
+.pokemon-detalhes-numero {
+    padding-left: 15px;
+
+    color: #d7f3ff;
+
+    font-size: 17px;
+    font-weight: 900;
+
+    letter-spacing: 1px;
+}
+
+.pokemon-detalhes-nome {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 30px;
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+    text-shadow:
+        2px 2px 0 #183b68;
+}
+
+
+/* ============================================================
+   ÁREA PRINCIPAL DOS DETALHES
+   ============================================================ */
+
+.pokemon-detalhes-principal {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 25px;
+
+    padding: 25px;
+}
+
+
+/* ============================================================
+   IMAGEM DOS DETALHES
+   ============================================================ */
+
+.pokemon-detalhes-imagem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pokemon-sprite-container {
+    position: relative;
+
+    width: 100%;
+    max-width: 400px;
+
+    aspect-ratio: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(circle,
+            #ffffff 0%,
+            #e7f6ff 55%,
+            #b9dff2 100%);
+
+    border: 4px solid #183b68;
+    border-radius: 8px;
+
+    box-shadow:
+        inset 0 0 0 4px #ffffff,
+        5px 5px 0 #183b68;
+}
+
+.pokemon-sprite-container::before {
+    content: '';
+
+    position: absolute;
+
+    inset: 13px;
+
+    border: 2px dashed rgba(24, 59, 104, 0.25);
+
+    border-radius: 5px;
+}
+
+.pokemon-sprite-container img {
+    position: relative;
+
+    z-index: 1;
+
+    width: 78%;
+    height: 78%;
+
+    object-fit: contain;
+
+    image-rendering: pixelated;
+
+    filter:
+        drop-shadow(4px 5px 0 rgba(38, 59, 89, 0.22));
+
+    transition:
+        transform 0.2s ease;
+}
+
+.pokemon-sprite-container:hover img {
+    transform: scale(1.06);
+}
+
+
+/* ============================================================
+   INFORMAÇÕES DOS DETALHES
+   ============================================================ */
+
+.pokemon-detalhes-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+.pokemon-detalhes-secao {
+    padding: 14px 16px;
+
+    background: #ffffff;
+
+    border: 3px solid #183b68;
+    border-radius: 6px;
+
+    box-shadow:
+        3px 3px 0 #183b68;
+}
+
+.pokemon-detalhes-secao h2 {
+    margin: 0 0 9px;
+
+    color: #183b68;
+
+    font-size: 14px;
+    font-weight: 900;
+
+    letter-spacing: 0.7px;
+
+    text-transform: uppercase;
+}
+
+.pokemon-detalhes-secao p {
+    margin: 0;
+
+    color: #263b59;
+
+    font-size: 19px;
+    font-weight: 900;
+}
+
+
+/* ============================================================
+   TIPOS DA TELA DE DETALHES
+   ============================================================ */
+
+.pokemon-tipos {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+.pokemon-tipo {
+    min-width: 82px;
+
+    padding: 7px 12px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+
+    color: #ffffff;
+
+    font-size: 11px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+
+    box-shadow:
+        2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+/* ============================================================
+   HABILIDADES
+   ============================================================ */
+
+.pokemon-habilidades {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+.pokemon-habilidades span {
+    padding: 6px 10px;
+
+    background: #e8f1f8;
+
+    border: 2px solid #183b68;
+    border-radius: 4px;
+
+    color: #183b68;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+
+/* ============================================================
+   ÁUDIO
+   ============================================================ */
+
+.pokemon-detalhes-secao audio {
+    display: block;
+
+    width: 100%;
+    height: 38px;
+}
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.pokemon-status {
+    margin: 0 25px 25px;
+
+    padding: 20px;
+
+    background: #ffffff;
+
+    border: 3px solid #183b68;
+    border-radius: 6px;
+
+    box-shadow:
+        4px 4px 0 #183b68;
+}
+
+.pokemon-status h2 {
+    margin: 0 0 18px;
+
+    color: #183b68;
+
+    font-size: 18px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+}
+
+.pokemon-status-lista {
+    display: flex;
+    flex-direction: column;
+
+    gap: 13px;
+}
+
+.pokemon-status-item {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.pokemon-status-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    color: #263b59;
+
+    font-size: 12px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+}
+
+.pokemon-status-label strong {
+    min-width: 35px;
+
+    padding: 2px 6px;
+
+    background: #087fc1;
+
+    border: 2px solid #183b68;
+    border-radius: 3px;
+
+    color: #ffffff;
+
+    text-align: center;
+
+    font-size: 11px;
+}
+
+.pokemon-status-barra {
+    height: 15px;
+
+    overflow: hidden;
+
+    background: #d8d8d8;
+
+    border: 2px solid #183b68;
+    border-radius: 3px;
+}
+
+.pokemon-status-progresso {
+    height: 100%;
+
+    background:
+        repeating-linear-gradient(135deg,
+            #087fc1 0,
+            #087fc1 8px,
+            #096fa8 8px,
+            #096fa8 16px);
+
+    border-right: 2px solid #183b68;
+
+    transition:
+        width 0.3s ease;
 }
 
 
@@ -1171,6 +1528,16 @@ body {
 
     .pokemon-pagination {
         padding: 0 12px;
+    }
+
+    .pokemon-detalhes-principal {
+        grid-template-columns: 1fr;
+
+        gap: 20px;
+    }
+
+    .pokemon-sprite-container {
+        max-width: 360px;
     }
 }
 
@@ -1273,6 +1640,49 @@ body {
 
         font-size: 0.75rem;
     }
+
+    .pokemon-detalhes {
+        padding: 95px 12px 40px;
+    }
+
+    .pokemon-detalhes-container {
+        border-width: 3px;
+
+        box-shadow:
+            5px 5px 0 #183b68;
+    }
+
+    .pokemon-detalhes-header {
+        padding: 14px 18px;
+
+        gap: 10px;
+    }
+
+    .pokemon-detalhes-numero {
+        font-size: 14px;
+    }
+
+    .pokemon-detalhes-nome {
+        font-size: 24px;
+    }
+
+    .pokemon-detalhes-principal {
+        padding: 18px;
+    }
+
+    .pokemon-sprite-container {
+        width: 100%;
+
+        box-shadow:
+            inset 0 0 0 4px #ffffff,
+            4px 4px 0 #183b68;
+    }
+
+    .pokemon-status {
+        margin: 0 18px 18px;
+
+        padding: 16px;
+    }
 }
 
 
@@ -1366,6 +1776,27 @@ body {
         height: 150px;
     }
 
+    .forma-anterior,
+    .forma-proxima {
+        width: 32px;
+        height: 32px;
+
+        border-width: 2px;
+
+        font-size: 16px;
+
+        box-shadow:
+            2px 2px 0 #263b59;
+    }
+
+    .forma-anterior {
+        left: 7px;
+    }
+
+    .forma-proxima {
+        right: 7px;
+    }
+
     .pokemon-info {
         padding: 15px 16px 17px;
     }
@@ -1398,622 +1829,6 @@ body {
 
         font-size: 0.7rem;
     }
-}
-
-
-/* ============================================================
-   ============================================================
-   NOVA TELA DE DADOS DO POKÉMON
-   ============================================================
-   ============================================================ */
-
-.pokemon-detalhes {
-    min-height: 100vh;
-
-    padding: 115px 25px 55px;
-
-    /*
-     * Mantemos o mesmo fundo verde da Pokédex.
-     * Assim a tela de detalhes parece fazer parte
-     * da mesma aplicação.
-     */
-    background:
-        radial-gradient(circle at 20% 20%,
-            rgba(255, 255, 255, 0.35) 0 2px,
-            transparent 3px),
-        #78c850;
-
-    background-size: 32px 32px;
-}
-
-
-/* ============================================================
-   PAINEL PRINCIPAL
-   ============================================================ */
-
-.pokemon-detalhes-container {
-    max-width: 1050px;
-
-    margin: 0 auto;
-
-    overflow: hidden;
-
-    background: #f5f5f5;
-
-    border: 4px solid #183b68;
-    border-radius: 10px;
-
-    box-shadow:
-        7px 7px 0 #183b68;
-}
-
-
-/* ============================================================
-   CABEÇALHO DA POKÉDEX
-   ============================================================ */
-
-.pokemon-detalhes-header {
-    position: relative;
-
-    display: flex;
-    align-items: center;
-
-    gap: 18px;
-
-    padding: 17px 25px;
-
-    background: #087fc1;
-
-    border-bottom: 4px solid #183b68;
-
-    color: #ffffff;
-}
-
-
-/*
- * Pequenos detalhes que lembram os elementos
- * de uma interface de Pokédex.
- */
-
-.pokemon-detalhes-header::before,
-.pokemon-detalhes-header::after {
-    content: '';
-
-    position: absolute;
-
-    left: 10px;
-
-    width: 9px;
-    height: 9px;
-
-    background: #f5f5f5;
-
-    border: 2px solid #183b68;
-
-    border-radius: 50%;
-}
-
-.pokemon-detalhes-header::before {
-    top: 8px;
-}
-
-.pokemon-detalhes-header::after {
-    bottom: 8px;
-}
-
-
-.pokemon-detalhes-numero {
-    padding-left: 15px;
-
-    color: #d7f3ff;
-
-    font-size: 17px;
-    font-weight: 900;
-
-    letter-spacing: 1px;
-}
-
-
-.pokemon-detalhes-nome {
-    margin: 0;
-
-    color: #ffffff;
-
-    font-size: 30px;
-    font-weight: 900;
-
-    letter-spacing: 1px;
-
-    text-transform: uppercase;
-
-    text-shadow:
-        2px 2px 0 #183b68;
-}
-
-
-/* ============================================================
-   ÁREA PRINCIPAL
-   ============================================================ */
-
-.pokemon-detalhes-principal {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 25px;
-
-    padding: 25px;
-}
-
-
-/* ============================================================
-   ÁREA DA IMAGEM
-   ============================================================ */
-
-.pokemon-detalhes-imagem {
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-}
-
-
-/*
- * Tela de visualização do Pokémon.
- */
-
-.pokemon-sprite-container {
-    position: relative;
-
-    width: 100%;
-    max-width: 400px;
-
-    aspect-ratio: 1;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background:
-        radial-gradient(circle,
-            #ffffff 0%,
-            #e7f6ff 55%,
-            #b9dff2 100%);
-
-    border: 4px solid #183b68;
-    border-radius: 8px;
-
-    box-shadow:
-        inset 0 0 0 4px #ffffff,
-        5px 5px 0 #183b68;
-
-    overflow: hidden;
-}
-
-
-/*
- * Moldura interna.
- */
-
-.pokemon-sprite-container::before {
-    content: '';
-
-    position: absolute;
-
-    inset: 13px;
-
-    border: 2px dashed rgba(24, 59, 104, 0.25);
-
-    border-radius: 5px;
-}
-
-
-.pokemon-sprite-container img {
-    position: relative;
-
-    z-index: 1;
-
-    width: 78%;
-    height: 78%;
-
-    object-fit: contain;
-
-    image-rendering: pixelated;
-
-    filter:
-        drop-shadow(4px 5px 0 rgba(38, 59, 89, 0.22));
-
-    transition:
-        transform 0.2s ease;
-}
-
-
-.pokemon-sprite-container:hover img {
-    transform: scale(1.06);
-}
-
-
-/* ============================================================
-   INFORMAÇÕES
-   ============================================================ */
-
-.pokemon-detalhes-info {
-    display: flex;
-    flex-direction: column;
-
-    gap: 14px;
-}
-
-
-.pokemon-detalhes-secao {
-    padding: 14px 16px;
-
-    background: #ffffff;
-
-    border: 3px solid #183b68;
-    border-radius: 6px;
-
-    box-shadow:
-        3px 3px 0 #183b68;
-}
-
-
-.pokemon-detalhes-secao h2 {
-    margin: 0 0 9px;
-
-    color: #183b68;
-
-    font-size: 14px;
-    font-weight: 900;
-
-    letter-spacing: 0.7px;
-
-    text-transform: uppercase;
-}
-
-
-.pokemon-detalhes-secao p {
-    margin: 0;
-
-    color: #263b59;
-
-    font-size: 19px;
-    font-weight: 900;
-}
-
-
-/* ============================================================
-   TIPOS
-   ============================================================ */
-
-.pokemon-tipos {
-    display: flex;
-    flex-wrap: wrap;
-
-    gap: 8px;
-}
-
-
-.pokemon-tipo {
-    min-width: 82px;
-
-    padding: 7px 12px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 2px solid rgba(0, 0, 0, 0.25);
-    border-radius: 5px;
-
-    color: #ffffff;
-
-    font-size: 11px;
-    font-weight: 900;
-
-    text-transform: uppercase;
-
-    box-shadow:
-        2px 2px 0 rgba(0, 0, 0, 0.2);
-}
-
-
-/* ============================================================
-   CORES DOS TIPOS DA TELA DE DETALHES
-   ============================================================ */
-
-.pokemon-tipo.normal {
-    background: #a8a878;
-}
-
-.pokemon-tipo.fire {
-    background: #f08030;
-}
-
-.pokemon-tipo.water {
-    background: #6890f0;
-}
-
-.pokemon-tipo.electric {
-    background: #f8d030;
-    color: #3d3200;
-}
-
-.pokemon-tipo.grass {
-    background: #78c850;
-}
-
-.pokemon-tipo.ice {
-    background: #98d8d8;
-    color: #164646;
-}
-
-.pokemon-tipo.fighting {
-    background: #c03028;
-}
-
-.pokemon-tipo.poison {
-    background: #a040a0;
-}
-
-.pokemon-tipo.ground {
-    background: #e0c068;
-    color: #4a3b12;
-}
-
-.pokemon-tipo.flying {
-    background: #a890f0;
-}
-
-.pokemon-tipo.psychic {
-    background: #f85888;
-}
-
-.pokemon-tipo.bug {
-    background: #a8b820;
-}
-
-.pokemon-tipo.rock {
-    background: #b8a038;
-}
-
-.pokemon-tipo.ghost {
-    background: #705898;
-}
-
-.pokemon-tipo.dragon {
-    background: #7038f8;
-}
-
-.pokemon-tipo.dark {
-    background: #705848;
-}
-
-.pokemon-tipo.steel {
-    background: #b8b8d0;
-    color: #30303b;
-}
-
-.pokemon-tipo.fairy {
-    background: #ee99ac;
-}
-
-
-/* ============================================================
-   HABILIDADES
-   ============================================================ */
-
-.pokemon-habilidades {
-    display: flex;
-    flex-wrap: wrap;
-
-    gap: 8px;
-}
-
-
-.pokemon-habilidades span {
-    padding: 6px 10px;
-
-    background: #e8f1f8;
-
-    border: 2px solid #183b68;
-    border-radius: 4px;
-
-    color: #183b68;
-
-    font-size: 12px;
-    font-weight: 800;
-
-    text-transform: uppercase;
-}
-
-
-/* ============================================================
-   ÁUDIO
-   ============================================================ */
-
-.pokemon-detalhes-secao audio {
-    display: block;
-
-    width: 100%;
-    height: 38px;
-}
-
-
-/* ============================================================
-   STATUS
-   ============================================================ */
-
-.pokemon-status {
-    margin: 0 25px 25px;
-
-    padding: 20px;
-
-    background: #ffffff;
-
-    border: 3px solid #183b68;
-    border-radius: 6px;
-
-    box-shadow:
-        4px 4px 0 #183b68;
-}
-
-
-.pokemon-status h2 {
-    margin: 0 0 18px;
-
-    color: #183b68;
-
-    font-size: 18px;
-    font-weight: 900;
-
-    text-transform: uppercase;
-}
-
-
-.pokemon-status-lista {
-    display: flex;
-    flex-direction: column;
-
-    gap: 13px;
-}
-
-
-.pokemon-status-item {
-    display: flex;
-    flex-direction: column;
-
-    gap: 5px;
-}
-
-
-.pokemon-status-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    color: #263b59;
-
-    font-size: 12px;
-    font-weight: 900;
-
-    text-transform: uppercase;
-}
-
-
-.pokemon-status-label strong {
-    min-width: 35px;
-
-    padding: 2px 6px;
-
-    background: #087fc1;
-
-    border: 2px solid #183b68;
-    border-radius: 3px;
-
-    color: #ffffff;
-
-    text-align: center;
-
-    font-size: 11px;
-}
-
-
-.pokemon-status-barra {
-    height: 15px;
-
-    overflow: hidden;
-
-    background: #d8d8d8;
-
-    border: 2px solid #183b68;
-    border-radius: 3px;
-}
-
-
-.pokemon-status-progresso {
-    height: 100%;
-
-    background:
-        repeating-linear-gradient(135deg,
-            #087fc1 0,
-            #087fc1 8px,
-            #096fa8 8px,
-            #096fa8 16px);
-
-    border-right: 2px solid #183b68;
-
-    transition:
-        width 0.3s ease;
-}
-
-
-/* ============================================================
-   RESPONSIVIDADE DA TELA DE DADOS
-   ============================================================ */
-
-@media (max-width: 900px) {
-
-    .pokemon-detalhes-principal {
-        grid-template-columns: 1fr;
-
-        gap: 20px;
-    }
-
-    .pokemon-sprite-container {
-        max-width: 360px;
-    }
-}
-
-
-@media (max-width: 767px) {
-
-    .pokemon-detalhes {
-        padding: 95px 12px 40px;
-    }
-
-    .pokemon-detalhes-container {
-        border-width: 3px;
-
-        box-shadow:
-            5px 5px 0 #183b68;
-    }
-
-    .pokemon-detalhes-header {
-        padding: 14px 18px;
-
-        gap: 10px;
-    }
-
-    .pokemon-detalhes-numero {
-        font-size: 14px;
-    }
-
-    .pokemon-detalhes-nome {
-        font-size: 24px;
-    }
-
-    .pokemon-detalhes-principal {
-        padding: 18px;
-    }
-
-    .pokemon-sprite-container {
-        width: 100%;
-
-        box-shadow:
-            inset 0 0 0 4px #ffffff,
-            4px 4px 0 #183b68;
-    }
-
-    .pokemon-status {
-        margin: 0 18px 18px;
-
-        padding: 16px;
-    }
-}
-
-
-@media (max-width: 480px) {
 
     .pokemon-detalhes {
         padding: 90px 8px 30px;
