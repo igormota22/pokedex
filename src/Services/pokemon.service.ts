@@ -62,11 +62,6 @@ interface PokemonRespostaHttp {
 
 }
 
-interface TipoRespostaHttp {
-    pokemon: {
-        pokemon: ResultadoObjetoHttp;
-    }[];
-}
 
 
 interface Regiao {
@@ -136,7 +131,8 @@ export class PokemonService {
         nome?: string,
         offset = 0,
         tipos?: string[],
-        formaRegional?: string
+        formaRegional?: string,
+        formaAlternativa?: string
     ) {
 
         let url: string;
@@ -192,6 +188,61 @@ export class PokemonService {
             );
         }
 
+        // FORMA ALTERNATIVA
+        if (formaAlternativa) {
+
+            url = 'https://pokeapi.co/api/v2/pokemon?limit=100000';
+
+            return this.http.get<ObjetoRespostaHttp>(url).pipe(
+
+                map((resposta) =>
+                    resposta.results.filter((pokemon) => {
+
+                        if (formaAlternativa === 'mega') {
+                            return pokemon.name.includes('-mega');
+                        }
+
+                        return pokemon.name.endsWith(
+                            `-${formaAlternativa.toLowerCase()}`
+                        );
+                    })
+                ),
+
+                switchMap((pokemons) => {
+
+                    const requisicoes = pokemons.map(
+                        (pokemon) =>
+                            this.http.get<PokemonRespostaHttp>(
+                                pokemon.url
+                            )
+                    );
+
+                    return forkJoin(requisicoes);
+                }),
+
+                map((detalhes) => {
+
+                    let pokemons = detalhes;
+
+                    if (tipos && tipos.length > 0) {
+                        pokemons = pokemons.filter((pokemon) =>
+                            pokemon.types.some((item) =>
+                                tipos.includes(item.type.name)
+                            )
+                        );
+                    }
+
+                    return pokemons.map((detalhe): Pokemon => ({
+                        id: detalhe.id,
+                        name: detalhe.name,
+                        types: detalhe.types.map(
+                            (item) => item.type.name
+                        ),
+                        sprite: detalhe.sprites.front_default,
+                    }));
+                })
+            );
+        }
 
         // REGIÃO
         if (nome) {
@@ -211,10 +262,14 @@ export class PokemonService {
         } else {
 
             // LISTAGEM NORMAL
-            url =
-                `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=32`;
+            if (tipos && tipos.length > 0) {
+                url =
+                    'https://pokeapi.co/api/v2/pokemon?limit=100000';
+            } else {
+                url =
+                    `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=32`;
+            }
         }
-
 
         return this.http.get<ObjetoRespostaHttp>(url).pipe(
 
@@ -240,6 +295,14 @@ export class PokemonService {
                             tipos.includes(item.type.name)
                         )
                     );
+
+                    // Paginação depois do filtro
+                    if (!nome) {
+                        pokemons = pokemons.slice(
+                            offset,
+                            offset + 32
+                        );
+                    }
                 }
 
                 return pokemons.map((detalhe): Pokemon => ({

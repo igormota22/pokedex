@@ -16,7 +16,9 @@
 
         <div class="navbar-links navbar-links-desktop">
 
-            <!-- DROPDOWN REGIÕES -->
+            <!-- ==========================================
+                 DROPDOWN REGIÕES
+                 ========================================== -->
 
             <div class="navbar-dropdown-container">
 
@@ -49,7 +51,9 @@
             </div>
 
 
-            <!-- DROPDOWN TIPOS -->
+            <!-- ==========================================
+                 DROPDOWN TIPOS
+                 ========================================== -->
 
             <div class="navbar-dropdown-container">
 
@@ -81,10 +85,16 @@
 
                         @for (tipo of tipos; track tipo) {
 
-                        <label class="tipo-filtro"
-                            [class.selecionado]="pokemonTipoService.tiposSelecionados().includes(tipo)" [class]="tipo">
-                            <input type="checkbox" [checked]="pokemonTipoService.tiposSelecionados().includes(tipo)"
-                                (change)="alternarTipo(tipo)">
+                        <label class="tipo-filtro" [class.selecionado]="
+                                        pokemonTipoService
+                                            .tiposSelecionados()
+                                            .includes(tipo)
+                                    " [class]="tipo">
+                            <input type="checkbox" [checked]="
+                                            pokemonTipoService
+                                                .tiposSelecionados()
+                                                .includes(tipo)
+                                        " (change)="alternarTipo(tipo)">
 
                             <span class="tipo-filtro-nome">
                                 {{ tipo }}
@@ -103,7 +113,9 @@
             </div>
 
 
-            <!-- DROPDOWN FORMAS REGIONAIS -->
+            <!-- ==========================================
+                 DROPDOWN FORMAS REGIONAIS
+                 ========================================== -->
 
             <div class="navbar-dropdown-container">
 
@@ -126,6 +138,45 @@
                                     forma.toLowerCase()
                                 ]" (click)="fecharFormasRegionaisMenu()">
                         {{ forma }}
+                    </a>
+
+                    }
+
+                </div>
+
+                }
+
+            </div>
+
+
+            <!-- ==========================================
+                 DROPDOWN FORMAS ALTERNATIVAS
+                 ========================================== -->
+
+            <div class="navbar-dropdown-container">
+
+                <button type="button" class="navbar-link dropdown-button" (click)="alternarFormasAlternativasMenu()">
+                    Formas Alternativas
+
+                    <span class="dropdown-arrow" [class.aberto]="formasAlternativasAberto()">
+                        ▼
+                    </span>
+                </button>
+
+                @if (formasAlternativasAberto()) {
+
+                <div class="formas-regionais-panel">
+
+                    @for (
+                    forma of formasAlternativas;
+                    track forma.titulo
+                    ) {
+
+                    <a class="forma-regional-link" [routerLink]="[
+                                    '/pokedex/formas-alternativas',
+                                    forma.sufixo.replace('-', '')
+                                ]" (click)="fecharFormasAlternativasMenu()">
+                        {{ forma.titulo }}
                     </a>
 
                     }
@@ -225,10 +276,16 @@
 
                 @for (tipo of tipos; track tipo) {
 
-                <label class="tipo-filtro" [class.selecionado]="pokemonTipoService.tiposSelecionados().includes(tipo)"
-                    [class]="tipo">
-                    <input type="checkbox" [checked]="pokemonTipoService.tiposSelecionados().includes(tipo)"
-                        (change)="alternarTipo(tipo)">
+                <label class="tipo-filtro" [class.selecionado]="
+                                    pokemonTipoService
+                                        .tiposSelecionados()
+                                        .includes(tipo)
+                                " [class]="tipo">
+                    <input type="checkbox" [checked]="
+                                        pokemonTipoService
+                                            .tiposSelecionados()
+                                            .includes(tipo)
+                                    " (change)="alternarTipo(tipo)">
 
                     <span class="tipo-filtro-nome">
                         {{ tipo }}
@@ -268,6 +325,41 @@
                                 forma.toLowerCase()
                             ]" (click)="fecharMenu()">
                 {{ forma }}
+            </a>
+
+            }
+
+        </div>
+
+        }
+
+
+        <!-- ==========================================
+                 FORMAS ALTERNATIVAS MOBILE
+                 ========================================== -->
+
+        <button type="button" class="mobile-menu-button" (click)="alternarFormasAlternativasMenu()">
+            <span>Formas Alternativas</span>
+
+            <span class="dropdown-arrow" [class.aberto]="formasAlternativasAberto()">
+                ▼
+            </span>
+        </button>
+
+        @if (formasAlternativasAberto()) {
+
+        <div class="formas-regionais-panel formas-regionais-panel-mobile">
+
+            @for (
+            forma of formasAlternativas;
+            track forma.titulo
+            ) {
+
+            <a class="forma-regional-link" [routerLink]="[
+                                '/pokedex/formas-alternativas',
+                                forma.sufixo.replace('-', '')
+                            ]" (click)="fecharMenu()">
+                {{ forma.titulo }}
             </a>
 
             }

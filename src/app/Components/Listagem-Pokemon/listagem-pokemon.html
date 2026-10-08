@@ -48,7 +48,7 @@
 
     </div>
 
-    @if (!regiao() && pokemonTipoService.tiposSelecionados().length === 0 && !formaRegional()) {
+    @if (!regiao() && !formaRegional() && !formaAlternativa()) {
     <div class="pokemon-pagination">
 
         <button type="button" class="botao-anterior" (click)="paginaAnterior()">

@@ -16,6 +16,12 @@ export const routes: Routes = [
                 .then(m => m.ListagemPokemon)
     },
     {
+        path: 'pokedex/formas-alternativas/:formaAlternativa',
+        loadComponent: () =>
+            import('./Components/Listagem-Pokemon/listagem-pokemon')
+                .then(m => m.ListagemPokemon)
+    },
+    {
         path: 'pokedex/:regiao',
         loadComponent: () =>
             import('./Components/Listagem-Pokemon/listagem-pokemon')

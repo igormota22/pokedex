@@ -62,6 +62,12 @@ export class ListagemPokemon {
         )
     )
 
+    protected readonly formaAlternativa = toSignal(
+        this.route.paramMap.pipe(
+            map((params) => params.get('formaAlternativa'))
+        )
+    )
+
     protected readonly pokemon = toSignal(
         combineLatest([
             this.route.paramMap,
@@ -71,12 +77,14 @@ export class ListagemPokemon {
             switchMap(([params, offset, tipos]) => {
                 const regiao = params.get('regiao');
                 const formaRegional = params.get('formaRegional');
+                const formaAlternativa = params.get('formaAlternativa');
 
                 return this.pokemonService.obterPokemons(
                     regiao ?? undefined,
                     offset,
                     tipos,
-                    formaRegional ?? undefined
+                    formaRegional ?? undefined,
+                    formaAlternativa ?? undefined
                 );
             })
         ),
@@ -104,4 +112,6 @@ export class ListagemPokemon {
             .toLowerCase()
             .replace(/\b\w/g, (l) => l.toUpperCase());
     }
+
+
 }
