@@ -65,11 +65,21 @@ interface PokemonRespostaHttp {
 
     readonly sprites: {
         readonly front_default: string | null;
+        readonly front_shiny: string | null;
+
+        readonly other: {
+            readonly 'official-artwork': {
+                readonly front_default: string | null;
+                readonly front_shiny: string | null;
+            };
+        };
     };
 
     readonly stats: EstatisticaPokemonRespostaHttp[];
 
     readonly weight: number;
+
+    readonly height: number;
 
     readonly abilities: HabilidadePokemonRespostaHttp[];
 
@@ -214,6 +224,11 @@ export class PokemonService {
                             (item) => item.type.name
                         ),
                         sprite: pokemon.detalhe.sprites.front_default,
+                        spriteShiny: pokemon.detalhe.sprites.front_shiny,
+
+                        artwork: pokemon.detalhe.sprites.other['official-artwork'].front_default,
+
+                        artworkShiny: pokemon.detalhe.sprites.other['official-artwork'].front_shiny,
 
                         formas: pokemon.species.varieties
                             .filter((variedade) => {
@@ -299,6 +314,12 @@ export class PokemonService {
                             (item) => item.type.name
                         ),
                         sprite: pokemon.detalhe.sprites.front_default,
+                        spriteShiny: pokemon.detalhe.sprites.front_shiny,
+
+                        artwork: pokemon.detalhe.sprites.other['official-artwork'].front_default,
+
+                        artworkShiny: pokemon.detalhe.sprites.other['official-artwork'].front_shiny,
+
 
                         formas: pokemon.species.varieties
                             .filter((variedade) => {
@@ -402,6 +423,12 @@ export class PokemonService {
                         (item) => item.type.name
                     ),
                     sprite: pokemon.detalhe.sprites.front_default,
+                    spriteShiny: pokemon.detalhe.sprites.front_shiny,
+
+                    artwork: pokemon.detalhe.sprites.other['official-artwork'].front_default,
+
+                    artworkShiny: pokemon.detalhe.sprites.other['official-artwork'].front_shiny,
+
 
                     formas: pokemon.species.varieties
                         .filter((variedade) => {
@@ -448,6 +475,12 @@ export class PokemonService {
                     item => item.type.name
                 ),
                 sprite: detalhe.sprites.front_default,
+                spriteShiny: detalhe.sprites.front_shiny,
+
+                artwork: detalhe.sprites.other['official-artwork'].front_default,
+
+                artworkShiny: detalhe.sprites.other['official-artwork'].front_shiny,
+
 
                 formas: species.varieties
                     .filter((variedade) => {
@@ -473,6 +506,7 @@ export class PokemonService {
                 })),
 
                 peso: detalhe.weight,
+                altura: detalhe.height,
 
                 habilidades: detalhe.abilities.map(
                     habilidade => habilidade.ability.name

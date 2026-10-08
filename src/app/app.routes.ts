@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 
-import { DadosPokemon } from './Components/Dados-Pokemon/dados-pokemon';
 
 export const routes: Routes = [
     {

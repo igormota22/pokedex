@@ -2,6 +2,15 @@
 
 <section class="pokemon-detalhes">
 
+    <!-- VOLTAR -->
+    <div class="voltar-container">
+        <a routerLink="/" class="botao-voltar">
+            ← Voltar
+        </a>
+    </div>
+
+
+    <!-- CONTAINER PRINCIPAL -->
     <div class="pokemon-detalhes-container">
 
         <!-- CABEÇALHO -->
@@ -25,7 +34,38 @@
             <div class="pokemon-detalhes-imagem">
 
                 <div class="pokemon-sprite-container">
-                    <img [src]="dados.sprite" [alt]="dados.name">
+
+                    <img [src]="
+            artwork()
+                ? (
+                    shiny()
+                        ? (dados.artworkShiny ?? 'images/pokebola.png')
+                        : (dados.artwork ??  'images/pokebola.png')
+                  )
+                : (
+                    shiny()
+                        ? (dados.spriteShiny ??  'images/pokebola.png')
+                        : (dados.sprite ??  'images/pokebola.png')
+                  )
+        " [alt]="dados.name">
+
+                </div>
+
+
+                <!-- CONTROLES DA IMAGEM -->
+                <div class="pokemon-imagem-controles">
+
+                    <button type="button" class="botao-shiny" [class.ativo]="shiny()" (click)="alternarShiny()"
+                        title="Shiny">
+                        {{ shiny() ? 'Normal' : 'Shiny' }}
+
+                    </button>
+
+                    <button type="button" class="botao-artwork" [class.ativo]="artwork()" (click)="alternarArtWork()"
+                        title="Artwork">
+                        Artwork
+                    </button>
+
                 </div>
 
             </div>
@@ -34,6 +74,7 @@
             <!-- INFORMAÇÕES -->
             <div class="pokemon-detalhes-info">
 
+                <!-- TIPO -->
                 <div class="pokemon-detalhes-secao">
 
                     <h2>Tipo</h2>
@@ -53,6 +94,7 @@
                 </div>
 
 
+                <!-- PESO -->
                 <div class="pokemon-detalhes-secao">
 
                     <h2>Peso</h2>
@@ -64,6 +106,19 @@
                 </div>
 
 
+                <!-- ALTURA -->
+                <div class="pokemon-detalhes-secao">
+
+                    <h2>Altura</h2>
+
+                    <p>
+                        {{ dados.altura / 10 }} m
+                    </p>
+
+                </div>
+
+
+                <!-- HABILIDADES -->
                 <div class="pokemon-detalhes-secao">
 
                     <h2>Habilidades</h2>
@@ -86,6 +141,7 @@
                 </div>
 
 
+                <!-- SOM -->
                 <div class="pokemon-detalhes-secao">
 
                     <h2>Som</h2>
@@ -110,7 +166,10 @@
 
             <div class="pokemon-status-lista">
 
-                @for (stat of dados.stats; track stat.nome) {
+                @for (
+                stat of dados.stats;
+                track stat.nome
+                ) {
 
                 <div class="pokemon-status-item">
 
@@ -126,11 +185,10 @@
 
                     </div>
 
+
                     <div class="pokemon-status-barra">
 
-                        <div class="pokemon-status-progresso" [style.width.%]="
-                                (stat.valor / 255) * 100
-                            "></div>
+                        <div class="pokemon-status-progresso" [style.width.%]="(stat.valor / 255) * 100"></div>
 
                     </div>
 

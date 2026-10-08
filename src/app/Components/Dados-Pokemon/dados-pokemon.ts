@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map, switchMap } from 'rxjs';
 import { PokemonService } from '../../../Services/pokemon.service';
 import { Pokemon } from '../Listagem-Pokemon/listagem-pokemon';
@@ -11,19 +11,23 @@ export interface DadosPokemonResponse extends Pokemon {
         valor: number;
     }[];
     peso: number;
+    altura: number;
     habilidades: string[];
     audio: string;
 }
 
 @Component({
     selector: 'app-dados-pokemon',
-    imports: [],
+    imports: [RouterLink],
     templateUrl: './dados-pokemon.html',
 })
 export class DadosPokemon {
 
     private readonly route = inject(ActivatedRoute);
     private readonly pokemonService = inject(PokemonService);
+
+    private readonly shiny = signal(false);
+    private readonly artwork = signal(false);
 
     protected readonly pokemon = toSignal(
         this.route.paramMap.pipe(
@@ -38,4 +42,13 @@ export class DadosPokemon {
             initialValue: null
         }
     );
+
+    protected alternarShiny(): void {
+        this.shiny.update((valor) => !valor);
+
+    }
+
+    protected alternarArtWork(): void {
+        this.artwork.update((valor) => !valor);
+    }
 }

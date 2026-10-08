@@ -10,6 +10,9 @@ export interface Pokemon {
     name: string;
     types: string[];
     sprite: string | null;
+    spriteShiny: string | null;
+    artwork: string | null;
+    artworkShiny: string | null;
     formas: FormaPokemon[];
 }
 
