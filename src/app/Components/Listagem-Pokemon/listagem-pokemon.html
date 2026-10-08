@@ -13,9 +13,11 @@
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
 
                 <a class="pokemon-card" [routerLink]="[
-                        '/pokedex/pokemon',
-                        forma?.nome ?? pokemon.name
-                    ]">
+    '/pokedex/pokemon',
+    formaRegional() || formaAlternativa()
+        ? pokemon.name
+        : (forma?.nome ?? pokemon.name)
+]">
 
                     @if (pokemon.formas.length > 1 && !formaRegional() && !formaAlternativa()) {
 
