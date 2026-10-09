@@ -9,7 +9,6 @@
         </a>
     </div>
 
-
     <!-- CONTAINER PRINCIPAL -->
     <div class="pokemon-detalhes-container">
 
@@ -24,8 +23,20 @@
                 {{ dados.name }}
             </h1>
 
-        </div>
+            <!-- FAVORITO -->
+            <button type="button" class="botao-favorito" [class.ativo]="ehFavorito(dados.id)" [attr.aria-label]="
+                    ehFavorito(dados.id)
+                        ? 'Remover dos favoritos'
+                        : 'Adicionar aos favoritos'
+                " [attr.aria-pressed]="ehFavorito(dados.id)" (click)="alternarFavorito()" [title]="
+                    ehFavorito(dados.id)
+                        ? 'Remover dos favoritos'
+                        : 'Adicionar aos favoritos'
+                ">
+                {{ ehFavorito(dados.id) ? '♥' : '♡' }}
+            </button>
 
+        </div>
 
         <!-- INFORMAÇÕES PRINCIPAIS -->
         <div class="pokemon-detalhes-principal">
@@ -36,21 +47,20 @@
                 <div class="pokemon-sprite-container">
 
                     <img [src]="
-            artwork()
-                ? (
-                    shiny()
-                        ? (dados.artworkShiny ?? 'images/pokebola.png')
-                        : (dados.artwork ??  'images/pokebola.png')
-                  )
-                : (
-                    shiny()
-                        ? (dados.spriteShiny ??  'images/pokebola.png')
-                        : (dados.sprite ??  'images/pokebola.png')
-                  )
-        " [alt]="dados.name">
+                            artwork()
+                                ? (
+                                    shiny()
+                                        ? (dados.artworkShiny ?? 'images/pokebola.png')
+                                        : (dados.artwork ?? 'images/pokebola.png')
+                                  )
+                                : (
+                                    shiny()
+                                        ? (dados.spriteShiny ?? 'images/pokebola.png')
+                                        : (dados.sprite ?? 'images/pokebola.png')
+                                  )
+                        " [alt]="dados.name">
 
                 </div>
-
 
                 <!-- CONTROLES DA IMAGEM -->
                 <div class="pokemon-imagem-controles">
@@ -58,7 +68,6 @@
                     <button type="button" class="botao-shiny" [class.ativo]="shiny()" (click)="alternarShiny()"
                         title="Shiny">
                         {{ shiny() ? 'Normal' : 'Shiny' }}
-
                     </button>
 
                     <button type="button" class="botao-artwork" [class.ativo]="artwork()" (click)="alternarArtWork()"
@@ -69,7 +78,6 @@
                 </div>
 
             </div>
-
 
             <!-- INFORMAÇÕES -->
             <div class="pokemon-detalhes-info">
@@ -82,41 +90,32 @@
                     <div class="pokemon-tipos">
 
                         @for (tipo of dados.types; track tipo) {
-
                         <span class="pokemon-tipo" [class]="'pokemon-tipo ' + tipo">
                             {{ tipo }}
                         </span>
-
                         }
 
                     </div>
 
                 </div>
 
-
                 <!-- PESO -->
                 <div class="pokemon-detalhes-secao">
 
                     <h2>Peso</h2>
 
-                    <p>
-                        {{ dados.peso / 10 }} kg
-                    </p>
+                    <p>{{ dados.peso / 10 }} kg</p>
 
                 </div>
-
 
                 <!-- ALTURA -->
                 <div class="pokemon-detalhes-secao">
 
                     <h2>Altura</h2>
 
-                    <p>
-                        {{ dados.altura / 10 }} m
-                    </p>
+                    <p>{{ dados.altura / 10 }} m</p>
 
                 </div>
-
 
                 <!-- HABILIDADES -->
                 <div class="pokemon-detalhes-secao">
@@ -129,17 +128,14 @@
                         habilidade of dados.habilidades;
                         track habilidade
                         ) {
-
                         <span>
                             {{ habilidade }}
                         </span>
-
                         }
 
                     </div>
 
                 </div>
-
 
                 <!-- SOM -->
                 <div class="pokemon-detalhes-secao">
@@ -147,9 +143,7 @@
                     <h2>Som</h2>
 
                     @if (dados.audio) {
-
                     <audio [src]="dados.audio" controls></audio>
-
                     }
 
                 </div>
@@ -157,7 +151,6 @@
             </div>
 
         </div>
-
 
         <!-- STATUS -->
         <div class="pokemon-status">
@@ -170,21 +163,15 @@
                 stat of dados.stats;
                 track stat.nome
                 ) {
-
                 <div class="pokemon-status-item">
 
                     <div class="pokemon-status-label">
 
-                        <span>
-                            {{ stat.nome }}
-                        </span>
+                        <span>{{ stat.nome }}</span>
 
-                        <strong>
-                            {{ stat.valor }}
-                        </strong>
+                        <strong>{{ stat.valor }}</strong>
 
                     </div>
-
 
                     <div class="pokemon-status-barra">
 
@@ -193,7 +180,6 @@
                     </div>
 
                 </div>
-
                 }
 
             </div>

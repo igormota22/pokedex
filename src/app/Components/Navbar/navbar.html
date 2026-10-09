@@ -4,9 +4,11 @@
 
         <!-- LOGO -->
 
-        <a class="navbar-logo" routerLink="/" (click)="fecharMenu()">
+        <a class="navbar-link navbar-favoritos" routerLink="/" (click)="fecharMenu()">
+
             <span class="logo-pokeball"></span>
             <span>Pokédex</span>
+
         </a>
 
 
@@ -16,6 +18,16 @@
 
         <div class="navbar-links navbar-links-desktop">
 
+            <!-- FAVORITOS -->
+
+            <a routerLink="/favoritos" routerLinkActive="ativo" (click)="fecharMenu()">
+
+                <i class="bi bi-heart-fill"></i>
+                Favoritos
+
+            </a>
+
+
             <!-- ==========================================
                  DROPDOWN REGIÕES
                  ========================================== -->
@@ -23,11 +35,13 @@
             <div class="navbar-dropdown-container">
 
                 <button type="button" class="navbar-link dropdown-button" (click)="alternarRegioesMenu()">
+
                     Regiões
 
                     <span class="dropdown-arrow" [class.aberto]="regioesAberto()">
                         ▼
                     </span>
+
                 </button>
 
                 @if (regioesAberto()) {
@@ -37,9 +51,11 @@
                     @for (item of itens; track item.titulo) {
 
                     <a class="regiao-link" [routerLink]="item.link" routerLinkActive="active" [routerLinkActiveOptions]="{
-                                    exact: item.link === '/pokedex'
-                                }" (click)="fecharRegioesMenu()">
+                                   exact: item.link === '/pokedex'
+                               }" (click)="fecharRegioesMenu()">
+
                         {{ item.titulo }}
+
                     </a>
 
                     }
@@ -58,11 +74,13 @@
             <div class="navbar-dropdown-container">
 
                 <button type="button" class="navbar-link dropdown-button" (click)="alternarTiposMenu()">
+
                     Tipos
 
                     <span class="dropdown-arrow" [class.aberto]="tiposAberto()">
                         ▼
                     </span>
+
                 </button>
 
                 @if (tiposAberto()) {
@@ -80,21 +98,21 @@
 
                     </div>
 
-
                     <div class="tipos-grid">
 
                         @for (tipo of tipos; track tipo) {
 
                         <label class="tipo-filtro" [class.selecionado]="
-                                        pokemonTipoService
-                                            .tiposSelecionados()
-                                            .includes(tipo)
-                                    " [class]="tipo">
+                                           pokemonTipoService
+                                               .tiposSelecionados()
+                                               .includes(tipo)
+                                       " [class]="tipo">
+
                             <input type="checkbox" [checked]="
-                                            pokemonTipoService
-                                                .tiposSelecionados()
-                                                .includes(tipo)
-                                        " (change)="alternarTipo(tipo)">
+                                               pokemonTipoService
+                                                   .tiposSelecionados()
+                                                   .includes(tipo)
+                                           " (change)="alternarTipo(tipo)">
 
                             <span class="tipo-filtro-nome">
                                 {{ tipo }}
@@ -120,11 +138,13 @@
             <div class="navbar-dropdown-container">
 
                 <button type="button" class="navbar-link dropdown-button" (click)="alternarFormasRegionaisMenu()">
+
                     Formas Regionais
 
                     <span class="dropdown-arrow" [class.aberto]="formasRegionaisAberto()">
                         ▼
                     </span>
+
                 </button>
 
                 @if (formasRegionaisAberto()) {
@@ -134,10 +154,12 @@
                     @for (forma of formasRegionais; track forma) {
 
                     <a class="forma-regional-link" [routerLink]="[
-                                    '/pokedex/formas',
-                                    forma.toLowerCase()
-                                ]" (click)="fecharFormasRegionaisMenu()">
+                                   '/pokedex/formas',
+                                   forma.toLowerCase()
+                               ]" (click)="fecharFormasRegionaisMenu()">
+
                         {{ forma }}
+
                     </a>
 
                     }
@@ -156,11 +178,13 @@
             <div class="navbar-dropdown-container">
 
                 <button type="button" class="navbar-link dropdown-button" (click)="alternarFormasAlternativasMenu()">
+
                     Formas Alternativas
 
                     <span class="dropdown-arrow" [class.aberto]="formasAlternativasAberto()">
                         ▼
                     </span>
+
                 </button>
 
                 @if (formasAlternativasAberto()) {
@@ -173,10 +197,12 @@
                     ) {
 
                     <a class="forma-regional-link" [routerLink]="[
-                                    '/pokedex/formas-alternativas',
-                                    forma.sufixo.replace('-', '')
-                                ]" (click)="fecharFormasAlternativasMenu()">
+                                   '/pokedex/formas-alternativas',
+                                   forma.sufixo.replace('-', '')
+                               ]" (click)="fecharFormasAlternativasMenu()">
+
                         {{ forma.titulo }}
+
                     </a>
 
                     }
@@ -191,14 +217,16 @@
 
 
         <!-- ==========================================
-             BOTÃO MOBILE
+             BOTÃO MENU MOBILE
              ========================================== -->
 
         <button type="button" class="navbar-menu-button" (click)="alternarMenu()" [attr.aria-expanded]="menuAberto()"
             aria-label="Abrir menu">
+
             <span></span>
             <span></span>
             <span></span>
+
         </button>
 
     </div>
@@ -212,17 +240,28 @@
 
     <div class="navbar-dropdown navbar-dropdown-mobile">
 
+        <!-- FAVORITOS MOBILE -->
+
+        <a class="navbar-favoritos-mobile" routerLink="/favoritos" routerLinkActive="ativo" (click)="fecharMenu()">
+
+            <i class="bi bi-heart-fill"></i>
+            Favoritos
+
+        </a>
+
 
         <!-- ==========================================
                  REGIÕES MOBILE
                  ========================================== -->
 
         <button type="button" class="mobile-menu-button" (click)="alternarRegioesMenu()">
+
             <span>Regiões</span>
 
             <span class="dropdown-arrow" [class.aberto]="regioesAberto()">
                 ▼
             </span>
+
         </button>
 
         @if (regioesAberto()) {
@@ -232,9 +271,11 @@
             @for (item of itens; track item.titulo) {
 
             <a class="regiao-link" [routerLink]="item.link" routerLinkActive="active" [routerLinkActiveOptions]="{
-                                exact: item.link === '/pokedex'
-                            }" (click)="fecharMenu()">
+                               exact: item.link === '/pokedex'
+                           }" (click)="fecharMenu()">
+
                 {{ item.titulo }}
+
             </a>
 
             }
@@ -249,11 +290,13 @@
                  ========================================== -->
 
         <button type="button" class="mobile-menu-button" (click)="alternarTiposMenu()">
+
             <span>Tipos</span>
 
             <span class="dropdown-arrow" [class.aberto]="tiposAberto()">
                 ▼
             </span>
+
         </button>
 
         @if (tiposAberto()) {
@@ -271,21 +314,21 @@
 
             </div>
 
-
             <div class="tipos-grid">
 
                 @for (tipo of tipos; track tipo) {
 
                 <label class="tipo-filtro" [class.selecionado]="
-                                    pokemonTipoService
-                                        .tiposSelecionados()
-                                        .includes(tipo)
-                                " [class]="tipo">
+                                       pokemonTipoService
+                                           .tiposSelecionados()
+                                           .includes(tipo)
+                                   " [class]="tipo">
+
                     <input type="checkbox" [checked]="
-                                        pokemonTipoService
-                                            .tiposSelecionados()
-                                            .includes(tipo)
-                                    " (change)="alternarTipo(tipo)">
+                                           pokemonTipoService
+                                               .tiposSelecionados()
+                                               .includes(tipo)
+                                       " (change)="alternarTipo(tipo)">
 
                     <span class="tipo-filtro-nome">
                         {{ tipo }}
@@ -307,11 +350,13 @@
                  ========================================== -->
 
         <button type="button" class="mobile-menu-button" (click)="alternarFormasRegionaisMenu()">
+
             <span>Formas Regionais</span>
 
             <span class="dropdown-arrow" [class.aberto]="formasRegionaisAberto()">
                 ▼
             </span>
+
         </button>
 
         @if (formasRegionaisAberto()) {
@@ -321,10 +366,12 @@
             @for (forma of formasRegionais; track forma) {
 
             <a class="forma-regional-link" [routerLink]="[
-                                '/pokedex/formas',
-                                forma.toLowerCase()
-                            ]" (click)="fecharMenu()">
+                               '/pokedex/formas',
+                               forma.toLowerCase()
+                           ]" (click)="fecharMenu()">
+
                 {{ forma }}
+
             </a>
 
             }
@@ -339,11 +386,13 @@
                  ========================================== -->
 
         <button type="button" class="mobile-menu-button" (click)="alternarFormasAlternativasMenu()">
+
             <span>Formas Alternativas</span>
 
             <span class="dropdown-arrow" [class.aberto]="formasAlternativasAberto()">
                 ▼
             </span>
+
         </button>
 
         @if (formasAlternativasAberto()) {
@@ -356,10 +405,12 @@
             ) {
 
             <a class="forma-regional-link" [routerLink]="[
-                                '/pokedex/formas-alternativas',
-                                forma.sufixo.replace('-', '')
-                            ]" (click)="fecharMenu()">
+                               '/pokedex/formas-alternativas',
+                               forma.sufixo.replace('-', '')
+                           ]" (click)="fecharMenu()">
+
                 {{ forma.titulo }}
+
             </a>
 
             }

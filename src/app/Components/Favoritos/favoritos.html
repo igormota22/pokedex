@@ -1,0 +1,60 @@
+<main class="pagina-favoritos">
+
+    <header class="favoritos-header">
+        <h1>Meus Pokémon Favoritos</h1>
+        <p>Seus Pokémon favoritos reunidos em um só lugar!</p>
+    </header>
+
+    @if (favoritos().length > 0) {
+
+    <section class="pokemon-lista">
+
+        @for (pokemon of favoritos(); track pokemon.id) {
+
+        <article class="pokemon-card">
+
+            <a class="pokemon-link" [routerLink]="['/pokedex/pokemon', pokemon.nome]">
+
+                <span class="pokemon-numero">
+                    Nº {{ pokemon.id.toString().padStart(3, '0') }}
+                </span>
+
+                <img class="pokemon-image" [src]="pokemon.spriteUrl ?? 'images/pokebola.png'" [alt]="pokemon.nome"
+                    loading="lazy" />
+
+                <div class="pokemon-info">
+                    <h2 class="pokemon-nome">
+                        {{ pokemon.nome | titlecase }}
+                    </h2>
+                </div>
+
+            </a>
+
+        </article>
+
+        }
+
+    </section>
+
+    } @else {
+
+    <section class="favoritos-vazio">
+
+        <img src="images/pokebola.png" alt="Pokébola" class="favoritos-vazio-imagem" />
+
+        <h2>Nenhum favorito por enquanto!</h2>
+
+        <p>
+            Acesse a Pokédex, escolha seus Pokémon favoritos
+            e eles aparecerão aqui.
+        </p>
+
+        <a class="botao-voltar-pokedex" routerLink="/pokedex">
+            Explorar Pokédex
+        </a>
+
+    </section>
+
+    }
+
+</main>

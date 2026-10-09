@@ -1,9 +1,14 @@
-import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { combineLatest, map, switchMap } from 'rxjs';
+
 import { FormaPokemon, PokemonService } from '../../../Services/pokemon.service';
 import { PokemonTipoService } from '../../../Services/pokemonTipo.service';
+
+// ======================================================
+// MODELOS
+// ======================================================
 
 export interface Pokemon {
     id: number;
@@ -21,6 +26,10 @@ interface DadosFormaSelecionada {
     tipos: string[];
 }
 
+// ======================================================
+// COMPONENTE
+// ======================================================
+
 @Component({
     selector: 'app-listagem-pokemon',
     imports: [RouterLink],
@@ -28,64 +37,58 @@ interface DadosFormaSelecionada {
 })
 export class ListagemPokemon {
 
+    // ==================================================
+    // DEPENDÊNCIAS
+    // ==================================================
+
     private readonly route = inject(ActivatedRoute);
-
     private readonly pokemonService = inject(PokemonService);
-
     private readonly pokemonTipoService = inject(PokemonTipoService);
+
+    // ==================================================
+    // ESTADO INTERNO
+    // ==================================================
 
     private readonly offset = signal(0);
 
-    private readonly formasSelecionadas = signal<Record<number, number>>({});
+    private readonly formasSelecionadas =
+        signal<Record<number, number>>({});
 
-    private readonly dadosFormaSelecionada = signal<Record<string, DadosFormaSelecionada>>({});
+    private readonly dadosFormaSelecionada =
+        signal<Record<string, DadosFormaSelecionada>>({});
 
-    protected readonly pokemonsFiltrados = computed(() => {
+    // ==================================================
+    // PARÂMETROS DA ROTA
+    // ==================================================
 
-        const tipos = this.pokemonTipoService.tiposSelecionados();
-
-        if (tipos.length === 0) {
-            return this.pokemon();
-        }
-
-        if (!this.regiao()) {
-            return this.pokemon();
-        }
-
-        return this.pokemon().filter((pokemon) =>
-            tipos.some((tipo) => pokemon.types.includes(tipo))
-        );
-    });
-
-    //=========================================
-    //EXPOE A REGIAO PARA O COMPONENTE HTML
-    //=========================================
     protected readonly regiao = toSignal(
         this.route.paramMap.pipe(
             map((params) => params.get('regiao'))
         ),
-        {
-            initialValue: null
-        }
+        { initialValue: null }
     );
 
     protected readonly formaRegional = toSignal(
         this.route.paramMap.pipe(
             map((params) => params.get('formaRegional'))
         )
-    )
+    );
 
     protected readonly formaAlternativa = toSignal(
         this.route.paramMap.pipe(
             map((params) => params.get('formaAlternativa'))
         )
-    )
+    );
+
+    // ==================================================
+    // LISTAGEM DE POKÉMON
+    // ==================================================
 
     protected readonly pokemon = toSignal(
         combineLatest([
             this.route.paramMap,
             toObservable(this.offset),
-            toObservable(this.pokemonTipoService.tiposSelecionados)
+            toObservable(this.pokemonTipoService.tiposSelecionados),
         ]).pipe(
             switchMap(([params, offset, tipos]) => {
                 const regiao = params.get('regiao');
@@ -104,40 +107,54 @@ export class ListagemPokemon {
         { initialValue: [] }
     );
 
-    protected proximaPagina(): void {
-        this.offset.update(
-            (valor) => valor + 32
-        );
+    protected readonly pokemonsFiltrados = computed(() => {
+        const pokemons = this.pokemon();
+        const tipos = this.pokemonTipoService.tiposSelecionados();
 
+        if (tipos.length === 0 || !this.regiao()) {
+            return pokemons;
+        }
+
+        return pokemons.filter((pokemon) =>
+            tipos.some((tipo) => pokemon.types.includes(tipo))
+        );
+    });
+
+    // ==================================================
+    // PAGINAÇÃO
+    // ==================================================
+
+    protected proximaPagina(): void {
+        this.offset.update((valor) => valor + 32);
         window.scrollTo(0, 0);
     }
 
     protected paginaAnterior(): void {
-        this.offset.update(
-            (valor) => valor - 32
-        );
-
+        this.offset.update((valor) => Math.max(0, valor - 32));
         window.scrollTo(0, 0);
     }
+
+    // ==================================================
+    // FORMATAÇÃO
+    // ==================================================
 
     protected paraTitleCase(texto: string): string {
         return texto
             .toLowerCase()
-            .replace(/\b\w/g, (l) => l.toUpperCase());
+            .replace(/\b\w/g, (letra) => letra.toUpperCase());
     }
+
+    // ==================================================
+    // FORMAS DOS POKÉMON
+    // ==================================================
 
     protected alterarFormaPokemon(
         pokemon: Pokemon,
         direcao: number
     ): void {
-
-        const indiceAtual =
-            this.formasSelecionadas()[pokemon.id] ?? 0;
-
+        const indiceAtual = this.formasSelecionadas()[pokemon.id] ?? 0;
         const novoIndice = indiceAtual + direcao;
-
-        const forma =
-            pokemon.formas[novoIndice];
+        const forma = pokemon.formas[novoIndice];
 
         if (!forma) {
             return;
@@ -145,21 +162,19 @@ export class ListagemPokemon {
 
         this.formasSelecionadas.update((formas) => ({
             ...formas,
-            [pokemon.id]: novoIndice
+            [pokemon.id]: novoIndice,
         }));
 
         this.pokemonService
             .obterDadosPokemons(forma.nome)
             .subscribe((dados) => {
-
                 this.dadosFormaSelecionada.update((formas) => ({
                     ...formas,
                     [forma.nome]: {
                         sprite: dados.sprite,
-                        tipos: dados.types
-                    }
+                        tipos: dados.types,
+                    },
                 }));
-
             });
     }
 }

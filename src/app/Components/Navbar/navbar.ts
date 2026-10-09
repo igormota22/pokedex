@@ -1,11 +1,26 @@
+
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PokemonTipoService } from '../../../Services/pokemonTipo.service';
+import { FavoritosService } from '../../../Services/pokemonFavorito.service';
+
+// ==========================================
+// MODELOS
+// ==========================================
 
 interface ItemNavbar {
     titulo: string;
     link: string;
 }
+
+interface FormaAlternativa {
+    titulo: string;
+    sufixo: string;
+}
+
+// ==========================================
+// COMPONENTE
+// ==========================================
 
 @Component({
     selector: 'app-navbar',
@@ -15,76 +30,37 @@ interface ItemNavbar {
 })
 export class NavbarComponent {
 
-
+    private readonly pokemonTipoService = inject(PokemonTipoService);
 
     // ==========================================
-    // ESTADO DO MENU MOBILE
+    // ESTADOS DOS MENUS
     // ==========================================
 
     protected readonly menuAberto = signal(false);
-
     protected readonly tiposAberto = signal(false);
-
     protected readonly regioesAberto = signal(false);
-
     protected readonly formasRegionaisAberto = signal(false);
-
     protected readonly formasAlternativasAberto = signal(false);
-
+    protected readonly listagemFavoritos = signal(false);
 
     // ==========================================
-    // ITENS DA NAVBAR
+    // DADOS DA NAVEGAÇÃO
     // ==========================================
 
-    itens: ItemNavbar[] = [
-        {
-            titulo: 'Todos',
-            link: '/pokedex'
-        },
-        {
-            titulo: 'Kanto',
-            link: '/pokedex/kanto'
-        },
-        {
-            titulo: 'Johto',
-            link: '/pokedex/johto'
-        },
-        {
-            titulo: 'Hoenn',
-            link: '/pokedex/hoenn'
-        },
-        {
-            titulo: 'Sinnoh',
-            link: '/pokedex/sinnoh'
-        },
-        {
-            titulo: 'Unova',
-            link: '/pokedex/unova'
-        },
-        {
-            titulo: 'Kalos',
-            link: '/pokedex/kalos'
-        },
-        {
-            titulo: 'Alola',
-            link: '/pokedex/alola'
-        },
-        {
-            titulo: 'Galar',
-            link: '/pokedex/galar'
-        },
-        {
-            titulo: 'Paldea',
-            link: '/pokedex/paldea'
-        }
+    protected readonly itens: ItemNavbar[] = [
+        { titulo: 'Todos', link: '/pokedex' },
+        { titulo: 'Kanto', link: '/pokedex/kanto' },
+        { titulo: 'Johto', link: '/pokedex/johto' },
+        { titulo: 'Hoenn', link: '/pokedex/hoenn' },
+        { titulo: 'Sinnoh', link: '/pokedex/sinnoh' },
+        { titulo: 'Unova', link: '/pokedex/unova' },
+        { titulo: 'Kalos', link: '/pokedex/kalos' },
+        { titulo: 'Alola', link: '/pokedex/alola' },
+        { titulo: 'Galar', link: '/pokedex/galar' },
+        { titulo: 'Paldea', link: '/pokedex/paldea' }
     ];
 
-
-    // ==========================================
-    // TIPOS DE POKÉMON
-    // ==========================================
-
-    tipos: string[] = [
+    protected readonly tipos: string[] = [
         'normal',
         'fire',
         'water',
@@ -105,108 +81,82 @@ export class NavbarComponent {
         'fairy'
     ];
 
-    formasRegionais: string[] = [
+    protected readonly formasRegionais: string[] = [
         'Alola',
         'Galar',
         'Hisui',
         'Paldea'
     ];
 
-    formasAlternativas = [
-        {
-            titulo: 'Mega Evolução',
-            sufixo: '-mega'
-        },
-        {
-            titulo: 'Gigantamax',
-            sufixo: '-gmax'
-        }
+    protected readonly formasAlternativas: FormaAlternativa[] = [
+        { titulo: 'Mega Evolução', sufixo: '-mega' },
+        { titulo: 'Gigantamax', sufixo: '-gmax' }
     ];
-
-    private readonly pokemonTipoService = inject(PokemonTipoService);
 
     // ==========================================
     // MENU MOBILE
     // ==========================================
 
     protected alternarMenu(): void {
-        this.menuAberto.update(
-            (aberto) => !aberto
-        );
+        this.menuAberto.update(aberto => !aberto);
     }
 
     protected fecharMenu(): void {
         this.menuAberto.set(false);
     }
 
-
     // ==========================================
     // MENU DE TIPOS
     // ==========================================
 
     protected alternarTiposMenu(): void {
-        this.tiposAberto.update(
-            (aberto) => !aberto
-        );
+        this.tiposAberto.update(aberto => !aberto);
     }
 
     protected alternarTipo(tipo: string): void {
-
-        this.pokemonTipoService.tiposSelecionados.update((tipos) => {
-
+        this.pokemonTipoService.tiposSelecionados.update(tipos => {
             if (tipos.includes(tipo)) {
-
-                return tipos.filter((item) => item !== tipo);
-
-            } else {
-
-                return [...tipos, tipo];
-
+                return tipos.filter(item => item !== tipo);
             }
 
+            return [...tipos, tipo];
         });
-
     }
 
-    //=========================================
-    // MENU REGIOES
-    //========================================
+    // ==========================================
+    // MENU DE REGIÕES
+    // ==========================================
 
     protected alternarRegioesMenu(): void {
-        this.regioesAberto.update((aberto) => !aberto);
-
+        this.regioesAberto.update(aberto => !aberto);
     }
 
     protected fecharRegioesMenu(): void {
         this.regioesAberto.set(false);
-
         window.scroll(0, 0);
     }
 
-    //=========================================
-    //MENU FORMAS REGIONAIS
-    //=========================================
+    // ==========================================
+    // MENU DE FORMAS REGIONAIS
+    // ==========================================
 
     protected alternarFormasRegionaisMenu(): void {
-        this.formasRegionaisAberto.update((aberto) => !aberto);
+        this.formasRegionaisAberto.update(aberto => !aberto);
     }
 
     protected fecharFormasRegionaisMenu(): void {
         this.formasRegionaisAberto.set(false);
     }
 
-    //===========================================
-    //MENU FORMAS ALTERNATIVAS
-    //===========================================
+    // ==========================================
+    // MENU DE FORMAS ALTERNATIVAS
+    // ==========================================
 
     protected alternarFormasAlternativasMenu(): void {
-        this.formasAlternativasAberto.update((aberto) => !aberto);
-
+        this.formasAlternativasAberto.update(aberto => !aberto);
     }
 
     protected fecharFormasAlternativasMenu(): void {
         this.formasAlternativasAberto.set(false);
     }
-
-
 }

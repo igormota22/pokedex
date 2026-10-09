@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map, switchMap } from 'rxjs';
 import { PokemonService } from '../../../Services/pokemon.service';
 import { Pokemon } from '../Listagem-Pokemon/listagem-pokemon';
+import { FavoritosService } from '../../../Services/pokemonFavorito.service';
 
 export interface DadosPokemonResponse extends Pokemon {
     stats: {
@@ -25,6 +26,7 @@ export class DadosPokemon {
 
     private readonly route = inject(ActivatedRoute);
     private readonly pokemonService = inject(PokemonService);
+    private readonly favoritosService = inject(FavoritosService);
 
     private readonly shiny = signal(false);
     private readonly artwork = signal(false);
@@ -50,5 +52,23 @@ export class DadosPokemon {
 
     protected alternarArtWork(): void {
         this.artwork.update((valor) => !valor);
+    }
+
+    protected ehFavorito(id: number): boolean {
+        return this.favoritosService.verificarFavorito(id);
+    }
+
+    protected alternarFavorito(): void {
+        const dadosPokemon = this.pokemon();
+
+        if (!dadosPokemon) {
+            return;
+        }
+
+        this.favoritosService.alternarFavorito({
+            id: dadosPokemon.id,
+            nome: dadosPokemon.name,
+            spriteUrl: dadosPokemon.sprite
+        });
     }
 }

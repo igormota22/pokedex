@@ -33,6 +33,12 @@ export const routes: Routes = [
                 .then(m => m.DadosPokemon)
     },
     {
+        path: 'favoritos',
+        loadComponent: () =>
+            import('./Components/Favoritos/favoritos')
+                .then(m => m.FavoritosComponent)
+    },
+    {
         path: '',
         redirectTo: 'pokedex',
         pathMatch: 'full'

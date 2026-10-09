@@ -1,9 +1,16 @@
+
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin, map, switchMap } from 'rxjs';
-import { Pokemon } from '../app/Components/Listagem-Pokemon/listagem-pokemon';
-import { DadosPokemon, DadosPokemonResponse } from '../app/Components/Dados-Pokemon/dados-pokemon';
 
+import { Pokemon } from '../app/Components/Listagem-Pokemon/listagem-pokemon';
+import {
+    DadosPokemonResponse,
+} from '../app/Components/Dados-Pokemon/dados-pokemon';
+
+// ======================================================
+// MODELOS DAS RESPOSTAS DA POKEAPI
+// ======================================================
 
 interface ResultadoObjetoHttp {
     name: string;
@@ -51,7 +58,6 @@ interface PokemonSpeciesRespostaHttp {
     }[];
 }
 
-
 interface PokemonRespostaHttp {
     readonly id: number;
     readonly name: string;
@@ -76,87 +82,62 @@ interface PokemonRespostaHttp {
     };
 
     readonly stats: EstatisticaPokemonRespostaHttp[];
-
     readonly weight: number;
-
     readonly height: number;
-
     readonly abilities: HabilidadePokemonRespostaHttp[];
-
     readonly cries: SomPokemonRespostaHttp;
-
 }
 
-
-
 interface Regiao {
-    nome: string,
-    inicio: number,
-    quantidade: number
+    nome: string;
+    inicio: number;
+    quantidade: number;
 }
 
 export interface FormaPokemon {
     nome: string;
 }
 
+interface PokemonComEspecie {
+    detalhe: PokemonRespostaHttp;
+    species: PokemonSpeciesRespostaHttp;
+}
+
+// ======================================================
+// REGIÕES
+// ======================================================
+
 const regioes: Regiao[] = [
-    {
-        nome: 'Kanto',
-        inicio: 1,
-        quantidade: 151
-    },
-    {
-        nome: 'Johto',
-        inicio: 152,
-        quantidade: 100
-    },
-    {
-        nome: 'Hoenn',
-        inicio: 252,
-        quantidade: 135
-    },
-    {
-        nome: 'Sinnoh',
-        inicio: 387,
-        quantidade: 108
-    },
-    {
-        nome: 'Unova',
-        inicio: 495,
-        quantidade: 155
-    },
-    {
-        nome: 'Kalos',
-        inicio: 650,
-        quantidade: 72
-    },
-    {
-        nome: 'Alola',
-        inicio: 722,
-        quantidade: 88
-    },
-    {
-        nome: 'Galar',
-        inicio: 810,
-        quantidade: 96
-    },
-    {
-        nome: 'Paldea',
-        inicio: 906,
-        quantidade: 120
-    }
+    { nome: 'Kanto', inicio: 1, quantidade: 151 },
+    { nome: 'Johto', inicio: 152, quantidade: 100 },
+    { nome: 'Hoenn', inicio: 252, quantidade: 135 },
+    { nome: 'Sinnoh', inicio: 387, quantidade: 108 },
+    { nome: 'Unova', inicio: 495, quantidade: 155 },
+    { nome: 'Kalos', inicio: 650, quantidade: 72 },
+    { nome: 'Alola', inicio: 722, quantidade: 88 },
+    { nome: 'Galar', inicio: 810, quantidade: 96 },
+    { nome: 'Paldea', inicio: 906, quantidade: 120 },
 ];
 
-
+// ======================================================
+// SERVIÇO
+// ======================================================
 
 @Injectable({
     providedIn: 'root',
 })
-
-
 export class PokemonService {
 
     private readonly http = inject(HttpClient);
+
+    private readonly apiUrl = 'https://pokeapi.co/api/v2';
+
+    private readonly quantidadePorPagina = 32;
+
+    // ==================================================
+    // LISTAGEM DE POKÉMON
+    // ==================================================
+
     obterPokemons(
         nome?: string,
         offset = 0,
@@ -164,355 +145,272 @@ export class PokemonService {
         formaRegional?: string,
         formaAlternativa?: string
     ) {
-
-        let url: string;
-
-        // FORMA REGIONAL
-        if (formaRegional) {
-
-            url = 'https://pokeapi.co/api/v2/pokemon?limit=100000';
-
-            return this.http.get<ObjetoRespostaHttp>(url).pipe(
-
-                map((resposta) =>
-                    resposta.results.filter((pokemon) =>
-                        pokemon.name.endsWith(
-                            `-${formaRegional.toLowerCase()}`
-                        )
-                    )
-                ),
-
-                switchMap((pokemons) => {
-
-                    const requisicoes = pokemons.map(
-                        (pokemon) =>
-                            this.http.get<PokemonRespostaHttp>(
-                                pokemon.url
-                            ).pipe(
-                                switchMap((detalhe) =>
-                                    this.http.get<PokemonSpeciesRespostaHttp>(
-                                        detalhe.species.url
-                                    ).pipe(
-                                        map((species) => ({
-                                            detalhe,
-                                            species
-                                        }))
-                                    )
-                                )
-                            )
-                    );
-
-                    return forkJoin(requisicoes);
-                }),
-
-                map((detalhes) => {
-
-                    let pokemons = detalhes;
-
-                    if (tipos && tipos.length > 0) {
-                        pokemons = pokemons.filter((pokemon) =>
-                            pokemon.detalhe.types.some((item) =>
-                                tipos.includes(item.type.name)
-                            )
-                        );
-                    }
-
-                    return pokemons.map((pokemon): Pokemon => ({
-                        id: pokemon.detalhe.id,
-                        name: pokemon.detalhe.name,
-                        types: pokemon.detalhe.types.map(
-                            (item) => item.type.name
-                        ),
-                        sprite: pokemon.detalhe.sprites.front_default,
-                        spriteShiny: pokemon.detalhe.sprites.front_shiny,
-
-                        artwork: pokemon.detalhe.sprites.other['official-artwork'].front_default,
-
-                        artworkShiny: pokemon.detalhe.sprites.other['official-artwork'].front_shiny,
-
-                        formas: pokemon.species.varieties
-                            .filter((variedade) => {
-                                const nome =
-                                    variedade.pokemon.name;
-
-                                return (
-                                    !nome.includes('-alola') &&
-                                    !nome.includes('-galar') &&
-                                    !nome.includes('-hisui') &&
-                                    !nome.includes('-paldea') &&
-                                    !nome.includes('-mega') &&
-                                    !nome.endsWith('-gmax')
-                                );
-                            })
-                            .map((variedade) => ({
-                                nome: variedade.pokemon.name
-                            }))
-                    }));
-                })
+        // Formas regionais e alternativas
+        if (formaRegional || formaAlternativa) {
+            return this.obterPokemonsPorForma(
+                tipos,
+                formaRegional,
+                formaAlternativa
             );
         }
 
-        // FORMA ALTERNATIVA
-        if (formaAlternativa) {
+        // Listagem por região ou listagem geral
+        const url = this.obterUrlListagem(nome, offset, tipos);
 
-            url = 'https://pokeapi.co/api/v2/pokemon?limit=100000';
+        return this.http.get<ObjetoRespostaHttp>(url).pipe(
+            switchMap((resposta) =>
+                this.buscarPokemonsComEspecie(resposta.results)
+            ),
 
-            return this.http.get<ObjetoRespostaHttp>(url).pipe(
+            map((pokemons) => {
+                let resultado = this.filtrarPorTipo(pokemons, tipos);
 
-                map((resposta) =>
-                    resposta.results.filter((pokemon) => {
-
-                        if (formaAlternativa === 'mega') {
-                            return pokemon.name.includes('-mega');
-                        }
-
-                        return pokemon.name.endsWith(
-                            `-${formaAlternativa.toLowerCase()}`
-                        );
-                    })
-                ),
-
-                switchMap((pokemons) => {
-
-                    const requisicoes = pokemons.map(
-                        (pokemon) =>
-                            this.http.get<PokemonRespostaHttp>(
-                                pokemon.url
-                            ).pipe(
-                                switchMap((detalhe) =>
-                                    this.http.get<PokemonSpeciesRespostaHttp>(
-                                        detalhe.species.url
-                                    ).pipe(
-                                        map((species) => ({
-                                            detalhe,
-                                            species
-                                        }))
-                                    )
-                                )
-                            )
+                // Aplica a paginação depois do filtro por tipo
+                if (!nome && tipos && tipos.length > 0) {
+                    resultado = resultado.slice(
+                        offset,
+                        offset + this.quantidadePorPagina
                     );
+                }
 
-                    return forkJoin(requisicoes);
-                }),
+                return resultado.map((pokemon) =>
+                    this.converterParaPokemon(pokemon)
+                );
+            })
+        );
+    }
 
-                map((detalhes) => {
+    // ==================================================
+    // CONSTRUÇÃO DA URL DA LISTAGEM
+    // ==================================================
 
-                    let pokemons = detalhes;
-
-                    if (tipos && tipos.length > 0) {
-                        pokemons = pokemons.filter((pokemon) =>
-                            pokemon.detalhe.types.some((item) =>
-                                tipos.includes(item.type.name)
-                            )
-                        );
-                    }
-
-                    return pokemons.map((pokemon): Pokemon => ({
-                        id: pokemon.detalhe.id,
-                        name: pokemon.detalhe.name,
-                        types: pokemon.detalhe.types.map(
-                            (item) => item.type.name
-                        ),
-                        sprite: pokemon.detalhe.sprites.front_default,
-                        spriteShiny: pokemon.detalhe.sprites.front_shiny,
-
-                        artwork: pokemon.detalhe.sprites.other['official-artwork'].front_default,
-
-                        artworkShiny: pokemon.detalhe.sprites.other['official-artwork'].front_shiny,
-
-
-                        formas: pokemon.species.varieties
-                            .filter((variedade) => {
-                                const nome =
-                                    variedade.pokemon.name;
-
-                                return (
-                                    !nome.includes('-alola') &&
-                                    !nome.includes('-galar') &&
-                                    !nome.includes('-hisui') &&
-                                    !nome.includes('-paldea') &&
-                                    !nome.includes('-mega') &&
-                                    !nome.endsWith('-gmax')
-                                );
-                            })
-                            .map((variedade) => ({
-                                nome: variedade.pokemon.name
-                            }))
-                    }));
-                })
-            );
-        }
-
-        // REGIÃO
+    private obterUrlListagem(
+        nome?: string,
+        offset = 0,
+        tipos?: string[]
+    ): string {
         if (nome) {
-
             const regiao = regioes.find(
-                (regiao) =>
-                    regiao.nome.toLowerCase() === nome.toLowerCase()
+                (item) =>
+                    item.nome.toLowerCase() === nome.toLowerCase()
             );
 
             if (!regiao) {
                 throw new Error('Região não encontrada.');
             }
 
-            url =
-                `https://pokeapi.co/api/v2/pokemon?offset=${regiao.inicio - 1}&limit=${regiao.quantidade}`;
-
-        } else {
-
-            // LISTAGEM NORMAL
-            if (tipos && tipos.length > 0) {
-                url =
-                    'https://pokeapi.co/api/v2/pokemon?limit=100000';
-            } else {
-                url =
-                    `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=32`;
-            }
+            return (
+                `${this.apiUrl}/pokemon` +
+                `?offset=${regiao.inicio - 1}` +
+                `&limit=${regiao.quantidade}`
+            );
         }
 
-        return this.http.get<ObjetoRespostaHttp>(url).pipe(
+        // Para filtrar por tipo, precisamos buscar a lista completa
+        if (tipos && tipos.length > 0) {
+            return `${this.apiUrl}/pokemon?limit=100000`;
+        }
 
-            switchMap((resposta) => {
-
-                const requisicoes = resposta.results.map(
-                    (pokemon) =>
-                        this.http.get<PokemonRespostaHttp>(
-                            pokemon.url
-                        ).pipe(
-                            switchMap((detalhe) =>
-                                this.http.get<PokemonSpeciesRespostaHttp>(
-                                    detalhe.species.url
-                                ).pipe(
-                                    map((species) => ({
-                                        detalhe,
-                                        species
-                                    }))
-                                )
-                            )
-                        )
-                );
-
-                return forkJoin(requisicoes);
-            }),
-
-            map((detalhes) => {
-
-                let pokemons = detalhes;
-
-                if (tipos && tipos.length > 0) {
-
-                    pokemons = pokemons.filter((pokemon) =>
-                        pokemon.detalhe.types.some((item) =>
-                            tipos.includes(item.type.name)
-                        )
-                    );
-
-                    // Paginação depois do filtro
-                    if (!nome) {
-                        pokemons = pokemons.slice(
-                            offset,
-                            offset + 32
-                        );
-                    }
-                }
-
-                return pokemons.map((pokemon): Pokemon => ({
-                    id: pokemon.detalhe.id,
-                    name: pokemon.detalhe.name,
-                    types: pokemon.detalhe.types.map(
-                        (item) => item.type.name
-                    ),
-                    sprite: pokemon.detalhe.sprites.front_default,
-                    spriteShiny: pokemon.detalhe.sprites.front_shiny,
-
-                    artwork: pokemon.detalhe.sprites.other['official-artwork'].front_default,
-
-                    artworkShiny: pokemon.detalhe.sprites.other['official-artwork'].front_shiny,
-
-
-                    formas: pokemon.species.varieties
-                        .filter((variedade) => {
-                            const nome =
-                                variedade.pokemon.name;
-
-                            return (
-                                !nome.includes('-alola') &&
-                                !nome.includes('-galar') &&
-                                !nome.includes('-hisui') &&
-                                !nome.includes('-paldea') &&
-                                !nome.includes('-mega') &&
-                                !nome.endsWith('-gmax')
-                            );
-                        })
-                        .map((variedade) => ({
-                            nome: variedade.pokemon.name
-                        }))
-                }));
-            })
+        return (
+            `${this.apiUrl}/pokemon` +
+            `?offset=${offset}` +
+            `&limit=${this.quantidadePorPagina}`
         );
     }
-    obterDadosPokemons(nome?: string) {
 
-        const url = `https://pokeapi.co/api/v2/pokemon/${nome}`;
+    // ==================================================
+    // LISTAGEM DE FORMAS REGIONAIS E ALTERNATIVAS
+    // ==================================================
 
-        return this.http.get<PokemonRespostaHttp>(url).pipe(
+    private obterPokemonsPorForma(
+        tipos?: string[],
+        formaRegional?: string,
+        formaAlternativa?: string
+    ) {
+        const url = `${this.apiUrl}/pokemon?limit=100000`;
 
-            switchMap((detalhe) =>
-                this.http.get<PokemonSpeciesRespostaHttp>(
-                    detalhe.species.url
-                ).pipe(
-                    map((species) => ({
-                        detalhe,
-                        species
-                    }))
+        return this.http.get<ObjetoRespostaHttp>(url).pipe(
+            map((resposta) =>
+                resposta.results.filter((pokemon) =>
+                    this.correspondeAForma(
+                        pokemon.name,
+                        formaRegional,
+                        formaAlternativa
+                    )
                 )
             ),
 
+            switchMap((pokemons) =>
+                this.buscarPokemonsComEspecie(pokemons)
+            ),
+
+            map((pokemons) =>
+                this.filtrarPorTipo(pokemons, tipos).map((pokemon) =>
+                    this.converterParaPokemon(pokemon)
+                )
+            )
+        );
+    }
+
+    private correspondeAForma(
+        nome: string,
+        formaRegional?: string,
+        formaAlternativa?: string
+    ): boolean {
+        if (formaRegional) {
+            return nome.endsWith(
+                `-${formaRegional.toLowerCase()}`
+            );
+        }
+
+        if (formaAlternativa === 'mega') {
+            return nome.includes('-mega');
+        }
+
+        if (formaAlternativa) {
+            return nome.endsWith(
+                `-${formaAlternativa.toLowerCase()}`
+            );
+        }
+
+        return false;
+    }
+
+    // ==================================================
+    // BUSCA DOS DADOS COMPLETOS DOS POKÉMON
+    // ==================================================
+
+    private buscarPokemonsComEspecie(
+        pokemons: ResultadoObjetoHttp[]
+    ) {
+        return forkJoin(
+            pokemons.map((pokemon) =>
+                this.http.get<PokemonRespostaHttp>(pokemon.url).pipe(
+                    switchMap((detalhe) =>
+                        this.http
+                            .get<PokemonSpeciesRespostaHttp>(
+                                detalhe.species.url
+                            )
+                            .pipe(
+                                map((species) => ({
+                                    detalhe,
+                                    species,
+                                }))
+                            )
+                    )
+                )
+            )
+        );
+    }
+
+    // ==================================================
+    // FILTRO POR TIPO
+    // ==================================================
+
+    private filtrarPorTipo(
+        pokemons: PokemonComEspecie[],
+        tipos?: string[]
+    ): PokemonComEspecie[] {
+        if (!tipos || tipos.length === 0) {
+            return pokemons;
+        }
+
+        return pokemons.filter((pokemon) =>
+            pokemon.detalhe.types.some((item) =>
+                tipos.includes(item.type.name)
+            )
+        );
+    }
+
+    // ==================================================
+    // CONVERSÃO PARA O MODELO DA APLICAÇÃO
+    // ==================================================
+
+    private converterParaPokemon(
+        pokemon: PokemonComEspecie
+    ): Pokemon {
+        const detalhe = pokemon.detalhe;
+
+        return {
+            id: detalhe.id,
+            name: detalhe.name,
+
+            types: detalhe.types.map(
+                (item) => item.type.name
+            ),
+
+            sprite: detalhe.sprites.front_default,
+            spriteShiny: detalhe.sprites.front_shiny,
+
+            artwork:
+                detalhe.sprites.other['official-artwork'].front_default,
+
+            artworkShiny:
+                detalhe.sprites.other['official-artwork'].front_shiny,
+
+            formas: pokemon.species.varieties
+                .filter((variedade) =>
+                    this.ehFormaBaseOuVariedadePermitida(
+                        variedade.pokemon.name
+                    )
+                )
+                .map((variedade) => ({
+                    nome: variedade.pokemon.name,
+                })),
+        };
+    }
+
+    private ehFormaBaseOuVariedadePermitida(nome: string): boolean {
+        return (
+            !nome.includes('-alola') &&
+            !nome.includes('-galar') &&
+            !nome.includes('-hisui') &&
+            !nome.includes('-paldea') &&
+            !nome.includes('-mega') &&
+            !nome.endsWith('-gmax')
+        );
+    }
+
+    // ==================================================
+    // DETALHES DE UM POKÉMON
+    // ==================================================
+
+    obterDadosPokemons(nome?: string) {
+        const url = `${this.apiUrl}/pokemon/${nome}`;
+
+        return this.http.get<PokemonRespostaHttp>(url).pipe(
+            switchMap((detalhe) =>
+                this.http
+                    .get<PokemonSpeciesRespostaHttp>(
+                        detalhe.species.url
+                    )
+                    .pipe(
+                        map((species) => ({
+                            detalhe,
+                            species,
+                        }))
+                    )
+            ),
+
             map(({ detalhe, species }): DadosPokemonResponse => ({
-                id: detalhe.id,
-                name: detalhe.name,
-                types: detalhe.types.map(
-                    item => item.type.name
-                ),
-                sprite: detalhe.sprites.front_default,
-                spriteShiny: detalhe.sprites.front_shiny,
+                ...this.converterParaPokemon({
+                    detalhe,
+                    species,
+                }),
 
-                artwork: detalhe.sprites.other['official-artwork'].front_default,
-
-                artworkShiny: detalhe.sprites.other['official-artwork'].front_shiny,
-
-
-                formas: species.varieties
-                    .filter((variedade) => {
-                        const nome =
-                            variedade.pokemon.name;
-
-                        return (
-                            !nome.includes('-alola') &&
-                            !nome.includes('-galar') &&
-                            !nome.includes('-hisui') &&
-                            !nome.includes('-paldea') &&
-                            !nome.includes('-mega') &&
-                            !nome.endsWith('-gmax')
-                        );
-                    })
-                    .map((variedade) => ({
-                        nome: variedade.pokemon.name
-                    })),
-
-                stats: detalhe.stats.map(stat => ({
+                stats: detalhe.stats.map((stat) => ({
                     nome: stat.stat.name,
-                    valor: stat.base_stat
+                    valor: stat.base_stat,
                 })),
 
                 peso: detalhe.weight,
                 altura: detalhe.height,
 
                 habilidades: detalhe.abilities.map(
-                    habilidade => habilidade.ability.name
+                    (habilidade) => habilidade.ability.name
                 ),
 
-                audio: detalhe.cries.latest ?? ''
+                audio: detalhe.cries.latest ?? '',
             }))
         );
     }

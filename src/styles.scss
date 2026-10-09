@@ -21,29 +21,21 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-
     width: 100%;
     z-index: 1000;
-
     background: #087fc1;
-
     border-bottom: 4px solid #183b68;
-
-    box-shadow:
-        0 4px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
 }
 
 .navbar-content {
     max-width: 1200px;
     min-height: 72px;
-
     margin: 0 auto;
     padding: 0 24px;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     gap: 40px;
 }
 
@@ -52,63 +44,51 @@ body {
    LOGO
    ============================================================ */
 
-.navbar-logo {
+.navbar-logo,
+.navbar-content>.navbar-link {
     display: flex;
     align-items: center;
-
     gap: 12px;
-
     color: #ffffff;
-
     font-size: 24px;
     font-weight: 900;
-
     letter-spacing: 1px;
-
     text-decoration: none;
-
     text-shadow:
         2px 2px 0 #183b68,
         -1px -1px 0 #183b68;
 }
 
+.navbar-content>.navbar-link::before {
+    display: none;
+}
+
 .logo-pokeball {
     position: relative;
-
+    flex-shrink: 0;
     width: 30px;
     height: 30px;
-
     border: 3px solid #183b68;
     border-radius: 50%;
-
-    background:
-        linear-gradient(to bottom,
+    background: linear-gradient(to bottom,
             #e53935 0%,
             #e53935 45%,
             #202020 45%,
             #202020 55%,
             #f5f5f5 55%,
             #f5f5f5 100%);
-
-    box-shadow:
-        2px 2px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.25);
 }
 
 .logo-pokeball::after {
     content: '';
-
     position: absolute;
-
     width: 9px;
     height: 9px;
-
     top: 50%;
     left: 50%;
-
     transform: translate(-50%, -50%);
-
     background: #ffffff;
-
     border: 2px solid #202020;
     border-radius: 50%;
 }
@@ -121,7 +101,6 @@ body {
 .navbar-links {
     display: flex;
     align-items: center;
-
     gap: 8px;
 }
 
@@ -135,44 +114,35 @@ body {
 
 
 /* ============================================================
-   LINKS / BOTÕES DA NAVBAR
+   LINKS E BOTÕES DA NAVBAR
    ============================================================ */
 
 .navbar-link {
     position: relative;
-
     padding: 10px 18px;
-
     background: transparent;
-
     border: 2px solid transparent;
-
     color: #ffffff;
-
     font-family: inherit;
     font-size: 16px;
     font-weight: 700;
-
     text-decoration: none;
-
     cursor: pointer;
-
     transition:
         background-color 0.15s ease,
         border-color 0.15s ease,
-        transform 0.15s ease;
+        color 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
 .navbar-link:hover,
-.navbar-link.active {
+.navbar-link.active,
+.navbar-link.ativo {
     background: #f5f5f5;
-
     color: #183b68;
-
     border-color: #183b68;
-
-    box-shadow:
-        3px 3px 0 #183b68;
+    box-shadow: 3px 3px 0 #183b68;
 }
 
 .navbar-link:hover {
@@ -181,22 +151,88 @@ body {
 
 .navbar-link::before {
     content: '▶';
-
     position: absolute;
-
     left: 5px;
-
     opacity: 0;
-
     font-size: 11px;
-
-    transition:
-        opacity 0.15s ease;
+    transition: opacity 0.15s ease;
 }
 
 .navbar-link:hover::before,
-.navbar-link.active::before {
+.navbar-link.active::before,
+.navbar-link.ativo::before {
     opacity: 1;
+}
+
+
+/* ============================================================
+   FAVORITOS — DESKTOP
+   Mantém as dimensões e os efeitos dos outros links.
+   ============================================================ */
+
+.navbar-links-desktop>a[routerLink="/favoritos"] {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 0;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: normal;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: none;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.navbar-links-desktop>a[routerLink="/favoritos"]::before {
+    content: '▶';
+    position: absolute;
+    left: 5px;
+    opacity: 0;
+    color: #183b68;
+    font-size: 11px;
+    transition: opacity 0.15s ease;
+}
+
+.navbar-links-desktop>a[routerLink="/favoritos"] i {
+    color: #ff6b81;
+    font-size: 16px;
+    transition: color 0.15s ease;
+}
+
+.navbar-links-desktop>a[routerLink="/favoritos"]:hover,
+.navbar-links-desktop>a[routerLink="/favoritos"].ativo {
+    background: #f5f5f5;
+    color: #183b68;
+    border-color: #183b68;
+    box-shadow: 3px 3px 0 #183b68;
+}
+
+.navbar-links-desktop>a[routerLink="/favoritos"]:hover {
+    transform: translateY(-1px);
+}
+
+.navbar-links-desktop>a[routerLink="/favoritos"]:hover::before,
+.navbar-links-desktop>a[routerLink="/favoritos"].ativo::before {
+    opacity: 1;
+}
+
+.navbar-links-desktop>a[routerLink="/favoritos"]:hover i,
+.navbar-links-desktop>a[routerLink="/favoritos"].ativo i {
+    color: #e63950;
 }
 
 
@@ -206,13 +242,9 @@ body {
 
 .dropdown-arrow {
     display: inline-block;
-
     margin-left: 5px;
-
     font-size: 9px;
-
-    transition:
-        transform 0.15s ease;
+    transition: transform 0.15s ease;
 }
 
 .dropdown-arrow.aberto {
@@ -226,27 +258,17 @@ body {
 
 .regioes-panel {
     position: absolute;
-
     top: calc(100% + 8px);
     right: 0;
-
     width: 360px;
-
     padding: 12px;
-
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-
     gap: 8px;
-
     background: #f5f5f5;
-
     border: 3px solid #183b68;
     border-radius: 8px;
-
-    box-shadow:
-        5px 5px 0 #183b68;
-
+    box-shadow: 5px 5px 0 #183b68;
     z-index: 1100;
 }
 
@@ -254,23 +276,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-
     min-height: 38px;
-
     padding: 7px 8px;
-
     background: #ffffff;
-
     border: 2px solid transparent;
     border-radius: 5px;
-
     color: #183b68;
-
     font-size: 12px;
     font-weight: 800;
-
     text-decoration: none;
-
     transition:
         background-color 0.15s ease,
         border-color 0.15s ease,
@@ -281,45 +295,30 @@ body {
 .regiao-link:hover,
 .regiao-link.active {
     background: #087fc1;
-
     color: #ffffff;
-
     border-color: #183b68;
-
-    box-shadow:
-        2px 2px 0 #183b68;
-
+    box-shadow: 2px 2px 0 #183b68;
     transform: translateY(-1px);
 }
 
 
 /* ============================================================
-   FORMAS REGIONAIS
+   FORMAS REGIONAIS E ALTERNATIVAS
    ============================================================ */
 
 .formas-regionais-panel {
     position: absolute;
-
     top: calc(100% + 8px);
     left: 0;
-
     min-width: 230px;
-
     padding: 12px;
-
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-
     gap: 8px;
-
     background: #ffffff;
-
     border: 3px solid #183b68;
     border-radius: 10px;
-
-    box-shadow:
-        4px 4px 0 #183b68;
-
+    box-shadow: 4px 4px 0 #183b68;
     z-index: 1000;
 }
 
@@ -327,22 +326,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-
     padding: 10px 14px;
-
     background: #f5f5f5;
-
     border: 2px solid #183b68;
     border-radius: 6px;
-
     color: #183b68;
-
     font-weight: 700;
-
     text-decoration: none;
-
     cursor: pointer;
-
     transition:
         background 0.15s ease,
         color 0.15s ease,
@@ -351,9 +342,7 @@ body {
 
 .forma-regional-link:hover {
     background: #087fc1;
-
     color: #ffffff;
-
     transform: translateY(-2px);
 }
 
@@ -368,22 +357,14 @@ body {
 
 .tipos-panel {
     position: absolute;
-
     top: calc(100% + 8px);
     right: 0;
-
     width: 440px;
-
     padding: 16px;
-
     background: #f5f5f5;
-
     border: 3px solid #183b68;
     border-radius: 8px;
-
-    box-shadow:
-        5px 5px 0 #183b68;
-
+    box-shadow: 5px 5px 0 #183b68;
     z-index: 1100;
 }
 
@@ -391,58 +372,40 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     margin-bottom: 14px;
     padding-bottom: 10px;
-
     border-bottom: 2px solid #183b68;
-
     color: #183b68;
-
     font-size: 14px;
 }
 
 .tipos-panel-header span {
     color: #183b68;
-
     font-size: 11px;
-
     text-transform: uppercase;
 }
 
 .tipos-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-
     gap: 8px;
 }
 
 .tipo-filtro {
     position: relative;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     min-height: 36px;
-
     padding: 5px 8px;
-
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 5px;
-
     color: #ffffff;
-
     font-size: 11px;
     font-weight: 800;
-
     text-transform: uppercase;
-
-    box-shadow:
-        2px 2px 0 rgba(0, 0, 0, 0.18);
-
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.18);
     cursor: pointer;
-
     transition:
         transform 0.12s ease,
         filter 0.12s ease,
@@ -451,52 +414,36 @@ body {
 
 .tipo-filtro input {
     position: absolute;
-
     opacity: 0;
-
     pointer-events: none;
 }
 
 .tipo-filtro:hover {
     filter: brightness(1.08);
-
     transform: translateY(-2px);
-
-    box-shadow:
-        3px 4px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.25);
 }
 
 .tipo-filtro.selecionado {
     border-color: #183b68;
-
-    box-shadow:
-        3px 3px 0 #183b68;
-
+    box-shadow: 3px 3px 0 #183b68;
     transform: translateY(-2px);
 }
 
 .tipo-filtro.selecionado::after {
     content: '✓';
-
     position: absolute;
-
     top: -8px;
     right: -8px;
-
     width: 20px;
     height: 20px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background: #87eaf7;
-
     border: 2px solid #183b68;
     border-radius: 50%;
-
     color: #183b68;
-
     font-size: 12px;
     font-weight: 900;
 }
@@ -528,7 +475,6 @@ body {
 .pokemon-type.electric,
 .pokemon-tipo.electric {
     background: #f8d030;
-
     color: #3d3200;
 }
 
@@ -542,7 +488,6 @@ body {
 .pokemon-type.ice,
 .pokemon-tipo.ice {
     background: #98d8d8;
-
     color: #164646;
 }
 
@@ -562,7 +507,6 @@ body {
 .pokemon-type.ground,
 .pokemon-tipo.ground {
     background: #e0c068;
-
     color: #4a3b12;
 }
 
@@ -612,7 +556,6 @@ body {
 .pokemon-type.steel,
 .pokemon-tipo.steel {
     background: #b8b8d0;
-
     color: #30303b;
 }
 
@@ -629,33 +572,22 @@ body {
 
 .navbar-menu-button {
     display: none;
-
     width: 42px;
     height: 42px;
-
     padding: 8px;
-
     background: #f5f5f5;
-
     border: 3px solid #183b68;
     border-radius: 6px;
-
-    box-shadow:
-        3px 3px 0 #183b68;
-
+    box-shadow: 3px 3px 0 #183b68;
     cursor: pointer;
 }
 
 .navbar-menu-button span {
     display: block;
-
     width: 100%;
     height: 3px;
-
     margin: 4px 0;
-
     background: #183b68;
-
     border-radius: 2px;
 }
 
@@ -665,26 +597,18 @@ body {
 
 .mobile-menu-button {
     width: 100%;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     padding: 12px 15px;
     margin-bottom: 8px;
-
     background: #087fc1;
-
     border: 2px solid transparent;
-
     color: #ffffff;
-
     font-family: inherit;
     font-size: 15px;
     font-weight: 700;
-
     cursor: pointer;
-
     transition:
         background-color 0.15s ease,
         color 0.15s ease,
@@ -693,42 +617,83 @@ body {
 
 .mobile-menu-button:hover {
     background: #f5f5f5;
-
     color: #183b68;
-
     border-color: #183b68;
-
-    box-shadow:
-        3px 3px 0 #183b68;
+    box-shadow: 3px 3px 0 #183b68;
 }
 
 .regioes-panel-mobile,
 .tipos-panel-mobile {
     position: static;
-
     width: auto;
-
     margin-bottom: 10px;
-
     box-shadow: none;
 }
 
 
 /* ============================================================
-   LISTAGEM DE POKÉMON
+   FAVORITOS — MENU MOBILE
+   ============================================================ */
+
+.navbar-favoritos-mobile {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    background: transparent;
+    border: 2px solid transparent;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.navbar-favoritos-mobile i {
+    color: #ff6b81;
+    font-size: 16px;
+    transition: color 0.15s ease;
+}
+
+.navbar-favoritos-mobile:hover,
+.navbar-favoritos-mobile.ativo {
+    background: #f5f5f5;
+    color: #183b68;
+    border-color: #183b68;
+    box-shadow: 3px 3px 0 #183b68;
+}
+
+.navbar-favoritos-mobile:hover {
+    transform: translateY(-1px);
+}
+
+.navbar-favoritos-mobile:hover i,
+.navbar-favoritos-mobile.ativo i {
+    color: #e63950;
+}
+
+
+/* ============================================================
+   LISTAGEM PRINCIPAL DA POKÉDEX
    ============================================================ */
 
 .pokemon-list {
     min-height: 100vh;
-
     padding: 117px 0 60px;
-
     background:
         radial-gradient(circle at 20% 20%,
             rgba(255, 255, 255, 0.35) 0 2px,
             transparent 3px),
         #78c850;
-
     background-size: 32px 32px;
 }
 
@@ -744,27 +709,16 @@ body {
 
 .pokemon-card {
     position: relative;
-
     display: block;
-
     height: 100%;
-
     overflow: hidden;
-
     background: #ffffff;
-
     border: 3px solid #263b59;
     border-radius: 14px;
-
     color: inherit;
-
     text-decoration: none;
-
-    box-shadow:
-        5px 5px 0 #263b59;
-
+    box-shadow: 5px 5px 0 #263b59;
     cursor: pointer;
-
     transition:
         transform 0.18s ease,
         box-shadow 0.18s ease;
@@ -772,13 +726,9 @@ body {
 
 .pokemon-card:hover {
     color: inherit;
-
     text-decoration: none;
-
     transform: translateY(-8px);
-
-    box-shadow:
-        8px 12px 0 #263b59;
+    box-shadow: 8px 12px 0 #263b59;
 }
 
 
@@ -789,39 +739,24 @@ body {
 .forma-anterior,
 .forma-proxima {
     position: absolute;
-
     top: 50%;
-
     z-index: 5;
-
     width: 36px;
     height: 36px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     padding: 0;
-
     background: #f5f5f5;
-
     border: 3px solid #263b59;
     border-radius: 50%;
-
     color: #263b59;
-
     font-size: 18px;
     font-weight: 900;
-
     line-height: 1;
-
     cursor: pointer;
-
     transform: translateY(-50%);
-
-    box-shadow:
-        2px 2px 0 #263b59;
-
+    box-shadow: 2px 2px 0 #263b59;
     transition:
         background 0.15s ease,
         color 0.15s ease,
@@ -840,73 +775,51 @@ body {
 .forma-anterior:hover,
 .forma-proxima:hover {
     background: #087fc1;
-
     color: #ffffff;
-
     transform: translateY(-50%) scale(1.08);
-
-    box-shadow:
-        3px 3px 0 #183b68;
+    box-shadow: 3px 3px 0 #183b68;
 }
 
 .forma-anterior:active,
 .forma-proxima:active {
     transform: translateY(-50%) scale(0.94);
-
-    box-shadow:
-        1px 1px 0 #183b68;
+    box-shadow: 1px 1px 0 #183b68;
 }
 
 
 /* ============================================================
-   IMAGEM DO POKÉMON
+   IMAGEM NA LISTAGEM PRINCIPAL
    ============================================================ */
 
 .pokemon-image {
     position: relative;
-
     min-height: 200px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     overflow: hidden;
-
     background: #e9f6ff;
-
     border-bottom: 3px solid #263b59;
 }
 
 .pokemon-image::before {
     content: '';
-
     position: absolute;
-
     width: 180px;
     height: 180px;
-
     border-radius: 50%;
-
     background: #c9eafa;
-
     opacity: 0.7;
 }
 
 .pokemon-image img {
     position: relative;
-
     z-index: 1;
-
     width: 170px;
     height: 170px;
-
     object-fit: contain;
-
     image-rendering: pixelated;
-
-    transition:
-        transform 0.2s ease;
+    transition: transform 0.2s ease;
 }
 
 .pokemon-card:hover .pokemon-image img {
@@ -920,50 +833,35 @@ body {
 
 .pokemon-info {
     position: relative;
-
     padding: 18px 20px 20px;
-
     background: #ffffff;
 }
 
 .pokemon-info::before {
     content: '';
-
     position: absolute;
-
     top: 0;
     left: 20px;
-
     width: 45px;
     height: 4px;
-
     background: #087fc1;
-
-    border-radius:
-        0 0 4px 4px;
+    border-radius: 0 0 4px 4px;
 }
 
 .pokemon-number {
     display: block;
-
     margin-bottom: 2px;
-
     color: #7b8794;
-
     font-size: 13px;
     font-weight: 800;
-
     letter-spacing: 1px;
 }
 
 .pokemon-name {
     margin: 0 0 15px;
-
     color: #263b59;
-
     font-size: 23px;
     font-weight: 900;
-
     letter-spacing: 0.3px;
 }
 
@@ -975,33 +873,23 @@ body {
 .pokemon-types {
     display: flex;
     flex-wrap: wrap;
-
     gap: 7px;
 }
 
 .pokemon-type {
     min-width: 68px;
-
     padding: 5px 11px;
-
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
     border: 2px solid rgba(0, 0, 0, 0.18);
     border-radius: 5px;
-
     color: #ffffff;
-
     font-size: 12px;
     font-weight: 800;
-
     text-transform: uppercase;
-
     letter-spacing: 0.4px;
-
-    box-shadow:
-        2px 2px 0 rgba(0, 0, 0, 0.18);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.18);
 }
 
 
@@ -1011,49 +899,32 @@ body {
 
 .pokemon-pagination {
     position: fixed;
-
     top: 50%;
     left: 0;
     right: 0;
-
     z-index: 900;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     padding: 0 24px;
-
     transform: translateY(-50%);
-
     pointer-events: none;
 }
 
 .botao-anterior,
 .botao-proximo {
     width: 105px;
-
     padding: 12px 10px;
-
     pointer-events: auto;
-
     background: #087fc1;
-
     border: 3px solid #183b68;
     border-radius: 10px;
-
     color: #ffffff;
-
     font-size: 0.85rem;
     font-weight: 700;
-
     text-transform: uppercase;
-
-    box-shadow:
-        0 5px 0 #183b68;
-
+    box-shadow: 0 5px 0 #183b68;
     cursor: pointer;
-
     transition:
         background 0.2s ease,
         transform 0.1s ease,
@@ -1068,9 +939,7 @@ body {
 .botao-anterior:active,
 .botao-proximo:active {
     transform: translateY(4px);
-
-    box-shadow:
-        0 1px 0 #183b68;
+    box-shadow: 0 1px 0 #183b68;
 }
 
 
@@ -1086,24 +955,14 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-
     padding: 8px 14px;
-
     background: #096fa8;
-
-
     border: 2px solid #183b68;
     border-radius: 5px;
-
     color: #f5f5f5;
-
     font-weight: 800;
-
     text-decoration: none;
-
-    box-shadow:
-        3px 3px 0 #183b68;
-
+    box-shadow: 3px 3px 0 #183b68;
     transition:
         background 0.15s ease,
         color 0.15s ease,
@@ -1112,48 +971,34 @@ body {
 
 .botao-voltar:hover {
     background: #096fa8;
-
-
     color: #ffffff;
-
     transform: translateY(-2px);
 }
 
 .botao-voltar:active {
     transform: translateY(2px);
-
-    box-shadow:
-        1px 1px 0 #183b68;
+    box-shadow: 1px 1px 0 #183b68;
 }
 
 .pokemon-detalhes {
     min-height: 100vh;
-
     padding: 115px 25px 55px;
-
     background:
         radial-gradient(circle at 20% 20%,
             rgba(255, 255, 255, 0.35) 0 2px,
             transparent 3px),
         #78c850;
-
     background-size: 32px 32px;
 }
 
 .pokemon-detalhes-container {
     max-width: 1050px;
-
     margin: 0 auto;
-
     overflow: hidden;
-
     background: #f5f5f5;
-
     border: 4px solid #183b68;
     border-radius: 10px;
-
-    box-shadow:
-        7px 7px 0 #183b68;
+    box-shadow: 7px 7px 0 #183b68;
 }
 
 
@@ -1163,34 +1008,23 @@ body {
 
 .pokemon-detalhes-header {
     position: relative;
-
     display: flex;
     align-items: center;
-
     gap: 18px;
-
     padding: 17px 25px;
-
     background: #087fc1;
-
     border-bottom: 4px solid #183b68;
-
     color: #ffffff;
 }
 
 .pokemon-detalhes-header::before,
 .pokemon-detalhes-header::after {
     content: '';
-
     position: absolute;
-
     left: 10px;
-
     width: 9px;
     height: 9px;
-
     background: #f5f5f5;
-
     border: 2px solid #183b68;
     border-radius: 50%;
 }
@@ -1205,29 +1039,20 @@ body {
 
 .pokemon-detalhes-numero {
     padding-left: 15px;
-
     color: #d7f3ff;
-
     font-size: 17px;
     font-weight: 900;
-
     letter-spacing: 1px;
 }
 
 .pokemon-detalhes-nome {
     margin: 0;
-
     color: #ffffff;
-
     font-size: 30px;
     font-weight: 900;
-
     letter-spacing: 1px;
-
     text-transform: uppercase;
-
-    text-shadow:
-        2px 2px 0 #183b68;
+    text-shadow: 2px 2px 0 #183b68;
 }
 
 
@@ -1237,11 +1062,8 @@ body {
 
 .pokemon-detalhes-principal {
     display: grid;
-
     grid-template-columns: 1fr 1fr;
-
     gap: 25px;
-
     padding: 25px;
 }
 
@@ -1252,7 +1074,6 @@ body {
 
 .pokemon-detalhes-imagem {
     position: relative;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1260,27 +1081,19 @@ body {
 
 .pokemon-sprite-container {
     position: relative;
-
     width: 100%;
     max-width: 400px;
-
     aspect-ratio: 1;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     overflow: hidden;
-
-    background:
-        radial-gradient(circle,
+    background: radial-gradient(circle,
             #ffffff 0%,
             #e7f6ff 55%,
             #b9dff2 100%);
-
     border: 4px solid #183b68;
     border-radius: 8px;
-
     box-shadow:
         inset 0 0 0 4px #ffffff,
         5px 5px 0 #183b68;
@@ -1288,33 +1101,21 @@ body {
 
 .pokemon-sprite-container::before {
     content: '';
-
     position: absolute;
-
     inset: 13px;
-
     border: 2px dashed rgba(24, 59, 104, 0.25);
-
     border-radius: 5px;
 }
 
 .pokemon-sprite-container img {
     position: relative;
-
     z-index: 1;
-
     width: 78%;
     height: 78%;
-
     object-fit: contain;
-
     image-rendering: pixelated;
-
-    filter:
-        drop-shadow(4px 5px 0 rgba(38, 59, 89, 0.22));
-
-    transition:
-        transform 0.2s ease;
+    filter: drop-shadow(4px 5px 0 rgba(38, 59, 89, 0.22));
+    transition: transform 0.2s ease;
 }
 
 .pokemon-sprite-container:hover img {
@@ -1328,39 +1129,24 @@ body {
 
 .botao-shiny {
     position: absolute;
-
     top: 12px;
     right: 12px;
-
     z-index: 5;
-
     width: 52px;
     height: 52px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     padding: 0;
-
     background: #ffffff;
-
     border: 3px solid #183b68;
     border-radius: 50%;
-
     color: #183b68;
-
     font-size: 0;
-
     font-weight: 900;
-
     line-height: 1;
-
     cursor: pointer;
-
-    box-shadow:
-        3px 3px 0 #183b68;
-
+    box-shadow: 3px 3px 0 #183b68;
     transition:
         transform 0.15s ease,
         box-shadow 0.15s ease,
@@ -1370,47 +1156,32 @@ body {
 
 .botao-shiny::before {
     content: '✦';
-
     font-size: 29px;
 }
 
 .botao-shiny:hover {
     background: #fff7b2;
-
     color: #f0b400;
-
     transform: translateY(-2px);
-
-    box-shadow:
-        4px 5px 0 #183b68;
+    box-shadow: 4px 5px 0 #183b68;
 }
 
 .botao-shiny:active {
     transform: translateY(2px);
-
-    box-shadow:
-        1px 1px 0 #183b68;
+    box-shadow: 1px 1px 0 #183b68;
 }
-
-
-/* ============================================================
-   SHINY ATIVO
-   ============================================================ */
 
 .botao-shiny.ativo {
     background: #fff3a6;
-
     color: #f0b400;
-
-    box-shadow:
-        3px 3px 0 #183b68;
+    box-shadow: 3px 3px 0 #183b68;
 }
 
 .botao-shiny.ativo:hover {
     background: #ffe66d;
-
     color: #d99a00;
 }
+
 
 /* ============================================================
    BOTÃO DE ARTWORK
@@ -1418,35 +1189,22 @@ body {
 
 .botao-artwork {
     position: absolute;
-
     top: 12px;
     right: 74px;
-
     z-index: 5;
-
     width: 52px;
     height: 52px;
-
     padding: 0;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background: #ffffff;
-
     border: 3px solid #183b68;
     border-radius: 50%;
-
     color: #183b68;
-
     font-size: 0;
-
     cursor: pointer;
-
-    box-shadow:
-        3px 3px 0 #183b68;
-
+    box-shadow: 3px 3px 0 #183b68;
     transition:
         transform 0.15s ease,
         box-shadow 0.15s ease,
@@ -1456,30 +1214,23 @@ body {
 
 .botao-artwork::before {
     content: '🎨';
-
     font-size: 21px;
-
     line-height: 1;
 }
 
 .botao-artwork:hover,
 .botao-artwork.ativo {
     background: #d7f3ff;
-
     color: #087fc1;
-
     transform: translateY(-2px);
-
-    box-shadow:
-        4px 5px 0 #183b68;
+    box-shadow: 4px 5px 0 #183b68;
 }
 
 .botao-artwork:active {
     transform: translateY(2px);
-
-    box-shadow:
-        1px 1px 0 #183b68;
+    box-shadow: 1px 1px 0 #183b68;
 }
+
 
 /* ============================================================
    INFORMAÇÕES DOS DETALHES
@@ -1488,40 +1239,29 @@ body {
 .pokemon-detalhes-info {
     display: flex;
     flex-direction: column;
-
     gap: 14px;
 }
 
 .pokemon-detalhes-secao {
     padding: 14px 16px;
-
     background: #ffffff;
-
     border: 3px solid #183b68;
     border-radius: 6px;
-
-    box-shadow:
-        3px 3px 0 #183b68;
+    box-shadow: 3px 3px 0 #183b68;
 }
 
 .pokemon-detalhes-secao h2 {
     margin: 0 0 9px;
-
     color: #183b68;
-
     font-size: 14px;
     font-weight: 900;
-
     letter-spacing: 0.7px;
-
     text-transform: uppercase;
 }
 
 .pokemon-detalhes-secao p {
     margin: 0;
-
     color: #263b59;
-
     font-size: 19px;
     font-weight: 900;
 }
@@ -1534,31 +1274,22 @@ body {
 .pokemon-tipos {
     display: flex;
     flex-wrap: wrap;
-
     gap: 8px;
 }
 
 .pokemon-tipo {
     min-width: 82px;
-
     padding: 7px 12px;
-
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
     border: 2px solid rgba(0, 0, 0, 0.25);
     border-radius: 5px;
-
     color: #ffffff;
-
     font-size: 11px;
     font-weight: 900;
-
     text-transform: uppercase;
-
-    box-shadow:
-        2px 2px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 
@@ -1569,23 +1300,17 @@ body {
 .pokemon-habilidades {
     display: flex;
     flex-wrap: wrap;
-
     gap: 8px;
 }
 
 .pokemon-habilidades span {
     padding: 6px 10px;
-
     background: #e8f1f8;
-
     border: 2px solid #183b68;
     border-radius: 4px;
-
     color: #183b68;
-
     font-size: 12px;
     font-weight: 800;
-
     text-transform: uppercase;
 }
 
@@ -1596,7 +1321,6 @@ body {
 
 .pokemon-detalhes-secao audio {
     display: block;
-
     width: 100%;
     height: 38px;
 }
@@ -1608,40 +1332,30 @@ body {
 
 .pokemon-status {
     margin: 0 25px 25px;
-
     padding: 20px;
-
     background: #ffffff;
-
     border: 3px solid #183b68;
     border-radius: 6px;
-
-    box-shadow:
-        4px 4px 0 #183b68;
+    box-shadow: 4px 4px 0 #183b68;
 }
 
 .pokemon-status h2 {
     margin: 0 0 18px;
-
     color: #183b68;
-
     font-size: 18px;
     font-weight: 900;
-
     text-transform: uppercase;
 }
 
 .pokemon-status-lista {
     display: flex;
     flex-direction: column;
-
     gap: 13px;
 }
 
 .pokemon-status-item {
     display: flex;
     flex-direction: column;
-
     gap: 5px;
 }
 
@@ -1649,75 +1363,370 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     color: #263b59;
-
     font-size: 12px;
     font-weight: 900;
-
     text-transform: uppercase;
 }
 
 .pokemon-status-label strong {
     min-width: 35px;
-
     padding: 2px 6px;
-
     background: #087fc1;
-
     border: 2px solid #183b68;
     border-radius: 3px;
-
     color: #ffffff;
-
     text-align: center;
-
     font-size: 11px;
 }
 
 .pokemon-status-barra {
     height: 15px;
-
     overflow: hidden;
-
     background: #d8d8d8;
-
     border: 2px solid #183b68;
     border-radius: 3px;
 }
 
 .pokemon-status-progresso {
     height: 100%;
-
-    background:
-        repeating-linear-gradient(135deg,
+    background: repeating-linear-gradient(135deg,
             #087fc1 0,
             #087fc1 8px,
             #096fa8 8px,
             #096fa8 16px);
-
     border-right: 2px solid #183b68;
-
-    transition:
-        width 0.3s ease;
+    transition: width 0.3s ease;
 }
 
 
 /* ============================================================
-   RESPONSIVIDADE
+   BOTÃO DE FAVORITOS NOS DETALHES
+   ============================================================ */
+
+.botao-favorito {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    padding: 0;
+    background: #ffffff;
+    border: 3px solid #183b68;
+    border-radius: 8px;
+    color: #183b68;
+    font-family: inherit;
+    font-size: 29px;
+    font-weight: 900;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 #183b68;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+.botao-favorito:hover {
+    background: #ffe5e5;
+    color: #e53935;
+    transform: translateY(-2px);
+    box-shadow: 4px 5px 0 #183b68;
+}
+
+.botao-favorito.ativo {
+    background: #e53935;
+    color: #ffffff;
+    border-color: #183b68;
+}
+
+.botao-favorito.ativo:hover {
+    background: #c62828;
+    color: #ffffff;
+}
+
+.botao-favorito:active {
+    transform: translateY(2px);
+    box-shadow: 1px 1px 0 #183b68;
+}
+
+.botao-favorito:focus-visible {
+    outline: 3px solid #ffe66d;
+    outline-offset: 4px;
+}
+
+
+/* ============================================================
+   PÁGINA DE FAVORITOS
+   ============================================================ */
+
+.pagina-favoritos {
+    min-height: 100vh;
+    padding: 117px 40px 60px;
+    background:
+        radial-gradient(circle at 20% 20%,
+            rgba(255, 255, 255, 0.35) 0 2px,
+            transparent 3px),
+        #78c850;
+    background-size: 32px 32px;
+}
+
+
+/* ============================================================
+   CABEÇALHO DOS FAVORITOS
+   ============================================================ */
+
+.favoritos-header {
+    max-width: 1200px;
+    margin: 0 auto 35px;
+    padding: 24px;
+    background: #087fc1;
+    border: 4px solid #183b68;
+    border-radius: 10px;
+    color: #ffffff;
+    text-align: center;
+    box-shadow: 6px 6px 0 #183b68;
+}
+
+.favoritos-header h1 {
+    margin: 0 0 10px;
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    text-shadow: 2px 2px 0 #183b68;
+}
+
+.favoritos-header p {
+    margin: 0;
+    color: #e4f5ff;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   GRID DOS POKÉMON FAVORITOS
+   Quatro colunas no desktop, como a listagem principal.
+   ============================================================ */
+
+.pokemon-lista {
+    width: 100%;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 25px;
+    margin: 0 auto;
+}
+
+
+/* ============================================================
+   CARDS DOS FAVORITOS
+   Aproxima o visual dos cards da listagem principal.
+   ============================================================ */
+
+.pagina-favoritos .pokemon-card {
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    background: #ffffff;
+    border: 3px solid #263b59;
+    border-radius: 14px;
+    box-shadow: 5px 5px 0 #263b59;
+}
+
+.pagina-favoritos .pokemon-card:hover {
+    box-shadow: 8px 12px 0 #263b59;
+}
+
+.pagina-favoritos .pokemon-link {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Número do Pokémon */
+
+.pagina-favoritos .pokemon-numero {
+    display: block;
+    padding: 12px 16px 0;
+    margin: 0 0 2px;
+    color: #7b8794;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+/*
+ * Na listagem principal, a imagem fica dentro de um contêiner
+ * com fundo azul-claro, círculo decorativo e borda inferior.
+ * Aqui reproduzimos esse visual diretamente na imagem, pois
+ * o HTML dos favoritos utiliza <img class="pokemon-image">.
+ */
+
+.pagina-favoritos img.pokemon-image {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 200px;
+    min-height: 200px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    margin: 10px 0 0;
+    padding: 15px;
+    object-fit: contain;
+    background: radial-gradient(circle at center,
+            #c9eafa 0,
+            #c9eafa 89px,
+            #e9f6ff 90px,
+            #e9f6ff 100%);
+    border: 0;
+    border-bottom: 3px solid #263b59;
+    image-rendering: pixelated;
+    transition: transform 0.2s ease;
+}
+
+.pagina-favoritos .pokemon-card:hover img.pokemon-image {
+    transform: scale(1.04);
+}
+
+/* Área de informações */
+
+.pagina-favoritos .pokemon-info {
+    position: relative;
+    flex: 1;
+    padding: 18px 20px 20px;
+    background: #ffffff;
+    border-top: 0;
+}
+
+.pagina-favoritos .pokemon-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20px;
+    width: 45px;
+    height: 4px;
+    background: #087fc1;
+    border-radius: 0 0 4px 4px;
+}
+
+.pagina-favoritos .pokemon-nome {
+    margin: 0 0 15px;
+    color: #263b59;
+    font-size: 23px;
+    font-weight: 900;
+    letter-spacing: 0.3px;
+    text-transform: capitalize;
+}
+
+
+/* ============================================================
+   ESTADO VAZIO DOS FAVORITOS
+   ============================================================ */
+
+.favoritos-vazio {
+    max-width: 620px;
+    margin: 45px auto 0;
+    padding: 35px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    background: #ffffff;
+    border: 4px solid #183b68;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 7px 7px 0 #183b68;
+}
+
+.favoritos-vazio-imagem {
+    width: 95px;
+    height: 95px;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+.favoritos-vazio h2 {
+    margin: 0;
+    color: #183b68;
+    font-size: 23px;
+    font-weight: 900;
+}
+
+.favoritos-vazio p {
+    max-width: 430px;
+    margin: 0;
+    color: #526579;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   BOTÃO PARA VOLTAR À POKÉDEX
+   ============================================================ */
+
+.botao-voltar-pokedex {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+    padding: 12px 20px;
+    background: #087fc1;
+    border: 3px solid #183b68;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 900;
+    text-decoration: none;
+    box-shadow: 3px 3px 0 #183b68;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.botao-voltar-pokedex:hover {
+    background: #f5f5f5;
+    color: #183b68;
+    transform: translateY(-2px);
+    box-shadow: 4px 5px 0 #183b68;
+}
+
+.botao-voltar-pokedex:active {
+    transform: translateY(2px);
+    box-shadow: 1px 1px 0 #183b68;
+}
+
+
+/* ============================================================
+   RESPONSIVIDADE: TABLETS E TELAS MENORES
    ============================================================ */
 
 @media (max-width: 991px) {
-
     .navbar-content {
         padding: 0 18px;
-
         gap: 20px;
     }
 
     .navbar-link {
         padding: 9px 12px;
+        font-size: 14px;
+    }
 
+    .navbar-links-desktop>a[routerLink="/favoritos"] {
+        padding: 9px 12px;
+        font-size: 14px;
+    }
+
+    .navbar-links-desktop>a[routerLink="/favoritos"] i {
         font-size: 14px;
     }
 
@@ -1729,9 +1738,7 @@ body {
     .botao-anterior,
     .botao-proximo {
         width: 85px;
-
         padding: 10px 8px;
-
         font-size: 0.75rem;
     }
 
@@ -1741,31 +1748,49 @@ body {
 
     .pokemon-detalhes-principal {
         grid-template-columns: 1fr;
-
         gap: 20px;
     }
 
     .pokemon-sprite-container {
         max-width: 360px;
     }
+
+    .pagina-favoritos {
+        padding-right: 30px;
+        padding-left: 30px;
+    }
+
+    .pokemon-lista {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .pagina-favoritos img.pokemon-image {
+        height: 190px;
+        min-height: 190px;
+        background: radial-gradient(circle at center,
+                #c9eafa 0,
+                #c9eafa 84px,
+                #e9f6ff 85px,
+                #e9f6ff 100%);
+    }
 }
 
 
 /* ============================================================
-   CELULAR
+   RESPONSIVIDADE: CELULAR
    ============================================================ */
 
 @media (max-width: 767px) {
-
     .navbar-content {
         min-height: 64px;
-
         padding: 0 15px;
-
         gap: 10px;
     }
 
-    .navbar-logo {
+    .navbar-logo,
+    .navbar-content>.navbar-link {
+        gap: 8px;
         font-size: 20px;
     }
 
@@ -1784,15 +1809,10 @@ body {
 
     .navbar-dropdown-mobile {
         display: block;
-
         padding: 12px 15px 15px;
-
         background: #087fc1;
-
         border-top: 2px solid rgba(24, 59, 104, 0.35);
-
-        box-shadow:
-            0 5px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 5px 0 rgba(0, 0, 0, 0.2);
     }
 
     .regioes-panel-mobile,
@@ -1823,30 +1843,21 @@ body {
 
     .pokemon-pagination {
         position: fixed;
-
         top: auto;
         bottom: 20px;
-
         left: 0;
         right: 0;
-
         padding: 0 15px;
-
         transform: none;
-
         gap: 15px;
     }
 
     .botao-anterior,
     .botao-proximo {
         width: auto;
-
         flex: 1;
-
         max-width: 150px;
-
         padding: 10px 12px;
-
         font-size: 0.75rem;
     }
 
@@ -1856,14 +1867,11 @@ body {
 
     .pokemon-detalhes-container {
         border-width: 3px;
-
-        box-shadow:
-            5px 5px 0 #183b68;
+        box-shadow: 5px 5px 0 #183b68;
     }
 
     .pokemon-detalhes-header {
         padding: 14px 18px;
-
         gap: 10px;
     }
 
@@ -1881,7 +1889,6 @@ body {
 
     .pokemon-sprite-container {
         width: 100%;
-
         box-shadow:
             inset 0 0 0 4px #ffffff,
             4px 4px 0 #183b68;
@@ -1889,14 +1896,12 @@ body {
 
     .pokemon-status {
         margin: 0 18px 18px;
-
         padding: 16px;
     }
 
     .botao-shiny {
         width: 46px;
         height: 46px;
-
         top: 10px;
         right: 10px;
     }
@@ -1904,36 +1909,93 @@ body {
     .botao-shiny::before {
         font-size: 25px;
     }
+
+    .botao-favorito {
+        width: 40px;
+        height: 40px;
+        font-size: 26px;
+    }
+
+    .pagina-favoritos {
+        padding: 100px 20px 40px;
+    }
+
+    .favoritos-header {
+        margin-bottom: 25px;
+        padding: 20px 15px;
+    }
+
+    .favoritos-header h1 {
+        font-size: 25px;
+    }
+
+    .favoritos-header p {
+        font-size: 14px;
+    }
+
+    .pokemon-lista {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .pagina-favoritos .pokemon-numero {
+        padding: 10px 12px 0;
+    }
+
+    .pagina-favoritos img.pokemon-image {
+        height: 160px;
+        min-height: 160px;
+        padding: 12px;
+        background: radial-gradient(circle at center,
+                #c9eafa 0,
+                #c9eafa 70px,
+                #e9f6ff 71px,
+                #e9f6ff 100%);
+    }
+
+    .pagina-favoritos .pokemon-info {
+        padding: 15px;
+    }
+
+    .pagina-favoritos .pokemon-nome {
+        font-size: 19px;
+    }
+
+    .favoritos-vazio {
+        margin-top: 25px;
+        padding: 28px 18px;
+    }
+
+    .favoritos-vazio h2 {
+        font-size: 21px;
+    }
 }
 
 
 /* ============================================================
-   CELULAR PEQUENO
+   RESPONSIVIDADE: CELULAR PEQUENO
    ============================================================ */
 
 @media (max-width: 480px) {
-
     .navbar-content {
         min-height: 60px;
     }
 
-    .navbar-logo {
+    .navbar-logo,
+    .navbar-content>.navbar-link {
         gap: 8px;
-
         font-size: 18px;
     }
 
     .logo-pokeball {
         width: 24px;
         height: 24px;
-
         border-width: 2px;
     }
 
     .navbar-menu-button {
         width: 38px;
         height: 38px;
-
         padding: 7px;
     }
 
@@ -1943,21 +2005,17 @@ body {
 
     .mobile-menu-button {
         padding: 10px 12px;
-
         font-size: 14px;
     }
 
     .regioes-panel-mobile {
         grid-template-columns: repeat(2, 1fr);
-
         padding: 10px;
-
         gap: 6px;
     }
 
     .regiao-link {
         min-height: 34px;
-
         font-size: 11px;
     }
 
@@ -1967,13 +2025,11 @@ body {
 
     .tipos-grid {
         grid-template-columns: repeat(2, 1fr);
-
         gap: 6px;
     }
 
     .tipo-filtro {
         min-height: 34px;
-
         font-size: 10px;
     }
 
@@ -1983,9 +2039,7 @@ body {
 
     .pokemon-card {
         border-width: 2px;
-
-        box-shadow:
-            4px 4px 0 #263b59;
+        box-shadow: 4px 4px 0 #263b59;
     }
 
     .pokemon-image {
@@ -2001,13 +2055,9 @@ body {
     .forma-proxima {
         width: 32px;
         height: 32px;
-
         border-width: 2px;
-
         font-size: 16px;
-
-        box-shadow:
-            2px 2px 0 #263b59;
+        box-shadow: 2px 2px 0 #263b59;
     }
 
     .forma-anterior {
@@ -2028,26 +2078,20 @@ body {
 
     .pokemon-type {
         min-width: 60px;
-
         padding: 4px 8px;
-
         font-size: 11px;
     }
 
     .pokemon-pagination {
         bottom: 15px;
-
         padding: 0 10px;
-
         gap: 10px;
     }
 
     .botao-anterior,
     .botao-proximo {
         max-width: none;
-
         padding: 9px 8px;
-
         font-size: 0.7rem;
     }
 
@@ -2056,11 +2100,9 @@ body {
     }
 
     .pokemon-detalhes-header {
-        flex-direction: column;
-
-        align-items: flex-start;
-
-        gap: 2px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
     }
 
     .pokemon-detalhes-numero {
@@ -2077,7 +2119,6 @@ body {
 
     .pokemon-sprite-container {
         max-width: 100%;
-
         box-shadow:
             inset 0 0 0 3px #ffffff,
             3px 3px 0 #183b68;
@@ -2089,7 +2130,6 @@ body {
 
     .pokemon-status {
         margin: 0 12px 12px;
-
         padding: 13px;
     }
 
@@ -2100,17 +2140,96 @@ body {
     .botao-shiny {
         width: 42px;
         height: 42px;
-
         top: 8px;
         right: 8px;
-
         border-width: 2px;
-
-        box-shadow:
-            2px 2px 0 #183b68;
+        box-shadow: 2px 2px 0 #183b68;
     }
 
     .botao-shiny::before {
         font-size: 23px;
+    }
+
+    .botao-favorito {
+        width: 36px;
+        height: 36px;
+        font-size: 24px;
+        border-width: 2px;
+        box-shadow: 2px 2px 0 #183b68;
+    }
+
+    .pagina-favoritos {
+        padding: 90px 15px 35px;
+    }
+
+    .favoritos-header {
+        border-width: 3px;
+        box-shadow: 4px 4px 0 #183b68;
+    }
+
+    .favoritos-header h1 {
+        font-size: 22px;
+    }
+
+    .pokemon-lista {
+        gap: 14px;
+    }
+
+    .pagina-favoritos .pokemon-card {
+        border-width: 2px;
+        box-shadow: 4px 4px 0 #263b59;
+    }
+
+    .pagina-favoritos img.pokemon-image {
+        height: 125px;
+        min-height: 125px;
+        padding: 8px;
+        background: radial-gradient(circle at center,
+                #c9eafa 0,
+                #c9eafa 53px,
+                #e9f6ff 54px,
+                #e9f6ff 100%);
+    }
+
+    .pagina-favoritos .pokemon-numero {
+        padding: 9px 10px 0;
+        font-size: 11px;
+    }
+
+    .pagina-favoritos .pokemon-info {
+        padding: 12px;
+    }
+
+    .pagina-favoritos .pokemon-info::before {
+        left: 12px;
+        width: 35px;
+    }
+
+    .pagina-favoritos .pokemon-nome {
+        margin-bottom: 8px;
+        font-size: 16px;
+        overflow-wrap: anywhere;
+    }
+
+    .favoritos-vazio {
+        padding: 24px 15px;
+    }
+
+    .favoritos-vazio-imagem {
+        width: 75px;
+        height: 75px;
+    }
+
+    .favoritos-vazio h2 {
+        font-size: 19px;
+    }
+
+    .favoritos-vazio p {
+        font-size: 14px;
+    }
+
+    .botao-voltar-pokedex {
+        width: 100%;
+        padding: 11px 14px;
     }
 }
