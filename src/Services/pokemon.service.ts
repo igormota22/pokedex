@@ -1,7 +1,7 @@
 
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { forkJoin, map, switchMap } from 'rxjs';
+import { forkJoin, from, map, mergeMap, Observable, switchMap, toArray } from 'rxjs';
 
 import { Pokemon } from '../app/Components/Listagem-Pokemon/listagem-pokemon';
 import {
@@ -46,6 +46,12 @@ interface TipoPokemonRespostaHttp {
     type: {
         name: string;
     };
+}
+
+interface PokemonPorTipoRespostaHttp {
+    readonly pokemon: {
+        readonly pokemon: ResultadoObjetoHttp;
+    }[];
 }
 
 interface PokemonSpeciesRespostaHttp {
@@ -145,7 +151,6 @@ export class PokemonService {
         formaRegional?: string,
         formaAlternativa?: string
     ) {
-        // Formas regionais e alternativas
         if (formaRegional || formaAlternativa) {
             return this.obterPokemonsPorForma(
                 tipos,
@@ -154,24 +159,79 @@ export class PokemonService {
             );
         }
 
-        // Listagem por região ou listagem geral
+        // Pesquisa diretamente os Pokémon dos tipos selecionados
+        if (!nome && tipos && tipos.length > 0) {
+            return forkJoin(
+                tipos.map((tipo) =>
+                    this.http.get<PokemonPorTipoRespostaHttp>(
+                        `${this.apiUrl}/type/${tipo}`
+                    )
+                )
+            ).pipe(
+                map((respostas) => {
+                    const unicos = new Map<string, ResultadoObjetoHttp>();
+
+                    respostas.forEach((resposta) =>
+                        resposta.pokemon.forEach(({ pokemon }) =>
+                            unicos.set(pokemon.name, pokemon)
+                        )
+                    );
+
+                    return [...unicos.values()]
+                        .sort((a, b) => {
+                            const idA = Number(a.url.split('/').filter(Boolean).at(-1));
+                            const idB = Number(b.url.split('/').filter(Boolean).at(-1));
+
+                            return idA - idB;
+                        })
+                        .slice(offset, offset + this.quantidadePorPagina);
+                }),
+
+                switchMap((resultados) =>
+                    from(resultados).pipe(
+                        mergeMap(
+                            (resultado) =>
+                                this.buscarPokemonsComEspecie([resultado]).pipe(
+                                    map((pokemons) => pokemons[0])
+                                ),
+                            6
+                        ),
+                        toArray()
+                    )
+                ),
+
+                map((pokemons) =>
+                    pokemons
+                        .filter((pokemon) =>
+                            pokemon.detalhe.types.some((item) =>
+                                tipos.includes(item.type.name)
+                            )
+                        )
+                        .sort((a, b) => a.detalhe.id - b.detalhe.id)
+                        .map((pokemon) => this.converterParaPokemon(pokemon))
+                )
+            );
+        }
+
+        // Listagem normal ou por região
         const url = this.obterUrlListagem(nome, offset, tipos);
 
         return this.http.get<ObjetoRespostaHttp>(url).pipe(
             switchMap((resposta) =>
-                this.buscarPokemonsComEspecie(resposta.results)
+                from(resposta.results).pipe(
+                    mergeMap(
+                        (resultado) =>
+                            this.buscarPokemonsComEspecie([resultado]).pipe(
+                                map((pokemons) => pokemons[0])
+                            ),
+                        6
+                    ),
+                    toArray()
+                )
             ),
 
             map((pokemons) => {
-                let resultado = this.filtrarPorTipo(pokemons, tipos);
-
-                // Aplica a paginação depois do filtro por tipo
-                if (!nome && tipos && tipos.length > 0) {
-                    resultado = resultado.slice(
-                        offset,
-                        offset + this.quantidadePorPagina
-                    );
-                }
+                const resultado = this.filtrarPorTipo(pokemons, tipos);
 
                 return resultado.map((pokemon) =>
                     this.converterParaPokemon(pokemon)
@@ -274,6 +334,57 @@ export class PokemonService {
         }
 
         return false;
+    }
+
+    //====================================================
+    //PESQUISA DE POKEMON POR NOME E NUMERO
+    //====================================================
+    termoPesquisa = signal('');
+
+    pesquisarPokemons(termo: string): void {
+
+        this.termoPesquisa.set(
+            termo.trim().toLowerCase()
+        );
+    }
+
+    obterPesquisa(): Observable<Pokemon[]> {
+        const url = `${this.apiUrl}/pokemon?limit=100000`;
+
+        return this.http.get<ObjetoRespostaHttp>(url).pipe(
+            map((resposta) =>
+                resposta.results.filter((pokemon) => {
+                    const termo = this.termoPesquisa();
+
+                    return (
+                        pokemon.name.includes(termo) ||
+                        pokemon.url.split('/').filter(Boolean).at(-1)?.includes(termo)
+                    );
+                })
+            ),
+
+            switchMap((resultados) =>
+                from(resultados).pipe(
+                    mergeMap(
+                        (resultado) =>
+                            this.http.get<PokemonRespostaHttp>(resultado.url),
+                        6
+                    ),
+                    map((detalhe) => ({
+                        id: detalhe.id,
+                        name: detalhe.name,
+                        types: detalhe.types.map((tipo) => tipo.type.name),
+                        sprite: detalhe.sprites.front_default,
+                        spriteShiny: detalhe.sprites.front_shiny,
+                        artwork: detalhe.sprites.other['official-artwork'].front_default,
+                        artworkShiny: detalhe.sprites.other['official-artwork'].front_shiny,
+                        formas: [],
+                    } satisfies Pokemon)),
+                    toArray(),
+                    map((pokemons) => pokemons.sort((a, b) => a.id - b.id))
+                )
+            )
+        );
     }
 
     // ==================================================

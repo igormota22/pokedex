@@ -1,10 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { map, switchMap } from 'rxjs';
+import { Component, computed, inject, signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { distinctUntilChanged, map, of, switchMap } from 'rxjs';
 import { PokemonService } from '../../../Services/pokemon.service';
 import { Pokemon } from '../Listagem-Pokemon/listagem-pokemon';
 import { FavoritosService } from '../../../Services/pokemonFavorito.service';
+import { TitleCasePipe } from '@angular/common';
 
 export interface DadosPokemonResponse extends Pokemon {
     stats: {
@@ -19,12 +20,13 @@ export interface DadosPokemonResponse extends Pokemon {
 
 @Component({
     selector: 'app-dados-pokemon',
-    imports: [RouterLink],
+    imports: [RouterLink, TitleCasePipe],
     templateUrl: './dados-pokemon.html',
 })
 export class DadosPokemon {
 
     private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router)
     private readonly pokemonService = inject(PokemonService);
     private readonly favoritosService = inject(FavoritosService);
 
@@ -43,6 +45,42 @@ export class DadosPokemon {
         {
             initialValue: null
         }
+    );
+
+    private readonly idPokemonAtual = computed(
+        () => this.pokemon()?.id ?? null
+    );
+
+    protected readonly pokemonAnterior = toSignal(
+        toObservable(this.idPokemonAtual).pipe(
+            distinctUntilChanged(),
+            switchMap((id) => {
+                if (id === null || id <= 1) {
+                    return of(null);
+                }
+
+                return this.pokemonService.obterDadosPokemons(
+                    String(id - 1)
+                );
+            })
+        ),
+        { initialValue: null }
+    );
+
+    protected readonly pokemonProximo = toSignal(
+        toObservable(this.idPokemonAtual).pipe(
+            distinctUntilChanged(),
+            switchMap((id) => {
+                if (id === null) {
+                    return of(null);
+                }
+
+                return this.pokemonService.obterDadosPokemons(
+                    String(id + 1)
+                );
+            })
+        ),
+        { initialValue: null }
     );
 
     protected alternarShiny(): void {
@@ -70,5 +108,23 @@ export class DadosPokemon {
             nome: dadosPokemon.name,
             spriteUrl: dadosPokemon.sprite
         });
+    }
+
+
+
+    protected verAnterior(id: number): void {
+        if (id <= 1) {
+            return;
+        }
+
+        this.router.navigate(['/pokedex/pokemon', id - 1]);
+
+    }
+
+    protected verProximo(id: number): void {
+
+        this.router.navigate(['/pokedex/pokemon', id + 1]);
+
+
     }
 }

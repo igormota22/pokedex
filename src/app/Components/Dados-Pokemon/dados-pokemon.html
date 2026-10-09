@@ -13,7 +13,7 @@
     <div class="pokemon-detalhes-container">
 
         <!-- CABEÇALHO -->
-        <div class="pokemon-detalhes-header">
+        <header class="pokemon-detalhes-header">
 
             <span class="pokemon-detalhes-numero">
                 #{{ dados.id.toString().padStart(3, '0') }}
@@ -25,18 +25,18 @@
 
             <!-- FAVORITO -->
             <button type="button" class="botao-favorito" [class.ativo]="ehFavorito(dados.id)" [attr.aria-label]="
-                    ehFavorito(dados.id)
-                        ? 'Remover dos favoritos'
-                        : 'Adicionar aos favoritos'
-                " [attr.aria-pressed]="ehFavorito(dados.id)" (click)="alternarFavorito()" [title]="
-                    ehFavorito(dados.id)
-                        ? 'Remover dos favoritos'
-                        : 'Adicionar aos favoritos'
-                ">
+                        ehFavorito(dados.id)
+                            ? 'Remover dos favoritos'
+                            : 'Adicionar aos favoritos'
+                    " [attr.aria-pressed]="ehFavorito(dados.id)" [title]="
+                        ehFavorito(dados.id)
+                            ? 'Remover dos favoritos'
+                            : 'Adicionar aos favoritos'
+                    " (click)="alternarFavorito()">
                 {{ ehFavorito(dados.id) ? '♥' : '♡' }}
             </button>
 
-        </div>
+        </header>
 
         <!-- INFORMAÇÕES PRINCIPAIS -->
         <div class="pokemon-detalhes-principal">
@@ -47,32 +47,38 @@
                 <div class="pokemon-sprite-container">
 
                     <img [src]="
-                            artwork()
-                                ? (
-                                    shiny()
-                                        ? (dados.artworkShiny ?? 'images/pokebola.png')
-                                        : (dados.artwork ?? 'images/pokebola.png')
-                                  )
-                                : (
-                                    shiny()
-                                        ? (dados.spriteShiny ?? 'images/pokebola.png')
-                                        : (dados.sprite ?? 'images/pokebola.png')
-                                  )
-                        " [alt]="dados.name">
+                                artwork()
+                                    ? (
+                                        shiny()
+                                            ? (dados.artworkShiny ?? 'images/pokebola.png')
+                                            : (dados.artwork ?? 'images/pokebola.png')
+                                      )
+                                    : (
+                                        shiny()
+                                            ? (dados.spriteShiny ?? 'images/pokebola.png')
+                                            : (dados.sprite ?? 'images/pokebola.png')
+                                      )
+                            " [alt]="dados.name">
 
                 </div>
 
                 <!-- CONTROLES DA IMAGEM -->
                 <div class="pokemon-imagem-controles">
 
-                    <button type="button" class="botao-shiny" [class.ativo]="shiny()" (click)="alternarShiny()"
-                        title="Shiny">
-                        {{ shiny() ? 'Normal' : 'Shiny' }}
+                    <!-- NORMAL / SHINY -->
+                    <button type="button" class="botao-shiny" [class.ativo]="shiny()" [attr.aria-label]="
+                                shiny() ? 'Ver normal' : 'Ver shiny'
+                            " [attr.aria-pressed]="shiny()" [title]="
+                                shiny() ? 'Ver normal' : 'Ver shiny'
+                            " (click)="alternarShiny()">
                     </button>
 
-                    <button type="button" class="botao-artwork" [class.ativo]="artwork()" (click)="alternarArtWork()"
-                        title="Artwork">
-                        Artwork
+                    <!-- SPRITE / ARTWORK -->
+                    <button type="button" class="botao-artwork" [class.ativo]="artwork()" [attr.aria-label]="
+                                artwork() ? 'Ver sprite' : 'Ver artwork'
+                            " [attr.aria-pressed]="artwork()" [title]="
+                                artwork() ? 'Ver sprite' : 'Ver artwork'
+                            " (click)="alternarArtWork()">
                     </button>
 
                 </div>
@@ -82,8 +88,8 @@
             <!-- INFORMAÇÕES -->
             <div class="pokemon-detalhes-info">
 
-                <!-- TIPO -->
-                <div class="pokemon-detalhes-secao">
+                <!-- TIPOS -->
+                <section class="pokemon-detalhes-secao">
 
                     <h2>Tipo</h2>
 
@@ -97,28 +103,28 @@
 
                     </div>
 
-                </div>
+                </section>
 
                 <!-- PESO -->
-                <div class="pokemon-detalhes-secao">
+                <section class="pokemon-detalhes-secao">
 
                     <h2>Peso</h2>
 
                     <p>{{ dados.peso / 10 }} kg</p>
 
-                </div>
+                </section>
 
                 <!-- ALTURA -->
-                <div class="pokemon-detalhes-secao">
+                <section class="pokemon-detalhes-secao">
 
                     <h2>Altura</h2>
 
                     <p>{{ dados.altura / 10 }} m</p>
 
-                </div>
+                </section>
 
                 <!-- HABILIDADES -->
-                <div class="pokemon-detalhes-secao">
+                <section class="pokemon-detalhes-secao">
 
                     <h2>Habilidades</h2>
 
@@ -135,10 +141,10 @@
 
                     </div>
 
-                </div>
+                </section>
 
                 <!-- SOM -->
-                <div class="pokemon-detalhes-secao">
+                <section class="pokemon-detalhes-secao">
 
                     <h2>Som</h2>
 
@@ -146,23 +152,21 @@
                     <audio [src]="dados.audio" controls></audio>
                     }
 
-                </div>
+                </section>
 
             </div>
 
         </div>
 
         <!-- STATUS -->
-        <div class="pokemon-status">
+        <section class="pokemon-status">
 
             <h2>Status</h2>
 
             <div class="pokemon-status-lista">
 
-                @for (
-                stat of dados.stats;
-                track stat.nome
-                ) {
+                @for (stat of dados.stats; track stat.nome) {
+
                 <div class="pokemon-status-item">
 
                     <div class="pokemon-status-label">
@@ -180,13 +184,55 @@
                     </div>
 
                 </div>
+
                 }
 
             </div>
 
-        </div>
+        </section>
 
     </div>
+
+    <<!-- NAVEGAÇÃO ENTRE POKÉMON -->
+        <nav class="pokemon-navegacao" aria-label="Navegação entre Pokémon">
+
+            <!-- ANTERIOR -->
+            <button type="button" class="botao-pokemon-anterior" [disabled]="!pokemonAnterior()"
+                (click)="verAnterior(dados.id)">
+                <span class="pokemon-navegacao-seta">←</span>
+
+                @if (pokemonAnterior(); as anterior) {
+                <img [src]="anterior.sprite ?? 'images/pokebola.png'" [alt]="anterior.name"
+                    class="pokemon-navegacao-sprite">
+
+                <span class="pokemon-navegacao-info">
+                    <small>Anterior</small>
+                    <strong>{{ anterior.name | titlecase }}</strong>
+                </span>
+                } @else {
+                <span>Carregando Pokémon anterior...</span>
+                }
+            </button>
+
+            <!-- PRÓXIMO -->
+            <button type="button" class="botao-pokemon-proximo" [disabled]="!pokemonProximo()"
+                (click)="verProximo(dados.id)">
+                @if (pokemonProximo(); as proximo) {
+                <span class="pokemon-navegacao-info">
+                    <small>Próximo</small>
+                    <strong>{{ proximo.name | titlecase }}</strong>
+                </span>
+
+                <img [src]="proximo.sprite ?? 'images/pokebola.png'" [alt]="proximo.name"
+                    class="pokemon-navegacao-sprite">
+                } @else {
+                <span>Carregando próximo Pokémon...</span>
+                }
+
+                <span class="pokemon-navegacao-seta">→</span>
+            </button>
+
+        </nav>
 
 </section>
 

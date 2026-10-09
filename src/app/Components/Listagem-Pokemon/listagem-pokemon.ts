@@ -89,8 +89,13 @@ export class ListagemPokemon {
             this.route.paramMap,
             toObservable(this.offset),
             toObservable(this.pokemonTipoService.tiposSelecionados),
+            toObservable(this.pokemonService.termoPesquisa),
         ]).pipe(
-            switchMap(([params, offset, tipos]) => {
+            switchMap(([params, offset, tipos, termo]) => {
+                if (termo.trim()) {
+                    return this.pokemonService.obterPesquisa();
+                }
+
                 const regiao = params.get('regiao');
                 const formaRegional = params.get('formaRegional');
                 const formaAlternativa = params.get('formaAlternativa');
@@ -110,14 +115,30 @@ export class ListagemPokemon {
     protected readonly pokemonsFiltrados = computed(() => {
         const pokemons = this.pokemon();
         const tipos = this.pokemonTipoService.tiposSelecionados();
+        const termo = this.pokemonService.termoPesquisa()
+            .trim()
+            .toLowerCase();
 
-        if (tipos.length === 0 || !this.regiao()) {
-            return pokemons;
+        let resultado = pokemons;
+
+        // Pesquisa por nome ou número
+        if (termo) {
+            resultado = resultado.filter((pokemon) =>
+                pokemon.name.toLowerCase().includes(termo) ||
+                pokemon.id.toString().includes(termo)
+            );
         }
 
-        return pokemons.filter((pokemon) =>
-            tipos.some((tipo) => pokemon.types.includes(tipo))
-        );
+        // Filtro por tipo
+        if (tipos.length > 0 && this.regiao()) {
+            resultado = resultado.filter((pokemon) =>
+                tipos.some((tipo) =>
+                    pokemon.types.includes(tipo)
+                )
+            );
+        }
+
+        return resultado;
     });
 
     // ==================================================
@@ -177,4 +198,5 @@ export class ListagemPokemon {
                 }));
             });
     }
+
 }

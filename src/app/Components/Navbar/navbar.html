@@ -12,6 +12,19 @@
         </a>
 
 
+        <div class="barra-pesquisa">
+            <i class="bi bi-search"></i>
+
+            <input type="text" placeholder="Informe o nome ou o número do Pokémon" aria-label="Pesquisar Pokémon"
+                [(ngModel)]="pesquisa" (input)="pesquisar()" />
+
+            @if (pesquisa) {
+            <button type="button" aria-label="Limpar pesquisa" (click)="pesquisa = ''; pesquisar()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+            }
+        </div>
+
         <!-- ==========================================
              MENU DESKTOP
              ========================================== -->

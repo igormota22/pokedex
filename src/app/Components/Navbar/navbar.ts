@@ -1,8 +1,9 @@
 
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { PokemonTipoService } from '../../../Services/pokemonTipo.service';
-import { FavoritosService } from '../../../Services/pokemonFavorito.service';
+import { PokemonService } from '../../../Services/pokemon.service';
 
 // ==========================================
 // MODELOS
@@ -25,12 +26,13 @@ interface FormaAlternativa {
 @Component({
     selector: 'app-navbar',
     standalone: true,
-    imports: [RouterLink, RouterLinkActive],
+    imports: [RouterLink, RouterLinkActive, FormsModule],
     templateUrl: './navbar.html',
 })
 export class NavbarComponent {
 
     private readonly pokemonTipoService = inject(PokemonTipoService);
+    private readonly pokemonService = inject(PokemonService);
 
     // ==========================================
     // ESTADOS DOS MENUS
@@ -42,6 +44,8 @@ export class NavbarComponent {
     protected readonly formasRegionaisAberto = signal(false);
     protected readonly formasAlternativasAberto = signal(false);
     protected readonly listagemFavoritos = signal(false);
+
+
 
     // ==========================================
     // DADOS DA NAVEGAÇÃO
@@ -133,7 +137,7 @@ export class NavbarComponent {
 
     protected fecharRegioesMenu(): void {
         this.regioesAberto.set(false);
-        window.scroll(0, 0);
+
     }
 
     // ==========================================
@@ -158,5 +162,15 @@ export class NavbarComponent {
 
     protected fecharFormasAlternativasMenu(): void {
         this.formasAlternativasAberto.set(false);
+    }
+
+    //=====================================================
+    // BARRA DE PESQUISA
+    //=====================================================
+
+    pesquisa = '';
+
+    protected pesquisar(): void {
+        this.pokemonService.pesquisarPokemons(this.pesquisa);
     }
 }
