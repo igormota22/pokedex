@@ -240,9 +240,10 @@ export class PokemonService {
                     .filter((pokemon) =>
                         pokemon.detalhe.types.some((item) =>
                             tipos.includes(item.type.name)
-                        )
+                        ),
+                        this.obterPokemonPorId(pokemons)
                     )
-                    .sort((a, b) => a.detalhe.id - b.detalhe.id)
+
                     .map((pokemon) => this.converterParaPokemon(pokemon))
 
 
@@ -283,9 +284,8 @@ export class PokemonService {
             map((pokemons) => {
                 const resultado = this.filtrarPorTipo(pokemons, tipos);
 
-                return resultado.map((pokemon) =>
-                    this.converterParaPokemon(pokemon)
-                );
+                return this.obterPokemonPorId(resultado).map((pokemon) =>
+                    this.converterParaPokemon(pokemon));
             })
         );
     }
@@ -337,6 +337,8 @@ export class PokemonService {
         formaAlternativa?: string
     ): Observable<Pokemon[]> {
 
+
+
         const url = `${this.apiUrl}/pokemon?limit=100000`;
 
         return this.http.get<ObjetoRespostaHttp>(url).pipe(
@@ -347,8 +349,11 @@ export class PokemonService {
                         formaRegional,
                         formaAlternativa
                     )
+
                 )
             ),
+
+
 
             switchMap((pokemons) =>
                 this.buscarPokemonsComEspecie(pokemons)
@@ -588,4 +593,8 @@ export class PokemonService {
     private obterIdDaUrl(url: string): number {
         return Number(url.split('/').filter(Boolean).at(-1));
     }
+    private obterPokemonPorId(pokemons: PokemonComEspecie[]): PokemonComEspecie[] {
+        return pokemons.sort((a, b) => a.detalhe.id - b.detalhe.id);
+    }
+
 }
