@@ -74,6 +74,14 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {
+            "baseHref": "https://igormota22.github.io/pokedex/",
+            "name": "Igor Mota",
+            "email": "igormello399@gmail.com"
+          }
         }
       }
     }
