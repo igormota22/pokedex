@@ -115,6 +115,9 @@ export class NavbarComponent {
 
     protected alternarTiposMenu(): void {
         this.tiposAberto.update(aberto => !aberto);
+        this.regioesAberto.set(false);
+        this.formasAlternativasAberto.set(false);
+        this.formasRegionaisAberto.set(false);
     }
 
     protected alternarTipo(tipo: string): void {
@@ -133,6 +136,10 @@ export class NavbarComponent {
 
     protected alternarRegioesMenu(): void {
         this.regioesAberto.update(aberto => !aberto);
+        this.tiposAberto.set(false);
+        this.formasAlternativasAberto.set(false);
+        this.formasRegionaisAberto.set(false);
+
     }
 
     protected fecharRegioesMenu(): void {
@@ -146,6 +153,9 @@ export class NavbarComponent {
 
     protected alternarFormasRegionaisMenu(): void {
         this.formasRegionaisAberto.update(aberto => !aberto);
+        this.regioesAberto.set(false);
+        this.tiposAberto.set(false);
+        this.formasAlternativasAberto.set(false);
     }
 
     protected fecharFormasRegionaisMenu(): void {
@@ -158,6 +168,9 @@ export class NavbarComponent {
 
     protected alternarFormasAlternativasMenu(): void {
         this.formasAlternativasAberto.update(aberto => !aberto);
+        this.regioesAberto.set(false);
+        this.tiposAberto.set(false);
+        this.formasRegionaisAberto.set(false);
     }
 
     protected fecharFormasAlternativasMenu(): void {

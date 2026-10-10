@@ -9,4 +9,5 @@ export class PokemonTipoService {
 
     readonly tiposSelecionados = signal<string[]>([]);
 
+
 }

@@ -1,12 +1,20 @@
 
-import { Injectable, inject, signal } from '@angular/core';
+
 import { HttpClient } from '@angular/common/http';
-import { forkJoin, from, map, mergeMap, Observable, switchMap, toArray } from 'rxjs';
+import { Injectable, inject, signal } from '@angular/core';
+import {
+    forkJoin,
+    from,
+    map,
+    mergeMap,
+    Observable,
+    of,
+    switchMap,
+    toArray,
+} from 'rxjs';
 
 import { Pokemon } from '../app/Components/Listagem-Pokemon/listagem-pokemon';
-import {
-    DadosPokemonResponse,
-} from '../app/Components/Dados-Pokemon/dados-pokemon';
+import { DadosPokemonResponse } from '../app/Components/Dados-Pokemon/dados-pokemon';
 
 // ======================================================
 // MODELOS DAS RESPOSTAS DA POKEAPI
@@ -43,8 +51,8 @@ export interface EstatisticaPokemonRespostaHttp {
 }
 
 interface TipoPokemonRespostaHttp {
-    type: {
-        name: string;
+    readonly type: {
+        readonly name: string;
     };
 }
 
@@ -78,7 +86,6 @@ interface PokemonRespostaHttp {
     readonly sprites: {
         readonly front_default: string | null;
         readonly front_shiny: string | null;
-
         readonly other: {
             readonly 'official-artwork': {
                 readonly front_default: string | null;
@@ -137,8 +144,13 @@ export class PokemonService {
     private readonly http = inject(HttpClient);
 
     private readonly apiUrl = 'https://pokeapi.co/api/v2';
-
     private readonly quantidadePorPagina = 32;
+
+    // Indica se há mais resultados para a listagem atual.
+    readonly temMaisPokemons = signal(false);
+
+    // Termo utilizado pela pesquisa da navbar.
+    readonly termoPesquisa = signal('');
 
     // ==================================================
     // LISTAGEM DE POKÉMON
@@ -150,7 +162,9 @@ export class PokemonService {
         tipos?: string[],
         formaRegional?: string,
         formaAlternativa?: string
-    ) {
+    ): Observable<Pokemon[]> {
+
+        // Formas regionais e alternativas.
         if (formaRegional || formaAlternativa) {
             return this.obterPokemonsPorForma(
                 tipos,
@@ -159,66 +173,57 @@ export class PokemonService {
             );
         }
 
-        // Pesquisa diretamente os Pokémon dos tipos selecionados
+        // Filtro por tipo na listagem geral.
         if (!nome && tipos && tipos.length > 0) {
-            return forkJoin(
-                tipos.map((tipo) =>
-                    this.http.get<PokemonPorTipoRespostaHttp>(
-                        `${this.apiUrl}/type/${tipo}`
-                    )
-                )
-            ).pipe(
-                map((respostas) => {
-                    const unicos = new Map<string, ResultadoObjetoHttp>();
-
-                    respostas.forEach((resposta) =>
-                        resposta.pokemon.forEach(({ pokemon }) =>
-                            unicos.set(pokemon.name, pokemon)
-                        )
-                    );
-
-                    return [...unicos.values()]
-                        .sort((a, b) => {
-                            const idA = Number(a.url.split('/').filter(Boolean).at(-1));
-                            const idB = Number(b.url.split('/').filter(Boolean).at(-1));
-
-                            return idA - idB;
-                        })
-                        .slice(offset, offset + this.quantidadePorPagina);
-                }),
-
-                switchMap((resultados) =>
-                    from(resultados).pipe(
-                        mergeMap(
-                            (resultado) =>
-                                this.buscarPokemonsComEspecie([resultado]).pipe(
-                                    map((pokemons) => pokemons[0])
-                                ),
-                            6
-                        ),
-                        toArray()
-                    )
-                ),
-
-                map((pokemons) =>
-                    pokemons
-                        .filter((pokemon) =>
-                            pokemon.detalhe.types.some((item) =>
-                                tipos.includes(item.type.name)
-                            )
-                        )
-                        .sort((a, b) => a.detalhe.id - b.detalhe.id)
-                        .map((pokemon) => this.converterParaPokemon(pokemon))
-                )
-            );
+            return this.obterPokemonsPorTipo(tipos, offset);
         }
 
-        // Listagem normal ou por região
-        const url = this.obterUrlListagem(nome, offset, tipos);
+        // Listagem normal ou por região.
+        return this.obterPokemonsDaListagem(nome, offset, tipos);
+    }
 
-        return this.http.get<ObjetoRespostaHttp>(url).pipe(
-            switchMap((resposta) =>
-                from(resposta.results).pipe(
+    // ==================================================
+    // LISTAGEM POR TIPO
+    // ==================================================
+
+    private obterPokemonsPorTipo(
+        tipos: string[],
+        offset: number
+    ): Observable<Pokemon[]> {
+
+        return forkJoin(
+            tipos.map((tipo) =>
+                this.http.get<PokemonPorTipoRespostaHttp>(
+                    `${this.apiUrl}/type/${tipo}`
+                )
+            )
+        ).pipe(
+            map((respostas) => {
+                const unicos = new Map<string, ResultadoObjetoHttp>();
+
+                respostas.forEach((resposta) => {
+                    resposta.pokemon.forEach(({ pokemon }) => {
+                        unicos.set(pokemon.name, pokemon);
+                    });
+                });
+
+                const ordenados = [...unicos.values()].sort(
+                    (a, b) => this.obterIdDaUrl(a.url) - this.obterIdDaUrl(b.url)
+                );
+
+                // Verifica se há resultados depois da página atual.
+                this.temMaisPokemons.set(
+                    offset + this.quantidadePorPagina < ordenados.length
+                );
+
+                return ordenados.slice(
+                    offset,
+                    offset + this.quantidadePorPagina
+                );
+            }),
+
+            switchMap((resultados) =>
+                from(resultados).pipe(
                     mergeMap(
                         (resultado) =>
                             this.buscarPokemonsComEspecie([resultado]).pipe(
@@ -229,6 +234,51 @@ export class PokemonService {
                     toArray()
                 )
             ),
+
+            map((pokemons) =>
+                pokemons
+                    .filter((pokemon) =>
+                        pokemon.detalhe.types.some((item) =>
+                            tipos.includes(item.type.name)
+                        )
+                    )
+                    .sort((a, b) => a.detalhe.id - b.detalhe.id)
+                    .map((pokemon) => this.converterParaPokemon(pokemon))
+
+
+
+            )
+        );
+    }
+
+    // ==================================================
+    // LISTAGEM NORMAL OU POR REGIÃO
+    // ==================================================
+
+    private obterPokemonsDaListagem(
+        nome?: string,
+        offset = 0,
+        tipos?: string[]
+    ): Observable<Pokemon[]> {
+
+        const url = this.obterUrlListagem(nome, offset, tipos);
+
+        return this.http.get<ObjetoRespostaHttp>(url).pipe(
+            switchMap((resposta) => {
+                // A PokeAPI informa se existe outra página.
+                this.temMaisPokemons.set(resposta.next !== null);
+
+                return from(resposta.results).pipe(
+                    mergeMap(
+                        (resultado) =>
+                            this.buscarPokemonsComEspecie([resultado]).pipe(
+                                map((pokemons) => pokemons[0])
+                            ),
+                        6
+                    ),
+                    toArray()
+                );
+            }),
 
             map((pokemons) => {
                 const resultado = this.filtrarPorTipo(pokemons, tipos);
@@ -249,10 +299,10 @@ export class PokemonService {
         offset = 0,
         tipos?: string[]
     ): string {
+
         if (nome) {
             const regiao = regioes.find(
-                (item) =>
-                    item.nome.toLowerCase() === nome.toLowerCase()
+                (item) => item.nome.toLowerCase() === nome.toLowerCase()
             );
 
             if (!regiao) {
@@ -266,7 +316,6 @@ export class PokemonService {
             );
         }
 
-        // Para filtrar por tipo, precisamos buscar a lista completa
         if (tipos && tipos.length > 0) {
             return `${this.apiUrl}/pokemon?limit=100000`;
         }
@@ -279,14 +328,15 @@ export class PokemonService {
     }
 
     // ==================================================
-    // LISTAGEM DE FORMAS REGIONAIS E ALTERNATIVAS
+    // FORMAS REGIONAIS E ALTERNATIVAS
     // ==================================================
 
     private obterPokemonsPorForma(
         tipos?: string[],
         formaRegional?: string,
         formaAlternativa?: string
-    ) {
+    ): Observable<Pokemon[]> {
+
         const url = `${this.apiUrl}/pokemon?limit=100000`;
 
         return this.http.get<ObjetoRespostaHttp>(url).pipe(
@@ -304,11 +354,14 @@ export class PokemonService {
                 this.buscarPokemonsComEspecie(pokemons)
             ),
 
-            map((pokemons) =>
-                this.filtrarPorTipo(pokemons, tipos).map((pokemon) =>
-                    this.converterParaPokemon(pokemon)
-                )
-            )
+            map((pokemons) => {
+                // A listagem de formas não usa paginação.
+                this.temMaisPokemons.set(false);
+
+                return this.filtrarPorTipo(pokemons, tipos).map(
+                    (pokemon) => this.converterParaPokemon(pokemon)
+                );
+            })
         );
     }
 
@@ -317,10 +370,9 @@ export class PokemonService {
         formaRegional?: string,
         formaAlternativa?: string
     ): boolean {
+
         if (formaRegional) {
-            return nome.endsWith(
-                `-${formaRegional.toLowerCase()}`
-            );
+            return nome.endsWith(`-${formaRegional.toLowerCase()}`);
         }
 
         if (formaAlternativa === 'mega') {
@@ -328,40 +380,33 @@ export class PokemonService {
         }
 
         if (formaAlternativa) {
-            return nome.endsWith(
-                `-${formaAlternativa.toLowerCase()}`
-            );
+            return nome.endsWith(`-${formaAlternativa.toLowerCase()}`);
         }
 
         return false;
     }
 
-    //====================================================
-    //PESQUISA DE POKEMON POR NOME E NUMERO
-    //====================================================
-    termoPesquisa = signal('');
+    // ==================================================
+    // PESQUISA POR NOME OU NÚMERO
+    // ==================================================
 
     pesquisarPokemons(termo: string): void {
-
-        this.termoPesquisa.set(
-            termo.trim().toLowerCase()
-        );
+        this.termoPesquisa.set(termo.trim().toLowerCase());
     }
 
     obterPesquisa(): Observable<Pokemon[]> {
+
         const url = `${this.apiUrl}/pokemon?limit=100000`;
 
         return this.http.get<ObjetoRespostaHttp>(url).pipe(
-            map((resposta) =>
-                resposta.results.filter((pokemon) => {
-                    const termo = this.termoPesquisa();
+            map((resposta) => {
+                const termo = this.termoPesquisa();
 
-                    return (
-                        pokemon.name.includes(termo) ||
-                        pokemon.url.split('/').filter(Boolean).at(-1)?.includes(termo)
-                    );
-                })
-            ),
+                return resposta.results.filter((pokemon) =>
+                    pokemon.name.includes(termo) ||
+                    this.obterIdDaUrl(pokemon.url).toString().includes(termo)
+                );
+            }),
 
             switchMap((resultados) =>
                 from(resultados).pipe(
@@ -370,7 +415,8 @@ export class PokemonService {
                             this.http.get<PokemonRespostaHttp>(resultado.url),
                         6
                     ),
-                    map((detalhe) => ({
+
+                    map((detalhe): Pokemon => ({
                         id: detalhe.id,
                         name: detalhe.name,
                         types: detalhe.types.map((tipo) => tipo.type.name),
@@ -379,35 +425,45 @@ export class PokemonService {
                         artwork: detalhe.sprites.other['official-artwork'].front_default,
                         artworkShiny: detalhe.sprites.other['official-artwork'].front_shiny,
                         formas: [],
-                    } satisfies Pokemon)),
+                    })),
+
                     toArray(),
-                    map((pokemons) => pokemons.sort((a, b) => a.id - b.id))
+
+                    map((pokemons) => {
+                        // A pesquisa retorna todos os resultados encontrados.
+                        this.temMaisPokemons.set(false);
+
+                        return pokemons.sort((a, b) => a.id - b.id);
+                    })
                 )
             )
         );
     }
 
     // ==================================================
-    // BUSCA DOS DADOS COMPLETOS DOS POKÉMON
+    // BUSCA DOS DADOS DOS POKÉMON E ESPÉCIES
     // ==================================================
 
     private buscarPokemonsComEspecie(
         pokemons: ResultadoObjetoHttp[]
-    ) {
+    ): Observable<PokemonComEspecie[]> {
+
+        if (pokemons.length === 0) {
+            return of([]);
+        }
+
         return forkJoin(
             pokemons.map((pokemon) =>
                 this.http.get<PokemonRespostaHttp>(pokemon.url).pipe(
                     switchMap((detalhe) =>
-                        this.http
-                            .get<PokemonSpeciesRespostaHttp>(
-                                detalhe.species.url
-                            )
-                            .pipe(
-                                map((species) => ({
-                                    detalhe,
-                                    species,
-                                }))
-                            )
+                        this.http.get<PokemonSpeciesRespostaHttp>(
+                            detalhe.species.url
+                        ).pipe(
+                            map((species) => ({
+                                detalhe,
+                                species,
+                            }))
+                        )
                     )
                 )
             )
@@ -422,6 +478,7 @@ export class PokemonService {
         pokemons: PokemonComEspecie[],
         tipos?: string[]
     ): PokemonComEspecie[] {
+
         if (!tipos || tipos.length === 0) {
             return pokemons;
         }
@@ -440,15 +497,14 @@ export class PokemonService {
     private converterParaPokemon(
         pokemon: PokemonComEspecie
     ): Pokemon {
+
         const detalhe = pokemon.detalhe;
 
         return {
             id: detalhe.id,
             name: detalhe.name,
 
-            types: detalhe.types.map(
-                (item) => item.type.name
-            ),
+            types: detalhe.types.map((item) => item.type.name),
 
             sprite: detalhe.sprites.front_default,
             spriteShiny: detalhe.sprites.front_shiny,
@@ -486,21 +542,20 @@ export class PokemonService {
     // DETALHES DE UM POKÉMON
     // ==================================================
 
-    obterDadosPokemons(nome?: string) {
+    obterDadosPokemons(nome?: string): Observable<DadosPokemonResponse> {
+
         const url = `${this.apiUrl}/pokemon/${nome}`;
 
         return this.http.get<PokemonRespostaHttp>(url).pipe(
             switchMap((detalhe) =>
-                this.http
-                    .get<PokemonSpeciesRespostaHttp>(
-                        detalhe.species.url
-                    )
-                    .pipe(
-                        map((species) => ({
-                            detalhe,
-                            species,
-                        }))
-                    )
+                this.http.get<PokemonSpeciesRespostaHttp>(
+                    detalhe.species.url
+                ).pipe(
+                    map((species) => ({
+                        detalhe,
+                        species,
+                    }))
+                )
             ),
 
             map(({ detalhe, species }): DadosPokemonResponse => ({
@@ -524,5 +579,13 @@ export class PokemonService {
                 audio: detalhe.cries.latest ?? '',
             }))
         );
+    }
+
+    // ==================================================
+    // UTILITÁRIOS
+    // ==================================================
+
+    private obterIdDaUrl(url: string): number {
+        return Number(url.split('/').filter(Boolean).at(-1));
     }
 }

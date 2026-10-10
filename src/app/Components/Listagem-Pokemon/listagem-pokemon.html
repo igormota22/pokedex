@@ -90,20 +90,27 @@
 
     </div>
 
+
     @if (!regiao() && !formaRegional() && !formaAlternativa()) {
 
     <div class="pokemon-pagination">
+
 
         <button type="button" class="botao-anterior" (click)="paginaAnterior()">
             ← Anterior
         </button>
 
+
+        @if (temProximaPagina()) {
         <button type="button" class="botao-proximo" (click)="proximaPagina()">
             Próximo →
         </button>
+        }
 
     </div>
 
     }
+
+
 
 </section>

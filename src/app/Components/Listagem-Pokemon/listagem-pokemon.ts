@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { combineLatest, map, switchMap } from 'rxjs';
@@ -50,6 +50,14 @@ export class ListagemPokemon {
     // ==================================================
 
     private readonly offset = signal(0);
+
+    private readonly resetarPaginaAoAlterarTipo = effect(() => {
+        this.pokemonTipoService.tiposSelecionados();
+
+        untracked(() => {
+            this.offset.set(0);
+        });
+    });
 
     private readonly formasSelecionadas =
         signal<Record<number, number>>({});
@@ -108,6 +116,7 @@ export class ListagemPokemon {
                     formaAlternativa ?? undefined
                 );
             })
+
         ),
         { initialValue: [] }
     );
@@ -144,6 +153,10 @@ export class ListagemPokemon {
     // ==================================================
     // PAGINAÇÃO
     // ==================================================
+
+    protected temProximaPagina(): boolean {
+        return this.pokemonService.temMaisPokemons();
+    }
 
     protected proximaPagina(): void {
         this.offset.update((valor) => valor + 32);
