@@ -1,59 +1,98 @@
-# Pokedex
+# 🔴 Pokédex
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.1.
+Uma Pokédex desenvolvida com **Angular**, inspirada na interface e na experiência dos jogos clássicos de Pokémon, especialmente *Pokémon FireRed*.
 
-## Development server
+O projeto consome dados da [PokéAPI](https://pokeapi.co/) para apresentar informações sobre os Pokémon, permitindo explorar diferentes regiões, consultar formas alternativas e filtrar os resultados.
 
-To start a local development server, run:
+## ✨ Funcionalidades
+
+- **Listagem de Pokémon:** exibição de Pokémon com sprites, tipos e informações visuais.
+- **Paginação:** navegação entre páginas com quantidade limitada de Pokémon por página.
+- **Pesquisa:** busca por nome ou número do Pokémon.
+- **Filtro por tipo:** filtragem por um ou mais tipos de Pokémon.
+- **Regiões:** navegação pelas regiões de Kanto, Johto e Hoenn.
+- **Formas regionais:** consulta de formas de Alola, Galar, Hisui e Paldea.
+- **Formas alternativas:** navegação entre diferentes formas de um Pokémon.
+- **Sprites e artes oficiais:** exibição de imagens nas versões normal e shiny, quando disponíveis.
+- **Interface responsiva:** adaptação para diferentes tamanhos de tela.
+- **Identidade visual retrô:** interface inspirada na estética dos jogos clássicos de Pokémon.
+
+## 🛠️ Tecnologias utilizadas
+
+- [Angular](https://angular.dev/)
+- TypeScript
+- HTML5
+- SCSS
+- [Bootstrap](https://getbootstrap.com/)
+- [Bootstrap Icons](https://icons.getbootstrap.com/)
+- [PokéAPI](https://pokeapi.co/)
+
+## 🚀 Como executar o projeto
+
+### Pré-requisitos
+
+- [Node.js](https://nodejs.org/)
+- npm
+- Angular CLI
+
+### Instalação
+
+Clone o repositório:
+
+```bash
+git clone https://github.com/igormota22/pokedex.git
+```
+
+Entre na pasta do projeto:
+
+```bash
+cd pokedex
+```
+
+Instale as dependências:
+
+```bash
+npm install
+```
+
+Execute a aplicação:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Acesse no navegador:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```text
+http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🌐 API utilizada
 
-```bash
-ng generate --help
-```
+Os dados são obtidos por meio da [PokéAPI](https://pokeapi.co/docs/v2), uma API pública que disponibiliza informações sobre Pokémon, espécies, tipos, sprites e outras características.
 
-## Building
+O projeto utiliza esses dados para montar as listagens e permitir a navegação pelas funcionalidades da Pokédex.
 
-To build the project run:
+## 📦 Build de produção
+
+Para gerar os arquivos de produção:
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Os arquivos compilados são gerados no diretório de saída configurado pelo Angular.
 
-## Running unit tests
+## 🎯 Objetivo do projeto
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Este projeto tem como objetivo praticar e aprofundar conhecimentos em desenvolvimento frontend com Angular, consumo de APIs REST, programação reativa, gerenciamento de estado, roteamento e construção de interfaces responsivas.
 
-```bash
-ng test
-```
+Também busca recriar parte da experiência de uma Pokédex clássica, combinando funcionalidades modernas com uma identidade visual retrô.
 
-## Running end-to-end tests
+## 📄 Licença
 
-For end-to-end (e2e) testing, run:
+Este projeto foi desenvolvido para fins educacionais e de portfólio.
 
-```bash
-ng e2e
-```
+Pokémon e suas respectivas marcas e personagens pertencem aos seus titulares. Este projeto é um trabalho independente, sem afiliação oficial com a Nintendo, Game Freak ou The Pokémon Company.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Os dados são fornecidos pela PokéAPI, conforme suas condições de uso.
