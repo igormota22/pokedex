@@ -2,6 +2,18 @@
 
     <div class="container">
 
+        @if (carregar()) {
+
+        <div class="pokemon-loading">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+
+            <p>Carregando Pokémon...</p>
+        </div>
+
+        } @else {
+
         <div class="row g-4">
 
             @for (pokemon of pokemonsFiltrados(); track pokemon.id) {
@@ -11,19 +23,21 @@
             @let dadosForma = dadosFormaSelecionada()[forma?.nome ?? ''];
 
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+
                 <a class="pokemon-card" [routerLink]="[
-    '/pokedex/pokemon',
-    pokemon.name.includes('-')
-        ? pokemon.name
-        : (forma?.nome ?? pokemon.name)
-]">
+                    '/pokedex/pokemon',
+                    pokemon.name.includes('-')
+                        ? pokemon.name
+                        : (forma?.nome ?? pokemon.name)
+                ]">
+
                     @if (pokemon.formas.length > 1 && !formaRegional() && !formaAlternativa()) {
 
                     <button type="button" class="forma-anterior" (click)="
-                            $event.preventDefault();
-                            $event.stopPropagation();
-                            alterarFormaPokemon(pokemon, -1)
-                        ">
+                        $event.preventDefault();
+                        $event.stopPropagation();
+                        alterarFormaPokemon(pokemon, -1)
+                    ">
                         ←
                     </button>
 
@@ -69,10 +83,10 @@
                     @if (pokemon.formas.length > 1 && !formaRegional() && !formaAlternativa()) {
 
                     <button type="button" class="forma-proxima" (click)="
-                            $event.preventDefault();
-                            $event.stopPropagation();
-                            alterarFormaPokemon(pokemon, 1)
-                        ">
+                        $event.preventDefault();
+                        $event.stopPropagation();
+                        alterarFormaPokemon(pokemon, 1)
+                    ">
                         →
                     </button>
 
@@ -86,18 +100,17 @@
 
         </div>
 
+        }
+
     </div>
 
-
-    @if (!regiao() && !formaRegional() && !formaAlternativa()) {
+    @if (!regiao() && !formaRegional() && !formaAlternativa() && !carregar()) {
 
     <div class="pokemon-pagination">
-
 
         <button type="button" class="botao-anterior" (click)="paginaAnterior()">
             ← Anterior
         </button>
-
 
         @if (temProximaPagina()) {
         <button type="button" class="botao-proximo" (click)="proximaPagina()">
@@ -108,7 +121,5 @@
     </div>
 
     }
-
-
 
 </section>

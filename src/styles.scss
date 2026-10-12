@@ -1114,6 +1114,25 @@ button {
     box-shadow: 0 1px 0 var(--pokemon-navy);
 }
 
+/*======================================================
+CARREGAMENTO
+========================================================*/
+
+
+.pokemon-loading {
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.pokemon-loading p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
 /* ============================================================
    BOTÃO VOLTAR
    ============================================================ */

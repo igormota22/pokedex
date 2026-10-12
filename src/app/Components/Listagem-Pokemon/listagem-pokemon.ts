@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { combineLatest, map, switchMap } from 'rxjs';
+import { combineLatest, finalize, map, pipe, switchMap } from 'rxjs';
 
 import { FormaPokemon, PokemonService } from '../../../Services/pokemon.service';
 import { PokemonTipoService } from '../../../Services/pokemonTipo.service';
@@ -65,6 +65,7 @@ export class ListagemPokemon {
     private readonly dadosFormaSelecionada =
         signal<Record<string, DadosFormaSelecionada>>({});
 
+    private readonly carregar = signal(false);
     // ==================================================
     // PARÂMETROS DA ROTA
     // ==================================================
@@ -100,23 +101,22 @@ export class ListagemPokemon {
             toObservable(this.pokemonService.termoPesquisa),
         ]).pipe(
             switchMap(([params, offset, tipos, termo]) => {
-                if (termo.trim()) {
-                    return this.pokemonService.obterPesquisa();
-                }
+                this.carregar.set(true);
 
-                const regiao = params.get('regiao');
-                const formaRegional = params.get('formaRegional');
-                const formaAlternativa = params.get('formaAlternativa');
+                const requisicao = termo.trim()
+                    ? this.pokemonService.obterPesquisa()
+                    : this.pokemonService.obterPokemons(
+                        params.get('regiao') ?? undefined,
+                        offset,
+                        tipos,
+                        params.get('formaRegional') ?? undefined,
+                        params.get('formaAlternativa') ?? undefined
+                    );
 
-                return this.pokemonService.obterPokemons(
-                    regiao ?? undefined,
-                    offset,
-                    tipos,
-                    formaRegional ?? undefined,
-                    formaAlternativa ?? undefined
+                return requisicao.pipe(
+                    finalize(() => this.carregar.set(false))
                 );
             })
-
         ),
         { initialValue: [] }
     );
